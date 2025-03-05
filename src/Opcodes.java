@@ -11,18 +11,10 @@ public class Opcodes {
         opcodesArray[0x84] = new Instruction(Instruction.Operation.ADD, Operand.H);
         opcodesArray[0x85] = new Instruction(Instruction.Operation.ADD, Operand.L);
         opcodesArray[0x86] = new Instruction(Instruction.Operation.ADD, Operand.HL);
-        opcodesArray[0x87] = new Instruction(Instruction.Operation.ADD, Operand.A);    
+        opcodesArray[0x87] = new Instruction(Instruction.Operation.ADD, Operand.A);  
     }
 
     public Instruction byteToInstruction(int readByte) {
-        // Handle variable bytes
-        int nibble1 = (readByte & 0xFF00);
-        int nibble2 = (readByte & 0x00FF);
-        switch(nibble1){
-            case 0xC6:
-                return new Instruction(Instruction.Operation.ADD, nibble2);
-            default:
-                return opcodesArray[readByte];
-        }
+        return opcodesArray[readByte];
     }
 }
