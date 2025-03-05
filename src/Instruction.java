@@ -32,11 +32,13 @@ public class Instruction {
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = null;
+        this.num_bytes = num_bytes;
     }
-    public Instruction(Operation operation, Operand operandToSet, Operand operand, int num_byte){
+    public Instruction(Operation operation, Operand operandToSet, Operand operand, int num_bytes){
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = operandToSet;
+        this.num_bytes = num_bytes;
     }
 
     // TODO: add more constructors for other operations
