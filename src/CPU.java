@@ -8,7 +8,6 @@ public class CPU {
     int[] memory;
 
     public CPU(){
-        registers = new Registers();
         memory = new int[0xFFFF]; // 65536 bytes
         loadROM("ROMs/snake.gb"); // FIXME
     }
@@ -29,6 +28,9 @@ public class CPU {
                     addToA(instruction.next_bytes[0]);
                     break;
                 }
+                if (instruction.operand == Operand.HL){
+                    addToA(memory[registers.readValFromEnum(instruction.operand)]);
+                }
                 // otherwise, add from another register
                 addToA(registers.readValFromEnum(instruction.operand));
                 break;
@@ -42,7 +44,7 @@ public class CPU {
 
 
             case Operation.SUB:
-                System.out.println("SUBTRACTING");
+                subFromA(registers.readValFromEnum(instruction.operand));
                 break;
 
 
