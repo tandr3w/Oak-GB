@@ -62,12 +62,15 @@ public class CPU {
                 } 
                 
                 // If the operand is a 16-bit register, valueToLoad = memory[value of register]
-                // There is no load operation where the operand is SP
+                // There is no 8-bit load operation where the operand is SP
                 else if (instruction.operand == Operand.BC 
                 || instruction.operand == Operand.DE 
                 || instruction.operand == Operand.HL ) {
                     valToLoad = memory[registers.readValFromEnum(instruction.operand)];
                 } 
+                
+                // TODO: ADD a8
+                
                 // otherwise, the operant is a register
                 else {;
                     valToLoad = registers.readValFromEnum(instruction.operand);
@@ -89,6 +92,7 @@ public class CPU {
                     loadToMemory(address, valToLoad);
                     break;
                 }
+                // TODO: ADD a8 for operantToSet
 
                 // OTHERWISE, operandToSet should be some register
                 loadToRegister(instruction.operandToSet, valToLoad);
