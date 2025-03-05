@@ -25,7 +25,8 @@ public class Registers {
         sp = 0xFFFE;
         pc = 0x0100;
     }
-    public int read_val_from_enum(ArithmeticTarget target){
+
+    public static int readValFromEnum(ArithmeticTarget target){
         switch (target){
             case ArithmeticTarget.A:
                 return a;
