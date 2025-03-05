@@ -39,7 +39,8 @@ public class CPU {
                     add16(Operand.SP, instruction.next_bytes[0]);
                     break;
                 }
-                // TODO: Code else statement for when we are adding to the HL register
+                // Add to HL
+                add16(Operand.HL, registers.readValFromEnum(instruction.operand));
                 break;
 
 
