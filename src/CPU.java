@@ -11,14 +11,14 @@ public class CPU {
 
     public void execute(Instruction instruction){
         switch (instruction.type){
-            case Instruction.Type.ADD:
+            case Instruction.Operation.ADD:
                 int n = registers.readValFromEnum(instruction.operand);
                 int a = registers.a;
                 int result = n + a;
                 // TODO: set carry flags and handle overflow
                 registers.a = result;
                 break;
-            case Instruction.Type.SUB:
+            case Instruction.Operation.SUB:
                 System.out.println("SUBTRACTING");
                 break;
         }

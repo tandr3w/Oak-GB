@@ -7,6 +7,7 @@ public class Main {
         registers.b = 0xFF;
         registers.c = 0xAF;
         printHex(registers.get_bc());
+
     }
     public static void printHex(int val){
         String hex = Integer.toHexString(val);

@@ -5,14 +5,14 @@ enum Operand {
 }
 
 public class Instruction {
-    public static enum Type {
+    public static enum Operation {
         ADD,
         SUB,
     }
-    public Type type;
+    public Operation operation;
     public Operand operand;
-    public Instruction(Type type, Operand operand){
-        this.type = type;
+    public Instruction(Operation operation, Operand operand){
+        this.operation = operation;
         this.operand = operand;
     }
 
