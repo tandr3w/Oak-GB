@@ -13,6 +13,7 @@ public class CPU {
     public void execute(Instruction instruction){
         switch (instruction.type){
             case Instruction.Type.ADD:
+                // TODO: Automate this part by creating a generic ADD function and a GetRegisterValueFromEnum function.
                 switch (instruction.target){
                     case ArithmeticTarget.C:
                         // TODO: Implement add instruction on C
