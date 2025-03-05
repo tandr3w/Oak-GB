@@ -14,13 +14,24 @@ public class CPU {
     }
 
     public int execute(Instruction instruction){
-        registers.pc += 1;
+        // Load correct number of bytes
+        if (instruction.num_bytes > 1){
+            instruction.next_bytes = new int[instruction.num_bytes - 1];
+            for (int i=0; i<instruction.num_bytes-1; i++){
+                if (instruction.immediate){
+                    instruction.next_bytes[i] = memory[registers.pc + i + 1];
+                }
+                else {
+                    instruction.next_bytes[i] = memory[memory[registers.pc + i + 1]];
+                }
+            }
+        }
+        registers.pc += instruction.num_bytes;
         switch (instruction.operation){
 
             case Operation.ADD:
                 if (instruction.operand == Operand.n8){
-                    addToA(memory[registers.pc]);
-                    registers.pc += 1;
+                    addToA(instruction.next_bytes[0]);
                     break;
                 }
                 // otherwise, add from another register
@@ -28,8 +39,7 @@ public class CPU {
                 break;
             case Operation.ADD16:
                 if (instruction.operandToSet == Operand.SP && instruction.operand == Operand.e8){
-                    add16(Operand.SP, memory[registers.pc]);
-                    registers.pc += 1;
+                    add16(Operand.SP, instruction.next_bytes[0]);
                     break;
                 }
                 // TODO: Code else statement for when we are adding to the HL register
@@ -48,11 +58,7 @@ public class CPU {
                 int valToLoad;
                 if (instruction.operand == Operand.a16){
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
-                    int highByte = memory[registers.pc];
-                    registers.pc+=1;
-                    int lowByte = memory[registers.pc];
-                    registers.pc+=1;
-                    valToLoad = memory[((highByte & 0xFF) << 8) | (lowByte & 0xFF)];
+                    valToLoad = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
                 } 
                 
                 // If the operand is a 16-bit register, valueToLoad = memory[value of register]
@@ -70,11 +76,7 @@ public class CPU {
                 
                 if (instruction.operandToSet == Operand.a16) {
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
-                    int highByte = memory[registers.pc];
-                    registers.pc+=1;
-                    int lowByte = memory[registers.pc];
-                    registers.pc+=1;
-                    int address = memory[((highByte & 0xFF) << 8) | (lowByte & 0xFF)];
+                    int address = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
                     loadToMemory(address, valToLoad);
                     break;
                 }
