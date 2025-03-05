@@ -10,31 +10,87 @@ public class CPU {
     public CPU(){
         registers = new Registers();
         memory = new int[0xFFFF]; // 65536 bytes
-        loadROM("ROMs/snake.gb");
+        loadROM("ROMs/snake.gb"); // FIXME
     }
 
     public int execute(Instruction instruction){
         registers.pc += 1;
         switch (instruction.operation){
-            case Instruction.Operation.ADD:
+
+            case Operation.ADD:
                 if (instruction.operand == Operand.n8){
                     addToA(memory[registers.pc]);
                     registers.pc += 1;
                     break;
                 }
+                // otherwise, add from another register
                 addToA(registers.readValFromEnum(instruction.operand));
                 break;
-            case Instruction.Operation.ADD16:
+            case Operation.ADD16:
                 if (instruction.operandToSet == Operand.SP && instruction.operand == Operand.e8){
                     add16(Operand.SP, memory[registers.pc]);
                     registers.pc += 1;
+                    break;
                 }
+                // TODO: Code else statement for when we are adding to the HL register
                 break;
-            case Instruction.Operation.SUB:
+
+
+            case Operation.SUB:
                 System.out.println("SUBTRACTING");
                 break;
-            case Instruction.Operation.LD:
-                // TODO:code load
+
+
+            case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
+                // instruction.operand is the value that will be loaded
+
+                // get the value that needs to be loaded first
+                int valToLoad;
+                if (instruction.operand == Operand.a16){
+                    // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
+                    int highByte = memory[registers.pc];
+                    registers.pc+=1;
+                    int lowByte = memory[registers.pc];
+                    registers.pc+=1;
+                    valToLoad = memory[((highByte & 0xFF) << 8) | (lowByte & 0xFF)];
+                } 
+                
+                // If the operand is a 16-bit register, valueToLoad = memory[value of register]
+                // There is no load operation where the operand is SP
+                else if (instruction.operand == Operand.BC 
+                || instruction.operand == Operand.DE 
+                || instruction.operand == Operand.HL ) {
+                    valToLoad = memory[registers.readValFromEnum(instruction.operand)];
+                } else {
+                    // added this to avoid compile error
+                    valToLoad = 0;
+                    System.out.println("error with second operant");
+                }
+                
+                
+                if (instruction.operandToSet == Operand.a16) {
+                    // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
+                    int highByte = memory[registers.pc];
+                    registers.pc+=1;
+                    int lowByte = memory[registers.pc];
+                    registers.pc+=1;
+                    int address = memory[((highByte & 0xFF) << 8) | (lowByte & 0xFF)];
+                    loadToMemory(address, valToLoad);
+                    break;
+                }
+
+                // load to memory address stored in the register
+                if (instruction.operandToSet == Operand.BC 
+                || instruction.operandToSet == Operand.DE 
+                || instruction.operandToSet == Operand.HL ) {
+                    int address = registers.readValFromEnum(instruction.operand);
+                    loadToMemory(address, valToLoad);
+                    break;
+                }
+
+                // OTHERWISE, operandToSet should be some register
+                loadToRegister(instruction.operandToSet, valToLoad);
+
                 break;
             default:
                 System.out.println("Not implemented!");
@@ -43,13 +99,18 @@ public class CPU {
         return registers.pc;
     }
 
-
-    // 16 bit load
-    // 8 bit load
-    // 16 bit in to A
-    public void load(Operand target, int val) {
+    // 8-bit
+    public void loadToRegister(Operand target, int val) { 
+        
         registers.setValToEnum(target, val);
     }
+    // for 8-bit, only loads from register A
+    public void loadToMemory(int address, int val) {
+        
+    }
+
+    // if target is memory --> pass in memory address ;-;what
+
     public void addToA(int val){
         int a = registers.a;
         int result = val + a;
