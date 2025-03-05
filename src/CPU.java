@@ -10,7 +10,7 @@ public class CPU {
     }
 
     public void execute(Instruction instruction){
-        switch (instruction.type){
+        switch (instruction.operation){
             case Instruction.Operation.ADD:
                 int n = registers.readValFromEnum(instruction.operand);
                 int a = registers.a;
