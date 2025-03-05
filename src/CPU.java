@@ -21,6 +21,7 @@ public class CPU {
             }
         }
         registers.pc += instruction.num_bytes;
+        
         switch (instruction.operation){
 
             case Operation.ADD:
@@ -67,7 +68,9 @@ public class CPU {
                     valToLoad = memory[registers.readValFromEnum(instruction.operand)];
                 } 
                 
-                // TODO: ADD a8
+                else if (instruction.operand == Operand.a8) {
+                    valToLoad = memory[instruction.next_bytes[0] + 0xFF00];
+                }
                 
                 // otherwise, the operant is a register
                 else {;
@@ -90,7 +93,12 @@ public class CPU {
                     loadToMemory(address, valToLoad);
                     break;
                 }
-                // TODO: ADD a8 for operantToSet
+
+                if (instruction.operand == Operand.a8) {
+                    int address = instruction.next_bytes[0] + 0xFF00;
+                    loadToMemory(address, valToLoad);
+                    break;
+                }
 
                 // OTHERWISE, operandToSet should be some register
                 loadToRegister(instruction.operandToSet, valToLoad);
