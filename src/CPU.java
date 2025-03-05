@@ -4,7 +4,7 @@ public class CPU {
     Registers registers;
     int[] memory;
 
-    public CPU(){  
+    public CPU(){
         registers = new Registers();
         memory = new int[0xFFFF]; // 65536 bytes
     }
@@ -30,15 +30,30 @@ public class CPU {
     public void addToA(int val){
         int a = registers.a;
         int result = val + a;
-        boolean did_overflow = false;
+        boolean didOverflow = false;
         if (result > 0xFF){
-           did_overflow = true;
-           result = result & 0xFF; 
+            didOverflow = true;
+            result = result & 0xFF; 
         }  
         registers.set_f_zero(result == 0);
         registers.set_f_subtract(false);
-        registers.set_f_carry(did_overflow);
+        registers.set_f_carry(didOverflow);
         registers.set_f_halfcarry((a & 0xF) + (val & 0xF) > 0xF);
         registers.a = result;
+    }
+
+    public void subFromA(int val) {
+        int a = registers.a;
+        int result = a - val;
+        boolean didUnderflow = false;
+        if (result < 0x00) {
+            didUnderflow = true;
+            // java automatically converts negative ints to binary
+            result = result & 0xFF;
+        }
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(true);
+        registers.set_f_carry(didUnderflow);
+        registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) & 0x10) != 0);
     }
 }

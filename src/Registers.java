@@ -82,6 +82,7 @@ public class Registers {
         l = (val & 0xFF); // Set l to the second byte of val
     }
 
+
     public void set_f_zero(boolean val){
         if (val){
             f = f | 0b10000000;
@@ -89,6 +90,7 @@ public class Registers {
         else {
             f = f & 0b01111111;
         }    }
+
     public void set_f_subtract(boolean val){
         if (val){
             f = f | 0b01000000;
