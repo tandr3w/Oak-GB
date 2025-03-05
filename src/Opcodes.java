@@ -6,8 +6,8 @@ public class Opcodes {
         // nvm its simple; switch to prefixed when CB instruction is executed
         opcodesArray = new Instruction[0x100]; // 0xFF represents 255 in binary, but array needs to hold 256 values
         opcodesArray[0x02] = new Instruction(Operation.LD, Operand.MemBC, Operand.A, 1);
-        opcodesArray[0x12] = new Instruction(Operation.LD, Operand.MemDE, Operand.A, 1);
         opcodesArray[0x09] = new Instruction(Operation.ADD16, Operand.HL, Operand.BC, 1);
+        opcodesArray[0x12] = new Instruction(Operation.LD, Operand.MemDE, Operand.A, 1);
         opcodesArray[0x19] = new Instruction(Operation.ADD16, Operand.HL, Operand.DE, 1);
         opcodesArray[0x29] = new Instruction(Operation.ADD16, Operand.HL, Operand.HL, 1);
         opcodesArray[0x39] = new Instruction(Operation.ADD16, Operand.HL, Operand.SP, 1);
@@ -75,7 +75,7 @@ public class Opcodes {
         opcodesArray[0x7E] = new Instruction(Operation.LD, Operand.A, Operand.MemHL, 1);
         opcodesArray[0x7F] = new Instruction(Operation.LD, Operand.A, Operand.A, 1);
         opcodesArray[0x80] = new Instruction(Operation.ADD, Operand.B, 1);
-        opcodesArray[0x80] = new Instruction(Operation.ADD, Operand.C, 1);
+        opcodesArray[0x81] = new Instruction(Operation.ADD, Operand.C, 1);
         opcodesArray[0x82] = new Instruction(Operation.ADD, Operand.D, 1);
         opcodesArray[0x83] = new Instruction(Operation.ADD, Operand.E, 1);
         opcodesArray[0x84] = new Instruction(Operation.ADD, Operand.H, 1);
