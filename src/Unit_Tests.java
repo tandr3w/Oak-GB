@@ -12,11 +12,12 @@ public class Unit_Tests {
     public int run(){
         // Test add operation
         // Test all opcodes do not error
-        for (int i=0; i<0x10; i++){
+        for (int i=0; i<0x100; i++){
             System.out.println("Testing: " + Integer.toString(i));
             try{
                 if (opcodes.byteToInstruction(i) != null){
                     cpu.execute(opcodes.byteToInstruction(i));
+                    System.out.println("Testing Passed");
                 }
             }
             catch(Exception e){
