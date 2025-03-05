@@ -94,9 +94,10 @@ public class CPU {
                     break;
                 }
 
-                else if (instruction.operand == Operand.a8) {
+                if (instruction.operand == Operand.a8) {
                     int address = instruction.next_bytes[0] + 0xFF00;
                     loadToMemory(address, valToLoad);
+                    break;
                 }
 
                 // OTHERWISE, operandToSet should be some register
