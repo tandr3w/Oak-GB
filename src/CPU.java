@@ -13,14 +13,11 @@ public class CPU {
     public void execute(Instruction instruction){
         switch (instruction.type){
             case Instruction.Type.ADD:
-                // TODO: Automate this part by creating a generic ADD function and a GetRegisterValueFromEnum function.
-                switch (instruction.target){
-                    case ArithmeticTarget.C:
-                        // TODO: Implement add instruction on C
-                        break;
-                    default:
-                        break;
-                }
+                int n = registers.read_val_from_enum(instruction.target);
+                int a = registers.a;
+                int result = n + a;
+                // TODO: set carry flags and handle overflow
+                registers.a = result;
                 break;
             case Instruction.Type.SUBTRACT:
                 System.out.println("SUBTRACTING");

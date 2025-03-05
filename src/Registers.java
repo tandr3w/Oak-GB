@@ -11,6 +11,33 @@ public class Registers {
     public Registers(){
 
     }
+    public int read_val_from_enum(ArithmeticTarget target){
+        switch (target){
+            case ArithmeticTarget.A:
+                return a;
+            case ArithmeticTarget.B:
+                return b;
+            case ArithmeticTarget.C:
+                return c;
+            case ArithmeticTarget.D:
+                return d;
+            case ArithmeticTarget.E:
+                return e;
+            case ArithmeticTarget.H:
+                return h;
+            case ArithmeticTarget.L:
+                return l;
+            case ArithmeticTarget.BC:
+                return get_bc();
+            case ArithmeticTarget.DE:
+                return get_de();
+            case ArithmeticTarget.HL:
+                return get_hl();
+            default:
+                return 0; // Should be unreachable
+        }
+    }
+
     public int get_af(){
         return (a << 0x8) | f;
     }
