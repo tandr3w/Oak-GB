@@ -75,7 +75,6 @@ public class CPU {
                     break;
                 }
 
-
                 if (instruction.operand == Operand.a8) {
                     int address = instruction.next_bytes[0] + 0xFF00;
                     memory[address] = valToLoad;
