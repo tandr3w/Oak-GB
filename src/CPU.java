@@ -13,14 +13,18 @@ public class CPU {
         switch (instruction.operation){
             case Instruction.Operation.ADD:
                 int n = registers.readValFromEnum(instruction.operand);
-                int a = registers.a;
-                int result = n + a;
-                // TODO: set carry flags and handle overflow
-                registers.a = result;
+                addToA(n);
                 break;
             case Instruction.Operation.SUB:
                 System.out.println("SUBTRACTING");
                 break;
         }
+    }
+
+    public void addToA(int val){
+        int a = registers.a;
+        int result = val + a;
+        // TODO: set carry flags and handle overflow
+        registers.a = result;
     }
 }
