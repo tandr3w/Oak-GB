@@ -35,7 +35,10 @@ public class CPU {
            did_overflow = true;
            result = result & 0xFF; 
         }  
-        // TODO: set carry flags and handle overflow
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(false);
+        registers.set_f_carry(did_overflow);
+        registers.set_f_halfcarry((a & 0xF) + (val & 0xF) > 0xF);
         registers.a = result;
     }
 }
