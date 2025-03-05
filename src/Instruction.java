@@ -25,20 +25,17 @@ public class Instruction {
     public Operand operandToSet; // 1st operand
     public int num_bytes;
     public int[] next_bytes;
-    public boolean immediate;
 
 
-    public Instruction(Operation operation, Operand operand, int num_bytes, boolean immediate){
+    public Instruction(Operation operation, Operand operand, int num_bytes){
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = null;
-        this.immediate = immediate;
     }
-    public Instruction(Operation operation, Operand operandToSet, Operand operand, int num_byte, boolean immediate){
+    public Instruction(Operation operation, Operand operandToSet, Operand operand, int num_byte){
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = operandToSet;
-        this.immediate = immediate;
     }
 
     // TODO: add more constructors for other operations

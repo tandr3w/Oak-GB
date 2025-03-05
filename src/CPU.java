@@ -18,12 +18,7 @@ public class CPU {
         if (instruction.num_bytes > 1){
             instruction.next_bytes = new int[instruction.num_bytes - 1];
             for (int i=0; i<instruction.num_bytes-1; i++){
-                if (instruction.immediate){
-                    instruction.next_bytes[i] = memory[registers.pc + i + 1];
-                }
-                else {
-                    instruction.next_bytes[i] = memory[memory[registers.pc + i + 1]];
-                }
+                instruction.next_bytes[i] = memory[registers.pc + i + 1];
             }
         }
         registers.pc += instruction.num_bytes;
