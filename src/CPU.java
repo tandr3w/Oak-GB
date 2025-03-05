@@ -61,10 +61,10 @@ public class CPU {
                 || instruction.operand == Operand.DE 
                 || instruction.operand == Operand.HL ) {
                     valToLoad = memory[registers.readValFromEnum(instruction.operand)];
-                } else {
-                    // added this to avoid compile error
-                    valToLoad = 0;
-                    System.out.println("error with second operant");
+                } 
+                // otherwise, the operant is a register
+                else {;
+                    valToLoad = registers.readValFromEnum(instruction.operand);
                 }
                 
                 
@@ -101,12 +101,11 @@ public class CPU {
 
     // 8-bit
     public void loadToRegister(Operand target, int val) { 
-        
         registers.setValToEnum(target, val);
     }
     // for 8-bit, only loads from register A
     public void loadToMemory(int address, int val) {
-        
+        memory[address] = val;
     }
 
     // if target is memory --> pass in memory address ;-;what
