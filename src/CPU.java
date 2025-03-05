@@ -19,7 +19,7 @@ public class CPU {
                 // TODO: set carry flags and handle overflow
                 registers.a = result;
                 break;
-            case Instruction.Type.SUBTRACT:
+            case Instruction.Type.SUB:
                 System.out.println("SUBTRACTING");
                 break;
         }

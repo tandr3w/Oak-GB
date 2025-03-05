@@ -7,7 +7,7 @@ enum ArithmeticTarget {
 public class Instruction {
     public enum Type {
         ADD,
-        SUBTRACT
+        SUB,
     }
     public Type type;
     public ArithmeticTarget target;
@@ -15,7 +15,7 @@ public class Instruction {
     public Instruction(Type type, ArithmeticTarget target){
         this.type = type;
         this.target = target;
-        opcodes = new Instruction[0xFFFF];
+        opcodes = new Instruction[0xFFFF]; // TODO: set this to an actually appropriate size...
         opcodes[0x80] = new Instruction(Type.ADD, ArithmeticTarget.B);
         opcodes[0x81] = new Instruction(Type.ADD, ArithmeticTarget.C);
         opcodes[0x82] = new Instruction(Type.ADD, ArithmeticTarget.D);
