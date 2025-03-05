@@ -13,7 +13,7 @@ public class Opcodes {
         opcodesArray[0x86] = new Instruction(Instruction.Operation.ADD, Operand.HL);
         opcodesArray[0x87] = new Instruction(Instruction.Operation.ADD, Operand.A); 
         opcodesArray[0xC6] = new Instruction(Instruction.Operation.ADD, Operand.n8);  
- 
+
     }
 
     public Instruction byteToInstruction(int readByte) {
