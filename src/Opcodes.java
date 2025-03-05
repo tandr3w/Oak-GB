@@ -1,6 +1,6 @@
 package src;
 public class Opcodes {
-    private Instruction[] opcodesArray;
+    public Instruction[] opcodesArray;
     public Opcodes() {
         // TODO: figure out how to handle prefixed/unprefixed opcodes
         // nvm its simple; switch to prefixed when CB instruction is executed
@@ -87,6 +87,10 @@ public class Opcodes {
     }
 
     public Instruction byteToInstruction(int readByte) {
+        if (opcodesArray[readByte] == null){
+            System.out.println("Opcode " + Integer.toString(readByte) + " is not implemented yet.");
+            return null;
+        }
         return opcodesArray[readByte];
     }
 

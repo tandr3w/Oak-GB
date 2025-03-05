@@ -160,8 +160,5 @@ public class CPU {
             System.out.println("error");
             e.printStackTrace();
         } 
-        for (int i=0x100; i<0x150;i++) {
-            System.out.println(memory[i]);
-        }
     }
 }
