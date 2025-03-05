@@ -11,9 +11,12 @@ public class CPU {
 
     public void execute(Instruction instruction){
         switch (instruction.operation){
-            case Instruction.Operation.ADD: // will need 
-                int n = registers.readValFromEnum(instruction.operand);
-                addToA(n);
+            case Instruction.Operation.ADD:
+                if (instruction.operand == Operand.NUMBER){
+                    addToA(instruction.value);
+                    break;
+                }
+                addToA(registers.readValFromEnum(instruction.operand));
                 break;
             case Instruction.Operation.SUB:
                 System.out.println("SUBTRACTING");
