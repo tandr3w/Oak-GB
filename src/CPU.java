@@ -9,6 +9,7 @@ public class CPU {
 
     public CPU(){
         memory = new int[0xFFFF]; // 65536 bytes
+        registers = new Registers(this);
         loadROM("ROMs/snake.gb"); // FIXME
     }
 
@@ -28,9 +29,6 @@ public class CPU {
                 if (instruction.operand == Operand.n8){
                     addToA(instruction.next_bytes[0]);
                     break;
-                }
-                if (instruction.operand == Operand.HL){
-                    addToA(memory[registers.readValFromEnum(instruction.operand)]);
                 }
                 // otherwise, add from another register
                 addToA(registers.readValFromEnum(instruction.operand));
@@ -60,14 +58,6 @@ public class CPU {
                     valToLoad = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
                 } 
                 
-                // If the operand is a 16-bit register, valueToLoad = memory[value of register]
-                // There is no 8-bit load operation where the operand is SP
-                else if (instruction.operand == Operand.BC 
-                || instruction.operand == Operand.DE 
-                || instruction.operand == Operand.HL ) {
-                    valToLoad = memory[registers.readValFromEnum(instruction.operand)];
-                } 
-                
                 else if (instruction.operand == Operand.a8) {
                     valToLoad = memory[instruction.next_bytes[0] + 0xFF00];
                 }
@@ -81,27 +71,19 @@ public class CPU {
                 if (instruction.operandToSet == Operand.a16) {
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
                     int address = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
-                    loadToMemory(address, valToLoad);
+                    memory[address] = valToLoad;
                     break;
                 }
 
-                // load to memory address stored in the register
-                if (instruction.operandToSet == Operand.BC 
-                || instruction.operandToSet == Operand.DE 
-                || instruction.operandToSet == Operand.HL ) {
-                    int address = registers.readValFromEnum(instruction.operand);
-                    loadToMemory(address, valToLoad);
-                    break;
-                }
 
                 if (instruction.operand == Operand.a8) {
                     int address = instruction.next_bytes[0] + 0xFF00;
-                    loadToMemory(address, valToLoad);
+                    memory[address] = valToLoad;
                     break;
                 }
 
                 // OTHERWISE, operandToSet should be some register
-                loadToRegister(instruction.operandToSet, valToLoad);
+                registers.setValToEnum(instruction.operandToSet, valToLoad);
 
                 break;
             default:
@@ -109,15 +91,6 @@ public class CPU {
                 break;
         }
         return registers.pc;
-    }
-
-    // 8-bit
-    public void loadToRegister(Operand target, int val) { 
-        registers.setValToEnum(target, val);
-    }
-    // for 8-bit, only loads from register A
-    public void loadToMemory(int address, int val) {
-        memory[address] = val;
     }
 
     // if target is memory --> pass in memory address ;-;what

@@ -12,8 +12,9 @@ public class Registers {
     // sp & pc are both registers
     int sp;
     int pc;
+    CPU cpu;
 
-    public Registers(){
+    public Registers(CPU cpu){
         a = 0x01;
         f = 0xB0;
         b = 0x00;
@@ -24,6 +25,7 @@ public class Registers {
         l = 0x4D;
         sp = 0xFFFE;
         pc = 0x0100;
+        this.cpu = cpu;
     }
 
     public int readValFromEnum(Operand operand){
@@ -48,6 +50,12 @@ public class Registers {
                 return get_de();
             case Operand.HL:
                 return get_hl();
+            case Operand.MemBC:
+                return cpu.memory[get_bc()];
+            case Operand.MemDE:
+                return cpu.memory[get_de()];
+            case Operand.MemHL:
+                return cpu.memory[get_hl()];
             case Operand.SP:
                 return sp;
             default:
@@ -89,6 +97,15 @@ public class Registers {
                 break;
             case Operand.SP:
                 sp = val;
+                break;
+            case Operand.MemBC:
+                cpu.memory[get_bc()] = val;
+                break;
+            case Operand.MemDE:
+                cpu.memory[get_de()] = val;
+                break;
+            case Operand.MemHL:
+                cpu.memory[get_hl()] = val;
                 break;
             default:
                 throw new Error("Attempted Read Of Invalid Register Operand: " + operand.name());

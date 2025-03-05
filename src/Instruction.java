@@ -1,7 +1,7 @@
 package src;
 
 enum Operand {
-    A, B, C, D, E, H, L, BC, DE, HL,
+    A, B, C, D, E, H, L, BC, DE, HL, MemHL, MemBC, MemDE,
     SP, PC,
     
     n8, e8, n16, // for when we are using a given number instead of a register value
