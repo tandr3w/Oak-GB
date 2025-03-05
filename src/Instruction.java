@@ -8,7 +8,6 @@ enum Operand {
     
     a8, // a8 is unsigned 8-bit that is added to FF00 to make a 16-bit address  
     a16,
-
 }
 
 enum Operation {
@@ -28,8 +27,9 @@ public class Instruction {
     public Instruction(Operation operation, Operand operand){
         this.operation = operation;
         this.operand = operand;
+        this.operandToSet = null;
     }
-    public Instruction(Operation operation, Operand operand, Operand operandToSet){
+    public Instruction(Operation operation, Operand operandToSet, Operand operand){
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = operandToSet;
