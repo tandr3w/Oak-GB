@@ -49,7 +49,7 @@ public class Registers {
             case Operand.HL:
                 return get_hl();
             default:
-                throw new Error("Attempted Read Of Invalid Register Operand");
+                throw new Error("Attempted Read Of Invalid Register Operand: " + operand.name());
         }
     }
 
