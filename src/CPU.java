@@ -1,4 +1,5 @@
 package src;
+
 public class CPU {
     Registers registers;
     int[] memory;
@@ -7,5 +8,22 @@ public class CPU {
     public CPU(){  
         registers = new Registers();
         memory = new int[0xFFFF]; // 65536 bytes
+    }
+
+    public void execute(Instruction instruction){
+        switch (instruction.type){
+            case Instruction.Type.ADD:
+                switch (instruction.target){
+                    case ArithmeticTarget.C:
+                        // TODO: Implement add instruction on C
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case Instruction.Type.SUBTRACT:
+                System.out.println("SUBTRACTING");
+                break;
+        }
     }
 }
