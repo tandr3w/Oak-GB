@@ -8,8 +8,19 @@ public class Registers {
     int f;
     int h;
     int l;
+    int sp;
+    int pc;
     public Registers(){
-
+        int a = 0x01;
+        int f = 0xB0;
+        int b = 0x00;
+        int c = 0x13;
+        int d = 0x00;
+        int e = 0xD8;
+        int h = 0x01;
+        int l = 0x4D;
+        int sp = 0xFFFE;
+        int pc = 0x0100;
     }
     public int get_af(){
         return (a << 0x8) | f;
