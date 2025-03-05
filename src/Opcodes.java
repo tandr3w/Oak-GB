@@ -15,6 +15,14 @@ public class Opcodes {
     }
 
     public Instruction byteToInstruction(int readByte) {
-        return opcodesArray[readByte];
+        // Handle variable bytes
+        int nibble1 = (readByte & 0xFF00);
+        int nibble2 = (readByte & 0x00FF);
+        switch(nibble1){
+            case 0xC6:
+                return new Instruction(Instruction.Operation.ADD, nibble2);
+            default:
+                return opcodesArray[readByte];
+        }
     }
 }

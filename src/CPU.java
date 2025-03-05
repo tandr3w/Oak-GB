@@ -11,7 +11,7 @@ public class CPU {
 
     public void execute(Instruction instruction){
         switch (instruction.operation){
-            case Instruction.Operation.ADD:
+            case Instruction.Operation.ADD: // will need 
                 int n = registers.readValFromEnum(instruction.operand);
                 addToA(n);
                 break;
