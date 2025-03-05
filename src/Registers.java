@@ -81,4 +81,34 @@ public class Registers {
         h = ((val & 0xFF00) >> 8); // Set h to the first bytes of val
         l = (val & 0xFF); // Set l to the second byte of val
     }
+
+    public void set_f_zero(boolean val){
+        if (val){
+            f = f | 0b10000000;
+        }
+        else {
+            f = f & 0b01111111;
+        }    }
+    public void set_f_subtract(boolean val){
+        if (val){
+            f = f | 0b01000000;
+        }
+        else {
+            f = f & 0b10111111;
+        }    }
+    public void set_f_carry(boolean val){
+        if (val){
+            f = f | 0b00010000;
+        }
+        else {
+            f = f & 0b11101111;
+        }    }
+    public void set_f_halfcarry(boolean val){
+        if (val){
+            f = f | 0b00100000;
+        }
+        else {
+            f = f & 0b11011111;
+        }
+    }
 }

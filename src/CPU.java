@@ -30,6 +30,11 @@ public class CPU {
     public void addToA(int val){
         int a = registers.a;
         int result = val + a;
+        boolean did_overflow = false;
+        if (result > 0xFF){
+           did_overflow = true;
+           result = result & 0xFF; 
+        }  
         // TODO: set carry flags and handle overflow
         registers.a = result;
     }
