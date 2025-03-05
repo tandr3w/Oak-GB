@@ -5,14 +5,14 @@ public class Opcodes {
     private static Instruction[] opcodes = new Instruction[0xFF];
 
     static {
-        opcodes[0x80] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.B);
-        opcodes[0x81] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.C);
-        opcodes[0x82] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.D);
-        opcodes[0x83] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.E);
-        opcodes[0x84] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.H);
-        opcodes[0x85] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.L);
-        opcodes[0x86] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.HL);
-        opcodes[0x87] = new Instruction(Instruction.Type.ADD, ArithmeticTarget.A); 
+        opcodes[0x80] = new Instruction(Instruction.Type.ADD, Operand.B);
+        opcodes[0x81] = new Instruction(Instruction.Type.ADD, Operand.C);
+        opcodes[0x82] = new Instruction(Instruction.Type.ADD, Operand.D);
+        opcodes[0x83] = new Instruction(Instruction.Type.ADD, Operand.E);
+        opcodes[0x84] = new Instruction(Instruction.Type.ADD, Operand.H);
+        opcodes[0x85] = new Instruction(Instruction.Type.ADD, Operand.L);
+        opcodes[0x86] = new Instruction(Instruction.Type.ADD, Operand.HL);
+        opcodes[0x87] = new Instruction(Instruction.Type.ADD, Operand.A); 
     }   
 
     public static Instruction byteToInstruction(int readByte) {

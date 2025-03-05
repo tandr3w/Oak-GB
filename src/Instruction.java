@@ -1,6 +1,6 @@
 package src;
 
-enum ArithmeticTarget {
+enum Operand {
     A, B, C, D, E, H, L, BC, DE, HL
 }
 
@@ -10,10 +10,10 @@ public class Instruction {
         SUB,
     }
     public Type type;
-    public ArithmeticTarget target;
-    public Instruction(Type type, ArithmeticTarget target){
+    public Operand operand;
+    public Instruction(Type type, Operand operand){
         this.type = type;
-        this.target = target;
+        this.operand = operand;
     }
 
     // TODO: add more constructors for other operations

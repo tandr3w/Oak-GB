@@ -26,27 +26,27 @@ public class Registers {
         pc = 0x0100;
     }
 
-    public int readValFromEnum(ArithmeticTarget target){
-        switch (target){
-            case ArithmeticTarget.A:
+    public int readValFromEnum(Operand operand){
+        switch (operand){
+            case Operand.A:
                 return a;
-            case ArithmeticTarget.B:
+            case Operand.B:
                 return b;
-            case ArithmeticTarget.C:
+            case Operand.C:
                 return c;
-            case ArithmeticTarget.D:
+            case Operand.D:
                 return d;
-            case ArithmeticTarget.E:
+            case Operand.E:
                 return e;
-            case ArithmeticTarget.H:
+            case Operand.H:
                 return h;
-            case ArithmeticTarget.L:
+            case Operand.L:
                 return l;
-            case ArithmeticTarget.BC:
+            case Operand.BC:
                 return get_bc();
-            case ArithmeticTarget.DE:
+            case Operand.DE:
                 return get_de();
-            case ArithmeticTarget.HL:
+            case Operand.HL:
                 return get_hl();
             default:
                 return 0; // Should be unreachable
