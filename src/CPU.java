@@ -22,6 +22,7 @@ public class CPU {
                 System.out.println("SUBTRACTING");
                 break;
         }
+        // TODO: This should return the next program counter
     }
 
     public void addToA(int val){

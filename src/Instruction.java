@@ -24,4 +24,5 @@ public class Instruction {
     }
 
     // TODO: add more constructors for other operations
+    // TODO: support multi-byte instructions
 }

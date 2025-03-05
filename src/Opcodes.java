@@ -17,4 +17,6 @@ public class Opcodes {
     public Instruction byteToInstruction(int readByte) {
         return opcodesArray[readByte];
     }
+    // TODO: support multi-byte instructions
+
 }
