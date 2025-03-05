@@ -49,7 +49,7 @@ public class Registers {
             case Operand.HL:
                 return get_hl();
             default:
-                return 0; // Should be unreachable
+                throw new Error("Attempted Read Of Invalid Register Operand");
         }
     }
 

@@ -9,11 +9,13 @@ public class CPU {
         memory = new int[0xFFFF]; // 65536 bytes
     }
 
-    public void execute(Instruction instruction){
+    public int execute(Instruction instruction){
+        registers.pc += 1;
         switch (instruction.operation){
             case Instruction.Operation.ADD:
-                if (instruction.operand == Operand.NUMBER){
-                    addToA(instruction.value);
+                if (instruction.operand == Operand.n8){
+                    addToA(memory[registers.pc]);
+                    registers.pc += 1;
                     break;
                 }
                 addToA(registers.readValFromEnum(instruction.operand));
@@ -22,7 +24,7 @@ public class CPU {
                 System.out.println("SUBTRACTING");
                 break;
         }
-        // TODO: This should return the next program counter
+        return registers.pc;
     }
 
     public void addToA(int val){
