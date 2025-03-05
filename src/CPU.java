@@ -12,7 +12,7 @@ public class CPU {
     public void execute(Instruction instruction){
         switch (instruction.type){
             case Instruction.Type.ADD:
-                int n = Registers.readValFromEnum(instruction.target);
+                int n = registers.readValFromEnum(instruction.target);
                 int a = registers.a;
                 int result = n + a;
                 // TODO: set carry flags and handle overflow

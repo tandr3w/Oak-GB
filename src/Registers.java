@@ -26,7 +26,7 @@ public class Registers {
         pc = 0x0100;
     }
 
-    public static int readValFromEnum(ArithmeticTarget target){
+    public int readValFromEnum(ArithmeticTarget target){
         switch (target){
             case ArithmeticTarget.A:
                 return a;
