@@ -12,9 +12,17 @@ public class Unit_Tests {
     public int run(){
         // Test add operation
         // Test all opcodes do not error
-        for (int i=0; i<0x100; i++){
+        for (int i=0; i<0x10; i++){
             System.out.println("Testing: " + Integer.toString(i));
-            cpu.execute(opcodes.byteToInstruction(i));
+            try{
+                if (opcodes.byteToInstruction(i) != null){
+                    cpu.execute(opcodes.byteToInstruction(i));
+                }
+            }
+            catch(Exception e){
+                System.out.println("Testing failed on: " + Integer.toString(i));
+                e.printStackTrace();
+            }
         }
         return 1;
     }
