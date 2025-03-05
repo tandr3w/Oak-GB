@@ -48,6 +48,48 @@ public class Registers {
                 return get_de();
             case Operand.HL:
                 return get_hl();
+            case Operand.SP:
+                return sp;
+            default:
+                throw new Error("Attempted Read Of Invalid Register Operand: " + operand.name());
+        }
+    }
+
+    public void setValToEnum(Operand operand, int val){
+        switch (operand){
+            case Operand.A:
+                a = val;
+                break;
+            case Operand.B:
+                b = val;
+                break;
+            case Operand.C:
+                c = val;
+                break;
+            case Operand.D:
+                d = val;
+                break;
+            case Operand.E:
+                e = val;
+                break;
+            case Operand.H:
+                h = val;
+                break;
+            case Operand.L:
+                l = val;
+                break;
+            case Operand.BC:
+                set_bc(val);
+                break;
+            case Operand.DE:
+                set_de(val);
+                break;
+            case Operand.HL:
+                set_hl(val);
+                break;
+            case Operand.SP:
+                sp = val;
+                break;
             default:
                 throw new Error("Attempted Read Of Invalid Register Operand: " + operand.name());
         }
@@ -113,4 +155,6 @@ public class Registers {
             f = f & 0b11011111;
         }
     }
+
+    
 }

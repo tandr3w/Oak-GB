@@ -1,6 +1,5 @@
 package src;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.FileInputStream;
 
@@ -25,13 +24,32 @@ public class CPU {
                 }
                 addToA(registers.readValFromEnum(instruction.operand));
                 break;
+            case Instruction.Operation.ADD16:
+                if (instruction.operandToSet == Operand.SP && instruction.operand == Operand.e8){
+                    add16(Operand.SP, memory[registers.pc]);
+                    registers.pc += 1;
+                }
+                break;
             case Instruction.Operation.SUB:
                 System.out.println("SUBTRACTING");
+                break;
+            case Instruction.Operation.LD:
+                // TODO:code load
+                break;
+            default:
+                System.out.println("Not implemented!");
                 break;
         }
         return registers.pc;
     }
 
+
+    // 16 bit load
+    // 8 bit load
+    // 16 bit in to A
+    public void load(Operand target, int val) {
+        registers.setValToEnum(target, val);
+    }
     public void addToA(int val){
         int a = registers.a;
         int result = val + a;
@@ -60,6 +78,27 @@ public class CPU {
         registers.set_f_subtract(true);
         registers.set_f_carry(didUnderflow);
         registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) & 0x10) != 0);
+    }
+
+    // val is unsigned 8
+    // operant is either HL or SP
+    public void add16(Operand target, int val) {
+        int targetVal = registers.readValFromEnum(target);
+        int result = val + targetVal;
+        boolean didOverflow = false;
+        if (result > 0xFFFF){
+            didOverflow = true;
+            result = result & 0xFFFF; 
+        }
+
+        if (target == Operand.SP){
+            // left untouched for HL
+            registers.set_f_zero(false); // always false for adding to sp
+        }
+        registers.set_f_subtract(false);
+        registers.set_f_carry(didOverflow);
+        registers.set_f_halfcarry((targetVal & 0xFF) + (val & 0xFF) > 0xFF);
+        registers.setValToEnum(target, result);
     }
 
     public void loadROM(String ROMName) {
