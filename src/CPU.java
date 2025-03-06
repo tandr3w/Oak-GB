@@ -398,8 +398,44 @@ public class CPU {
                 }
                 break;
 
+            case Operation.CALL:
+                if (instruction.operand == Operand.a16 && instruction.operandToSet == null){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    add16ToStack(registers.pc);
+                    jumpTo(addr);
+                }
+                if (instruction.operandToSet == Operand.JumpNZ){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_zero() == 0){
+                        add16ToStack(registers.pc);
+                        jumpTo(addr);
+                    }
+                }
+                if (instruction.operandToSet == Operand.JumpNC){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_carry() == 0){
+                        add16ToStack(registers.pc);
+                        jumpTo(addr);
+                    }
+                }
+                if (instruction.operandToSet == Operand.JumpC){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_carry() == 1){
+                        add16ToStack(registers.pc);
+                        jumpTo(addr);
+                    }
+                }
+                if (instruction.operandToSet == Operand.JumpZ){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_zero() == 1){
+                        add16ToStack(registers.pc);
+                        jumpTo(addr);
+                    }
+                }
+                break;
+
             default:
-                System.out.println("Not implemented!");
+                System.out.println("Attmpted run of operation that has not been implemented!");
                 break;
         }
         return registers.pc;
@@ -410,6 +446,15 @@ public class CPU {
     }
     // if target is memory --> pass in memory address ;-;what
 
+    public void add16ToStack(int val){
+        registers.sp--;
+        registers.sp &= 0xFFFF;
+        memory[registers.sp] = (val & 0xFF00) >> 8;
+        registers.sp--;
+        registers.sp &= 0xFFFF;
+        memory[registers.sp] = val & 0xFF;
+    }
+    
     public void addToA(int val){
         int a = registers.a;
         int result = val + a;

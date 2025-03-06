@@ -41,6 +41,10 @@ enum Operation {
     SCF,
     DAA,
     JP, JR,
+    CALL,
+    RET,
+    RST,
+    POP,
 }
 
 public class Instruction {
