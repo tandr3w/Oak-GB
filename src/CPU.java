@@ -140,7 +140,7 @@ public class CPU {
         }
         registers.set_f_subtract(false);
         registers.set_f_carry(didOverflow);
-        registers.set_f_halfcarry((targetVal & 0xFF) + (val & 0xFF) > 0xFF);
+        registers.set_f_halfcarry((targetVal & 0x0FFF) + (val & 0x0FFF) > 0x0FFF);
         registers.setValToEnum(target, result);
     }
 
