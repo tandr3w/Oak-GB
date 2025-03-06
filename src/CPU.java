@@ -120,6 +120,12 @@ public class CPU {
                 dec16(instruction.operandToSet);
                 break;
 
+            case Operation.CPL:
+                registers.a ^= 0xFF; // Flip all bits
+                registers.set_f_subtract(true);
+                registers.set_f_halfcarry(true);
+                break;
+
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
                 // get the value that needs to be loaded first

@@ -52,6 +52,9 @@ public class Opcodes {
         opcodesArray[0x2C] = new Instruction(Operation.INC, Operand.L, Operand.NONE, 1);
         opcodesArray[0x2D] = new Instruction(Operation.DEC, Operand.L, Operand.NONE, 1);
         opcodesArray[0x2E] = new Instruction(Operation.LD, Operand.L, Operand.n8, 2);
+        opcodesArray[0x2F] = new Instruction(Operation.CPL, 1);
+
+        // ROW 3
         opcodesArray[0x31] = new Instruction(Operation.LD16, Operand.SP, Operand.n16, 3);
         opcodesArray[0x32] = new Instruction(Operation.LDD, Operand.MemHL, Operand.A, 1);
         opcodesArray[0x33] = new Instruction(Operation.INC16, Operand.SP, Operand.NONE, 1);
