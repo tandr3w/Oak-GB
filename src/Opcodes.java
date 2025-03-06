@@ -83,6 +83,14 @@ public class Opcodes {
         opcodesArray[0x85] = new Instruction(Operation.ADD, Operand.L, 1);
         opcodesArray[0x86] = new Instruction(Operation.ADD, Operand.MemHL, 1);
         opcodesArray[0x87] = new Instruction(Operation.ADD, Operand.A, 1); 
+        opcodesArray[0x90] = new Instruction(Operation.SUB, Operand.B, 1);
+        opcodesArray[0x91] = new Instruction(Operation.SUB, Operand.C, 1);
+        opcodesArray[0x92] = new Instruction(Operation.SUB, Operand.D, 1);
+        opcodesArray[0x93] = new Instruction(Operation.SUB, Operand.E, 1);
+        opcodesArray[0x94] = new Instruction(Operation.SUB, Operand.H, 1);
+        opcodesArray[0x95] = new Instruction(Operation.SUB, Operand.L, 1);
+        opcodesArray[0x96] = new Instruction(Operation.SUB, Operand.MemHL, 1);
+        opcodesArray[0x97] = new Instruction(Operation.SUB, Operand.A, 1); 
         opcodesArray[0xC6] = new Instruction(Operation.ADD, Operand.n8, 2);  
         // opcodesArray[0xE8] = new Instruction(Operation.ADD16, Operand.SP, Operand.e8, 2);  
     }

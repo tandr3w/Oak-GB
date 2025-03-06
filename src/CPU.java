@@ -124,6 +124,7 @@ public class CPU {
         registers.set_f_subtract(true);
         registers.set_f_carry(didUnderflow);
         registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) & 0x10) != 0);
+        registers.a = result;
     }
 
     // val is unsigned 8-bit
