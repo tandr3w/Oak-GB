@@ -332,6 +332,72 @@ public class CPU {
 
             case Operation.NOP:
                 break;
+
+            case Operation.JP:
+                if (instruction.operand == Operand.a16){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    jumpTo(addr);
+                }
+                if (instruction.operand == Operand.JumpNZ){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_zero() == 0){
+                        jumpTo(addr);
+                    }
+                }
+                if (instruction.operand == Operand.JumpNC){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_carry() == 0){
+                        jumpTo(addr);
+                    }
+                }
+                if (instruction.operand == Operand.JumpC){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_carry() == 1){
+                        jumpTo(addr);
+                    }
+                }
+                if (instruction.operand == Operand.JumpZ){
+                    int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_zero() == 1){
+                        jumpTo(addr);
+                    }
+                }
+                if (instruction.operand == Operand.MemHL){
+                    jumpTo(registers.get_hl());
+                }
+                break;
+            
+            case Operation.JR:
+                if (instruction.operand == Operand.e8){
+                    int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
+                    jumpTo((registers.pc + toAdd) & 0xFFFF);
+                }
+                if (instruction.operand == Operand.JumpNZ){
+                    int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_zero() == 0){
+                        jumpTo((registers.pc + toAdd) & 0xFFFF);
+                    }
+                }
+                if (instruction.operand == Operand.JumpNC){
+                    int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_carry() == 0){
+                        jumpTo((registers.pc + toAdd) & 0xFFFF);
+                    }
+                }
+                if (instruction.operand == Operand.JumpC){
+                    int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_carry() == 1){
+                        jumpTo((registers.pc + toAdd) & 0xFFFF);
+                    }
+                }
+                if (instruction.operand == Operand.JumpZ){
+                    int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
+                    if (registers.get_f_zero() == 1){
+                        jumpTo((registers.pc + toAdd) & 0xFFFF);
+                    }
+                }
+                break;
+
             default:
                 System.out.println("Not implemented!");
                 break;
@@ -339,6 +405,9 @@ public class CPU {
         return registers.pc;
     }
 
+    public void jumpTo(int val){
+        registers.pc = val;
+    }
     // if target is memory --> pass in memory address ;-;what
 
     public void addToA(int val){
