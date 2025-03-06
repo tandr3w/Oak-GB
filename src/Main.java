@@ -6,8 +6,4 @@ public class Main {
         tests.run();        
 
     }
-    public static void printHex(int val){
-        String hex = Integer.toHexString(val);
-        System.out.println(hex);
-    }
 }
