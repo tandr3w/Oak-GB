@@ -172,7 +172,18 @@ public class Opcodes {
         opcodesArray[0xEE] = new Instruction(Operation.XOR, Operand.n8, 2);  
         opcodesArray[0xE8] = new Instruction(Operation.ADD, Operand.SP, Operand.e8, 2);  
         opcodesArray[0xFE] = new Instruction(Operation.CP, Operand.n8, 2);  
-        opcodesArray[0xF6] = new Instruction(Operation.OR, Operand.n8, 2);  
+        opcodesArray[0xF6] = new Instruction(Operation.OR, Operand.n8, 2);
+        
+        // 16-bit load operation
+        opcodesArray[0x01] = new Instruction(Operation.LD16, Operand.BC, Operand.n16, 3);
+        opcodesArray[0x11] = new Instruction(Operation.LD16, Operand.DE, Operand.n16, 3);
+        opcodesArray[0x21] = new Instruction(Operation.LD16, Operand.HL, Operand.n16, 3);
+        opcodesArray[0x31] = new Instruction(Operation.LD16, Operand.SP, Operand.n16, 3);
+
+        opcodesArray[0x08] = new Instruction(Operation.LD16, Operand.a16, Operand.SP, 3);
+        opcodesArray[0xF8] = new Instruction(Operation.LD16, Operand.a16, Operand.SPe8, 2);
+        opcodesArray[0xF9] = new Instruction(Operation.LD16, Operand.SP, Operand.HL, 1);
+
     }
 
     public Instruction byteToInstruction(int readByte) {

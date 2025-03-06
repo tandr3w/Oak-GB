@@ -312,8 +312,8 @@ public class CPU {
         }
 
         if (result > 0xFFFF){
-            result = result & 0xFFFF; 
-        }  
+            result = result & 0xFFFF;
+        }
 
         registers.set_f_zero(false);
         registers.set_f_subtract(false);
@@ -329,7 +329,7 @@ public class CPU {
         boolean didOverflow = false;
         if (result > 0xFFFF){
             didOverflow = true;
-            result = result & 0xFFFF; 
+            result = result & 0xFFFF;
         }
 
         if (target == Operand.SP){
@@ -351,7 +351,7 @@ public class CPU {
         if (result > 0xFF){
             didOverflow = true;
             result = result & 0xFF; 
-        }  
+        }
         registers.set_f_zero(result == 0);
         registers.set_f_subtract(false);
         registers.set_f_halfcarry((a & 0xF) + (val & 0xF) + (prevCarryBit & 0xF) > 0xF);
@@ -400,6 +400,6 @@ public class CPU {
         } catch (IOException e) {
             System.out.println("error");
             e.printStackTrace();
-        } 
+        }
     }
 }
