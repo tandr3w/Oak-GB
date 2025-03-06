@@ -87,6 +87,7 @@ public class Unit_Tests {
                 int y = ramElement.getInt(1);
                 if (cpu.memory[x] != y){
                     System.out.println("Case " + testCase.getString("name") + " At position: " + Integer.toString(x) + " Expected: " + Integer.toString(y) + " Found: " + Integer.toString(cpu.memory[x]));
+                    return 1;
                 }
             }
 

@@ -17,7 +17,7 @@ public class CPU {
         if (instruction.num_bytes > 1){
             instruction.next_bytes = new int[instruction.num_bytes - 1];
             for (int i=0; i<instruction.num_bytes-1; i++){
-                instruction.next_bytes[i] = memory[registers.pc + i + 1];
+                instruction.next_bytes[i] = memory[(registers.pc + i + 1) & 0xFFFF];
             }
         }
         registers.pc += instruction.num_bytes;
@@ -67,7 +67,7 @@ public class CPU {
             case Operation.SBC:
                 if (instruction.operand == Operand.n8){
                     sbcFromA(instruction.next_bytes[0]);
-                    break;   
+                    break;
                 }
                 sbcFromA(registers.readValFromEnum(instruction.operand));
                 break;
@@ -164,12 +164,12 @@ public class CPU {
                 int twoByteVal;
                 // There are no LD16 operations that have an n8 operand
                 if (instruction.operand == Operand.n16) {
-                    twoByteVal = ((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF);
+                    // LITTLE ENDIAN SMILEY FACE HAHAHAHAHAHAHAHAH
+                    twoByteVal = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
                 }
                 
-                else if (instruction.operand == Operand.e8) {
-                    addSignedTo16(Operand.SP, (byte) instruction.next_bytes[0]);
-                    twoByteVal = registers.sp;
+                else if (instruction.operand == Operand.SPe8) {
+                    twoByteVal = returnAddSignedTo16(Operand.SP, (byte) instruction.next_bytes[0]);
                 }
                 
                 // Otherwise, the operand is a 16-bit register
@@ -177,10 +177,12 @@ public class CPU {
                     twoByteVal = registers.readValFromEnum(instruction.operand);
                 }
                 
-
                 if (instruction.operandToSet == Operand.a16) {
-                    int address = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
-                    memory[address] = twoByteVal;
+                    // LITTLE ENDIAN
+                    int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
+                    memory[address] = (twoByteVal & 0xFF);
+                    memory[(address+1)] = (twoByteVal & 0xFF00) >> 8; 
+
                     break;
                 }
 
@@ -320,6 +322,26 @@ public class CPU {
         registers.set_f_halfcarry((targetVal & 0xF) + (val & 0xF) > 0xF);
         registers.set_f_carry((targetVal & 0xFF) + (val & 0xFF) > 0xFF);
         registers.setValToEnum(target, result);
+    }
+
+
+    public int returnAddSignedTo16(Operand target, byte val){
+        int targetVal = registers.readValFromEnum(target);
+        int result = targetVal + val;
+
+        if (result < 0x00) {
+            result = result & 0xFFFF;
+        }
+
+        if (result > 0xFFFF){
+            result = result & 0xFFFF;
+        }
+
+        registers.set_f_zero(false);
+        registers.set_f_subtract(false);
+        registers.set_f_halfcarry((targetVal & 0xF) + (val & 0xF) > 0xF);
+        registers.set_f_carry((targetVal & 0xFF) + (val & 0xFF) > 0xFF);
+        return result;
     }
     // val is unsigned 8-bit
     // target is either HL or SP
