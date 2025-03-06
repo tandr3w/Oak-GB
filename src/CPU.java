@@ -49,7 +49,6 @@ public class CPU {
 
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
-
                 // get the value that needs to be loaded first
                 int valToLoad;
                 if (instruction.operand == Operand.a16){
@@ -65,7 +64,6 @@ public class CPU {
                 else {;
                     valToLoad = registers.readValFromEnum(instruction.operand);
                 }
-                
                 
                 if (instruction.operandToSet == Operand.a16) {
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...

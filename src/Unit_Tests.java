@@ -15,8 +15,6 @@ public class Unit_Tests {
     }
 
     public int run(){
-        // Test add operation
-        // Test all opcodes do not error
         int cases_passed = 0;
         int case_count = 0;
         for (int i=0; i<0x100; i++){
@@ -74,20 +72,19 @@ public class Unit_Tests {
             cpu.registers.f = initial.getInt("f");
             cpu.registers.h = initial.getInt("h");
             cpu.registers.l = initial.getInt("l");
+            cpu.execute(opcodes.byteToInstruction(opcode));
 
             JSONObject end = testCase.getJSONObject("final");
             JSONArray endRam = end.getJSONArray("ram");
+
             for (int j=0; j<endRam.length(); j++){
                 JSONArray ramElement = endRam.getJSONArray(j);
                 int x = ramElement.getInt(0);
                 int y = ramElement.getInt(1);
                 if (cpu.memory[x] != y){
                     System.out.println("At position: " + Integer.toString(x) + " Expected: " + Integer.toString(y) + " Found: " + Integer.toString(cpu.memory[x]));
-                    return 1;
                 }
             }
-
-            cpu.execute(opcodes.byteToInstruction(opcode));
 
             if (cpu.registers.pc != end.getInt("pc")){
                 System.out.println("Expected: " + Integer.toString(end.getInt("pc")) + " Found: " + Integer.toString(cpu.registers.pc));
