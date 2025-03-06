@@ -41,7 +41,7 @@ public class Opcodes {
         opcodesArray[0x1F] = new Instruction(Operation.RCA, 1);
 
         // ROW 2
-        opcodesArray[0x20] = new Instruction(Operation.JR, Operand.JumpNZ, 2);
+        opcodesArray[0x20] = new Instruction(Operation.JR, Operand.JumpNZ, Operand.e8, 2);
         opcodesArray[0x21] = new Instruction(Operation.LD16, Operand.HL, Operand.n16, 3);
         opcodesArray[0x22] = new Instruction(Operation.LDI, Operand.MemHL, Operand.A, 1);
         opcodesArray[0x23] = new Instruction(Operation.INC16, Operand.HL, Operand.NONE, 1);
@@ -49,7 +49,7 @@ public class Opcodes {
         opcodesArray[0x25] = new Instruction(Operation.DEC, Operand.H, Operand.NONE, 1);
         opcodesArray[0x26] = new Instruction(Operation.LD, Operand.H, Operand.n8, 2);
         opcodesArray[0x27] = new Instruction(Operation.DAA, 1);
-        opcodesArray[0x28] = new Instruction(Operation.JR, Operand.JumpZ, 2);
+        opcodesArray[0x28] = new Instruction(Operation.JR, Operand.JumpZ, Operand.e8, 2);
         opcodesArray[0x29] = new Instruction(Operation.ADD16, Operand.HL, Operand.HL, 1);
         opcodesArray[0x2A] = new Instruction(Operation.LDI, Operand.A, Operand.MemHL, 1);
         opcodesArray[0x2B] = new Instruction(Operation.DEC16, Operand.HL, Operand.NONE, 1);
@@ -59,7 +59,7 @@ public class Opcodes {
         opcodesArray[0x2F] = new Instruction(Operation.CPL, 1);
 
         // ROW 3
-        opcodesArray[0x30] = new Instruction(Operation.JR, Operand.JumpNC, 2);
+        opcodesArray[0x30] = new Instruction(Operation.JR, Operand.JumpNC, Operand.e8, 2);
         opcodesArray[0x31] = new Instruction(Operation.LD16, Operand.SP, Operand.n16, 3);
         opcodesArray[0x32] = new Instruction(Operation.LDD, Operand.MemHL, Operand.A, 1);
         opcodesArray[0x33] = new Instruction(Operation.INC16, Operand.SP, Operand.NONE, 1);
@@ -67,7 +67,7 @@ public class Opcodes {
         opcodesArray[0x35] = new Instruction(Operation.DEC, Operand.MemHL, Operand.NONE, 1);
         opcodesArray[0x36] = new Instruction(Operation.LD, Operand.MemHL, Operand.n8, 2);
         opcodesArray[0x37] = new Instruction(Operation.SCF, 1);
-        opcodesArray[0x38] = new Instruction(Operation.JR, Operand.JumpC, 2);
+        opcodesArray[0x38] = new Instruction(Operation.JR, Operand.JumpC, Operand.e8, 2);
         opcodesArray[0x39] = new Instruction(Operation.ADD16, Operand.HL, Operand.SP, 1);
         opcodesArray[0x3A] = new Instruction(Operation.LDD, Operand.A, Operand.MemHL, 1);
         opcodesArray[0x3B] = new Instruction(Operation.DEC16, Operand.SP, Operand.NONE, 1);

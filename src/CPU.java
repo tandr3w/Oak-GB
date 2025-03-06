@@ -368,29 +368,29 @@ public class CPU {
                 break;
             
             case Operation.JR:
-                if (instruction.operand == Operand.e8){
+                if (instruction.operand == Operand.e8 && instruction.operandToSet == null){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     jumpTo((registers.pc + toAdd) & 0xFFFF);
                 }
-                if (instruction.operand == Operand.JumpNZ){
+                if (instruction.operandToSet == Operand.JumpNZ){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 0){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
                     }
                 }
-                if (instruction.operand == Operand.JumpNC){
+                if (instruction.operandToSet == Operand.JumpNC){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 0){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
                     }
                 }
-                if (instruction.operand == Operand.JumpC){
+                if (instruction.operandToSet == Operand.JumpC){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 1){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
                     }
                 }
-                if (instruction.operand == Operand.JumpZ){
+                if (instruction.operandToSet == Operand.JumpZ){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 1){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
