@@ -7,7 +7,7 @@ public class CPU {
     int[] memory;
 
     public CPU(){
-        memory = new int[0xFFFF]; // 65536 bytes
+        memory = new int[0xFFFF + 1]; // 65536 bytes
         registers = new Registers(this);
         loadROM("ROMs/snake.gb"); // FIXME
     }
@@ -21,6 +21,7 @@ public class CPU {
             }
         }
         registers.pc += instruction.num_bytes;
+        registers.pc &= 0xFFFF;
         
         switch (instruction.operation){
 
