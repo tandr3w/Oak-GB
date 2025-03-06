@@ -7,6 +7,7 @@ enum Operand {
     
     a8, // a8 is unsigned 8-bit that is added to FF00 to make a 16-bit address
     a16,
+    NONE,
 }
 
 enum Operation {
@@ -21,6 +22,8 @@ enum Operation {
     ADC,
     SBC,
     CP,
+    INC,
+    DEC,
 }
 
 public class Instruction {

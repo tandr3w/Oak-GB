@@ -103,6 +103,14 @@ public class CPU {
                 }
                 xorA(registers.readValFromEnum(instruction.operand));
                 break;    
+            
+            case Operation.INC:
+                inc(instruction.operandToSet);
+                break;     
+            
+            case Operation.DEC:
+                dec(instruction.operandToSet);
+                break;
 
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
@@ -246,6 +254,29 @@ public class CPU {
         registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) & 0x10) != 0);
     }
 
+    public void inc(Operand target){
+        int targetVal = registers.readValFromEnum(target);
+        int result = targetVal + 1;
+        if (result > 0xFF){
+            result = result & 0xFF;
+        }
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(false);
+        registers.set_f_halfcarry((targetVal & 0xF) + (1 & 0xF) > 0xF);
+        registers.setValToEnum(target, result);
+    }
+
+    public void dec(Operand target){
+        int targetVal = registers.readValFromEnum(target);
+        int result = targetVal - 1;
+        if (result < 0x00){
+            result = result & 0xFF;
+        }
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(true);
+        registers.set_f_halfcarry(((targetVal & 0xF) - (1 & 0xF) & 0x10) != 0);
+        registers.setValToEnum(target, result);
+    }
 
     public void addSignedTo16(Operand target, byte val){
         int targetVal = registers.readValFromEnum(target);
