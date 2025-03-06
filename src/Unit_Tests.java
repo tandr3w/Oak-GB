@@ -20,7 +20,7 @@ public class Unit_Tests {
         for (int i=0; i<0x100; i++){
             try{
                 if (opcodes.byteToInstruction(i) != null){
-                    int test_result = test_json("test_jsons/" + Util.hexByte(i) + ".json");
+                    int test_result = test_json("test_jsons/" + Util.hexByte(i) + ".json", i);
                     if (test_result == 0){
                         System.out.println("Testing passed on: " + Util.hexByte(i));
                     }
@@ -46,7 +46,7 @@ public class Unit_Tests {
         }
     }
 
-    public int test_json(String path){
+    public int test_json(String path, int opcode){
         JSONArray jsonArray = readJsonArrayFile(path);
         for (int i=0; i<jsonArray.length(); i++){
             JSONObject testCase = jsonArray.getJSONObject(i);
@@ -81,6 +81,8 @@ public class Unit_Tests {
                     return 1;
                 }
             }
+
+            cpu.execute(opcodes.byteToInstruction(opcode));
 
             if (cpu.registers.pc != end.getInt("pc")){
                 System.out.println("Expected: " + Integer.toString(end.getInt("pc")) + " Found: " + Integer.toString(cpu.registers.pc));
