@@ -17,6 +17,7 @@ public class Unit_Tests {
     public int run(){
         int cases_passed = 0;
         int case_count = 0;
+        int cases_not_implemented = 0;
         for (int i=0; i<0x100; i++){
             try{
                 if (opcodes.byteToInstruction(i) != null){
@@ -30,13 +31,16 @@ public class Unit_Tests {
                         System.out.println("Testing failed on: " + Util.hexByte(i) + " (error code: " + Integer.toString(test_result) + ")");
                     }
                 }
+                else {
+                    cases_not_implemented += 1;
+                }
             }
             catch(Exception e){
                 System.out.println("Testing failed on: " + Util.hexByte(i));
                 e.printStackTrace();
             }
         }
-        System.out.println("\nCases passed: " + Integer.toString(cases_passed) + " / " + Integer.toString(case_count));
+        System.out.println("\nCases passed: " + Integer.toString(cases_passed) + " / " + Integer.toString(case_count) + " (" + Integer.toString(cases_not_implemented) + " not implemented)");
         return cases_passed;
     }
 
