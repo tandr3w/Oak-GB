@@ -35,7 +35,7 @@ public class CPU {
                 break;
             case Operation.ADD16:
                 if (instruction.operandToSet == Operand.SP && instruction.operand == Operand.e8){
-                    add16(Operand.SP, instruction.next_bytes[0]);
+                    add16(Operand.SP, (byte) instruction.next_bytes[0]);
                     break;
                 }
                 // Add to HL
