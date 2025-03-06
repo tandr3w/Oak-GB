@@ -48,6 +48,10 @@ public class CPU {
                 break;
 
             case Operation.ADC:
+                if (instruction.operand == Operand.n8){
+                    adcToA(instruction.next_bytes[0]);
+                    break;   
+                }
                 adcToA(registers.readValFromEnum(instruction.operand));
                 break;
 
@@ -61,6 +65,10 @@ public class CPU {
                 break;
 
             case Operation.SBC:
+                if (instruction.operand == Operand.n8){
+                    sbcFromA(instruction.next_bytes[0]);
+                    break;   
+                }
                 sbcFromA(registers.readValFromEnum(instruction.operand));
                 break;
             
@@ -73,6 +81,10 @@ public class CPU {
                 break;
 
             case Operation.CP:
+                if (instruction.operand == Operand.n8){
+                    cpToA(instruction.next_bytes[0]);
+                    break;   
+                }
                 cpToA(registers.readValFromEnum(instruction.operand));
                 break;      
             
@@ -85,6 +97,10 @@ public class CPU {
                 break;
             
             case Operation.XOR:
+                if (instruction.operand == Operand.n8){
+                    xorA(instruction.next_bytes[0]);
+                    break;   
+                }
                 xorA(registers.readValFromEnum(instruction.operand));
                 break;    
 
