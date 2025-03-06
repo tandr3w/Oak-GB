@@ -17,11 +17,11 @@ public class CPU {
         if (instruction.num_bytes > 1){
             instruction.next_bytes = new int[instruction.num_bytes - 1];
             for (int i=0; i<instruction.num_bytes-1; i++){
-                instruction.next_bytes[i] = memory[(registers.pc + i + 1) & 0xFFFF];
+                instruction.next_bytes[i] = memory[(registers.pc + i + 1) & 0xFFFF]; // &0xFFFF to account for overflow
             }
         }
         registers.pc += instruction.num_bytes;
-        registers.pc &= 0xFFFF;
+        registers.pc &= 0xFFFF; // overflow
         
         switch (instruction.operation){
 

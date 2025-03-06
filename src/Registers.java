@@ -6,7 +6,7 @@ public class Registers {
     int e;
     int f;
     int h;
-    int l;;
+    int l;
     // sp & pc are both registers
     int sp;
     int pc;
