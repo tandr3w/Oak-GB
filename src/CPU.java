@@ -125,7 +125,6 @@ public class CPU {
                 // get the value that needs to be loaded first
                 int valToLoad;
                 if (instruction.operand == Operand.a16){
-                    // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
                     valToLoad = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
                 }
                 
@@ -149,7 +148,7 @@ public class CPU {
                     break;
                 }
 
-                if (instruction.operand == Operand.a8) {
+                if (instruction.operandToSet == Operand.a8) {
                     int address = instruction.next_bytes[0] + 0xFF00;
                     memory[address] = valToLoad;
                     break;
@@ -181,7 +180,7 @@ public class CPU {
                     // LITTLE ENDIAN
                     int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
                     memory[address] = (twoByteVal & 0xFF);
-                    memory[(address+1)] = (twoByteVal & 0xFF00) >> 8; 
+                    memory[(address+1) & 0xFFFF] = (twoByteVal & 0xFF00) >> 8; 
 
                     break;
                 }
@@ -190,6 +189,43 @@ public class CPU {
                 registers.setValToEnum(instruction.operandToSet, twoByteVal);
                 break;
                 
+        
+            // 8-bit
+            case Operation.LDI:
+                if (instruction.operand == Operand.MemHL) {
+                    int val = memory[registers.get_hl()];
+                    inc16(Operand.HL);
+
+                    // operandToSet is always A
+                    registers.setValToEnum(instruction.operandToSet, val);
+                    break;
+                }
+                if (instruction.operandToSet == Operand.MemHL) {
+                    // instruction.operand should always be A
+                    memory[registers.get_hl()] = registers.readValFromEnum(instruction.operand);
+                    inc16(Operand.HL);
+
+                    break;
+                }
+                break;
+                
+            case Operation.LDD:
+                if (instruction.operand == Operand.MemHL) {
+                    int val = memory[registers.get_hl()];
+                    dec16(Operand.HL);
+
+                    // operandToSet is always A
+                    registers.setValToEnum(instruction.operandToSet, val);
+                    break;
+                }
+                if (instruction.operandToSet == Operand.MemHL) {
+                    // instruction.operand should always be A
+                    memory[registers.get_hl()] = registers.readValFromEnum(instruction.operand);
+                    dec16(Operand.HL);
+
+                    break;
+                }
+
             default:
                 System.out.println("Not implemented!");
                 break;

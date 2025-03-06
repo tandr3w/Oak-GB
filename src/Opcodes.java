@@ -6,43 +6,62 @@ public class Opcodes {
         // TODO: Sort opcodes
         opcodesArray = new Instruction[0x100]; // 0xFF represents 255 in binary, but array needs to hold 256 values
 
+        // ROW 0
         opcodesArray[0x01] = new Instruction(Operation.LD16, Operand.BC, Operand.n16, 3);
         opcodesArray[0x02] = new Instruction(Operation.LD, Operand.MemBC, Operand.A, 1);
         opcodesArray[0x03] = new Instruction(Operation.INC16, Operand.BC, Operand.NONE, 1);
         opcodesArray[0x04] = new Instruction(Operation.INC, Operand.B, Operand.NONE, 1);
         opcodesArray[0x05] = new Instruction(Operation.DEC, Operand.B, Operand.NONE, 1);
+        opcodesArray[0x06] = new Instruction(Operation.LD, Operand.B, Operand.n8, 2);
         opcodesArray[0x08] = new Instruction(Operation.LD16, Operand.a16, Operand.SP, 3);
         opcodesArray[0x09] = new Instruction(Operation.ADD16, Operand.HL, Operand.BC, 1);
         opcodesArray[0x0A] = new Instruction(Operation.LD, Operand.A, Operand.MemBC, 1);
         opcodesArray[0x0B] = new Instruction(Operation.DEC16, Operand.BC, Operand.NONE, 1);
         opcodesArray[0x0C] = new Instruction(Operation.INC, Operand.C, Operand.NONE, 1);
         opcodesArray[0x0D] = new Instruction(Operation.DEC, Operand.C, Operand.NONE, 1);
+        opcodesArray[0x0E] = new Instruction(Operation.LD, Operand.C, Operand.n8, 2);
+
+        // ROW 1
         opcodesArray[0x11] = new Instruction(Operation.LD16, Operand.DE, Operand.n16, 3);
         opcodesArray[0x12] = new Instruction(Operation.LD, Operand.MemDE, Operand.A, 1);
         opcodesArray[0x13] = new Instruction(Operation.INC16, Operand.DE, Operand.NONE, 1);
         opcodesArray[0x14] = new Instruction(Operation.INC, Operand.D, Operand.NONE, 1);
         opcodesArray[0x15] = new Instruction(Operation.DEC, Operand.D, Operand.NONE, 1);
+        opcodesArray[0x16] = new Instruction(Operation.LD, Operand.D, Operand.n8, 2);
         opcodesArray[0x19] = new Instruction(Operation.ADD16, Operand.HL, Operand.DE, 1);
         opcodesArray[0x1A] = new Instruction(Operation.LD, Operand.A, Operand.MemDE, 1);
         opcodesArray[0x1B] = new Instruction(Operation.DEC16, Operand.DE, Operand.NONE, 1);
         opcodesArray[0x1C] = new Instruction(Operation.INC, Operand.E, Operand.NONE, 1);
         opcodesArray[0x1D] = new Instruction(Operation.DEC, Operand.E, Operand.NONE, 1);
+        opcodesArray[0x1E] = new Instruction(Operation.LD, Operand.E, Operand.n8, 2);
+
+        // ROW 2
         opcodesArray[0x21] = new Instruction(Operation.LD16, Operand.HL, Operand.n16, 3);
+        opcodesArray[0x22] = new Instruction(Operation.LDI, Operand.MemHL, Operand.A, 1);
         opcodesArray[0x23] = new Instruction(Operation.INC16, Operand.HL, Operand.NONE, 1);
         opcodesArray[0x24] = new Instruction(Operation.INC, Operand.H, Operand.NONE, 1);
         opcodesArray[0x25] = new Instruction(Operation.DEC, Operand.H, Operand.NONE, 1);
+        opcodesArray[0x26] = new Instruction(Operation.LD, Operand.H, Operand.n8, 2);
         opcodesArray[0x29] = new Instruction(Operation.ADD16, Operand.HL, Operand.HL, 1);
+        opcodesArray[0x2A] = new Instruction(Operation.LDI, Operand.A, Operand.MemHL, 1);
         opcodesArray[0x2B] = new Instruction(Operation.DEC16, Operand.HL, Operand.NONE, 1);
         opcodesArray[0x2C] = new Instruction(Operation.INC, Operand.L, Operand.NONE, 1);
         opcodesArray[0x2D] = new Instruction(Operation.DEC, Operand.L, Operand.NONE, 1);
+        opcodesArray[0x2E] = new Instruction(Operation.LD, Operand.L, Operand.n8, 2);
         opcodesArray[0x31] = new Instruction(Operation.LD16, Operand.SP, Operand.n16, 3);
+        opcodesArray[0x32] = new Instruction(Operation.LDD, Operand.MemHL, Operand.A, 1);
         opcodesArray[0x33] = new Instruction(Operation.INC16, Operand.SP, Operand.NONE, 1);
         opcodesArray[0x34] = new Instruction(Operation.INC, Operand.MemHL, Operand.NONE, 1);
         opcodesArray[0x35] = new Instruction(Operation.DEC, Operand.MemHL, Operand.NONE, 1);
+        opcodesArray[0x36] = new Instruction(Operation.LD, Operand.MemHL, Operand.n8, 2);
         opcodesArray[0x39] = new Instruction(Operation.ADD16, Operand.HL, Operand.SP, 1);
+        opcodesArray[0x3A] = new Instruction(Operation.LDD, Operand.A, Operand.MemHL, 1);
         opcodesArray[0x3B] = new Instruction(Operation.DEC16, Operand.SP, Operand.NONE, 1);
         opcodesArray[0x3C] = new Instruction(Operation.INC, Operand.A, Operand.NONE, 1);
         opcodesArray[0x3D] = new Instruction(Operation.DEC, Operand.A, Operand.NONE, 1);
+        opcodesArray[0x3E] = new Instruction(Operation.LD, Operand.A, Operand.n8, 2);
+
+        // ROW 4
         opcodesArray[0x40] = new Instruction(Operation.LD, Operand.B, Operand.B, 1);
         opcodesArray[0x41] = new Instruction(Operation.LD, Operand.B, Operand.C, 1);
         opcodesArray[0x42] = new Instruction(Operation.LD, Operand.B, Operand.D, 1);
@@ -59,6 +78,8 @@ public class Opcodes {
         opcodesArray[0x4D] = new Instruction(Operation.LD, Operand.C, Operand.L, 1);
         opcodesArray[0x4E] = new Instruction(Operation.LD, Operand.C, Operand.MemHL, 1);
         opcodesArray[0x4F] = new Instruction(Operation.LD, Operand.C, Operand.A, 1);
+
+        // ROW 5
         opcodesArray[0x50] = new Instruction(Operation.LD, Operand.D, Operand.B, 1);
         opcodesArray[0x51] = new Instruction(Operation.LD, Operand.D, Operand.C, 1);
         opcodesArray[0x52] = new Instruction(Operation.LD, Operand.D, Operand.D, 1);
@@ -186,7 +207,7 @@ public class Opcodes {
 
     public Instruction byteToInstruction(int readByte) {
         if (opcodesArray[readByte] == null){
-            System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
+            // System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
             return null;
         }
         return opcodesArray[readByte];

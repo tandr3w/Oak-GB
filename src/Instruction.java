@@ -17,6 +17,8 @@ enum Operation {
     SUB,
     LD,
     LD16,
+    LDI,
+    LDD,
     AND,
     OR,
     XOR,
