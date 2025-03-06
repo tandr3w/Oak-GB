@@ -55,7 +55,7 @@ public class CPU {
                 if (instruction.operand == Operand.a16){
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
                     valToLoad = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
-                } 
+                }
                 
                 else if (instruction.operand == Operand.a8) {
                     valToLoad = memory[instruction.next_bytes[0] + 0xFF00];
