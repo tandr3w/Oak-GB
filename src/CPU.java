@@ -44,6 +44,10 @@ public class CPU {
 
 
             case Operation.SUB:
+                if (instruction.operand == Operand.n8){
+                    subFromA(instruction.next_bytes[0]);
+                    break;
+                }
                 subFromA(registers.readValFromEnum(instruction.operand));
                 break;
 
