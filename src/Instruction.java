@@ -1,11 +1,11 @@
 enum Operand {
-    A, B, C, D, E, H, L, BC, DE, HL, 
+    A, B, C, D, E, H, L, BC, DE, HL,
     MemHL, MemBC, MemDE,
     SP, PC,
     
     n8, e8, n16, // for when we are using a given number instead of a register value
     
-    a8, // a8 is unsigned 8-bit that is added to FF00 to make a 16-bit address  
+    a8, // a8 is unsigned 8-bit that is added to FF00 to make a 16-bit address
     a16,
 }
 

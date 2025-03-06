@@ -82,9 +82,9 @@ public class Opcodes {
         opcodesArray[0x84] = new Instruction(Operation.ADD, Operand.H, 1);
         opcodesArray[0x85] = new Instruction(Operation.ADD, Operand.L, 1);
         opcodesArray[0x86] = new Instruction(Operation.ADD, Operand.MemHL, 1);
-        opcodesArray[0x87] = new Instruction(Operation.ADD, Operand.A, 1); 
-        opcodesArray[0xC6] = new Instruction(Operation.ADD, Operand.n8, 2);  
-        opcodesArray[0xE8] = new Instruction(Operation.ADD16, Operand.SP, Operand.e8, 2);  
+        opcodesArray[0x87] = new Instruction(Operation.ADD, Operand.A, 1);
+        opcodesArray[0xC6] = new Instruction(Operation.ADD, Operand.n8, 2);
+        opcodesArray[0xE8] = new Instruction(Operation.ADD16, Operand.SP, Operand.e8, 2);
     }
 
     public Instruction byteToInstruction(int readByte) {
