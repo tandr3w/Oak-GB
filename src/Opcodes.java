@@ -3,6 +3,7 @@ public class Opcodes {
     public Opcodes() {
         // TODO: figure out how to handle prefixed/unprefixed opcodes
         // nvm its simple; switch to prefixed when CB instruction is executed
+        // TODO: Sort opcodes
         opcodesArray = new Instruction[0x100]; // 0xFF represents 255 in binary, but array needs to hold 256 values
         opcodesArray[0x02] = new Instruction(Operation.LD, Operand.MemBC, Operand.A, 1);
         opcodesArray[0x09] = new Instruction(Operation.ADD16, Operand.HL, Operand.BC, 1);
