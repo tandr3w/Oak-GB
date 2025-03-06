@@ -87,34 +87,34 @@ public class Unit_Tests {
             }
 
             if (cpu.registers.pc != end.getInt("pc")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("pc")) + " Found: " + Integer.toString(cpu.registers.pc));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("pc")) + " Found: " + Integer.toString(cpu.registers.pc));
                 return 2;}
             if (cpu.registers.sp != end.getInt("sp")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("sp")) + " Found: " + Integer.toString(cpu.registers.sp));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("sp")) + " Found: " + Integer.toString(cpu.registers.sp));
                 return 3;}
             if (cpu.registers.a != end.getInt("a")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("a")) + " Found: " + Integer.toString(cpu.registers.a));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("a")) + " Found: " + Integer.toString(cpu.registers.a));
                 return 4;}
             if (cpu.registers.b != end.getInt("b")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("b")) + " Found: " + Integer.toString(cpu.registers.b));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("b")) + " Found: " + Integer.toString(cpu.registers.b));
                 return 5;}
             if (cpu.registers.c != end.getInt("c")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("c")) + " Found: " + Integer.toString(cpu.registers.c));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("c")) + " Found: " + Integer.toString(cpu.registers.c));
                 return 6;}
             if (cpu.registers.d != end.getInt("d")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("d")) + " Found: " + Integer.toString(cpu.registers.d));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("d")) + " Found: " + Integer.toString(cpu.registers.d));
                 return 7;}
             if (cpu.registers.e != end.getInt("e")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("e")) + " Found: " + Integer.toString(cpu.registers.e));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("e")) + " Found: " + Integer.toString(cpu.registers.e));
                 return 8;}
             if (cpu.registers.f != end.getInt("f")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("f")) + " Found: " + Integer.toString(cpu.registers.f));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("f")) + " Found: " + Integer.toString(cpu.registers.f));
                 return 9;}
             if (cpu.registers.h != end.getInt("h")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("h")) + " Found: " + Integer.toString(cpu.registers.h));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("h")) + " Found: " + Integer.toString(cpu.registers.h));
                 return 10;}
             if (cpu.registers.l != end.getInt("l")){
-                System.out.println("Case " + testCase.getString("name") + "Expected: " + Integer.toString(end.getInt("l")) + " Found: " + Integer.toString(cpu.registers.l));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("l")) + " Found: " + Integer.toString(cpu.registers.l));
                 return 11;}
         }
         return 0;
