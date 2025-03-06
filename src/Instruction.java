@@ -19,6 +19,7 @@ enum Operation {
     OR,
     XOR,
     ADC,
+    SBC,
 }
 
 public class Instruction {
