@@ -37,7 +37,7 @@ public class Opcodes {
         opcodesArray[0x1C] = new Instruction(Operation.INC, Operand.E, Operand.NONE, 1);
         opcodesArray[0x1D] = new Instruction(Operation.DEC, Operand.E, Operand.NONE, 1);
         opcodesArray[0x1E] = new Instruction(Operation.LD, Operand.E, Operand.n8, 2);
-        opcodesArray[0x0F] = new Instruction(Operation.RCA, 1);
+        opcodesArray[0x1F] = new Instruction(Operation.RCA, 1);
 
         // ROW 2
         opcodesArray[0x21] = new Instruction(Operation.LD16, Operand.HL, Operand.n16, 3);

@@ -258,6 +258,18 @@ public class CPU {
                 registers.set_f_carry(firstCircularBit == 1);
                 break;
 
+            case Operation.RLA:
+                int firstBit = (registers.a & 0b10000000) >> 7;
+                registers.a = (registers.a << 1) & 0xFF;
+                
+                registers.a = registers.a | registers.get_f_carry();
+
+                registers.set_f_zero(false);
+                registers.set_f_halfcarry(false);
+                registers.set_f_subtract(false);
+                registers.set_f_carry(firstBit == 1);
+                break;
+
             case Operation.RRCA:
                 int lastCircularBit = registers.a & 1;
                 registers.a = (registers.a >> 1) & 0xFF;
