@@ -93,8 +93,7 @@ public class Opcodes {
         opcodesArray[0x97] = new Instruction(Operation.SUB, Operand.A, 1); 
         opcodesArray[0xC6] = new Instruction(Operation.ADD, Operand.n8, 2);  
         opcodesArray[0xD6] = new Instruction(Operation.SUB, Operand.n8, 2);  
-
-        // opcodesArray[0xE8] = new Instruction(Operation.ADD16, Operand.SP, Operand.e8, 2);  
+        opcodesArray[0xE8] = new Instruction(Operation.ADD, Operand.SP, Operand.e8, 2);  
     }
 
     public Instruction byteToInstruction(int readByte) {

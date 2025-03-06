@@ -112,7 +112,7 @@ public class Unit_Tests {
                 System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("e")) + " Found: " + Integer.toString(cpu.registers.e));
                 return 8;}
             if (cpu.registers.f != end.getInt("f")){
-                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("f")) + " Found: " + Integer.toString(cpu.registers.f));
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toBinaryString(end.getInt("f")) + " Found: " + Integer.toBinaryString(cpu.registers.f));
                 return 9;}
             if (cpu.registers.h != end.getInt("h")){
                 System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("h")) + " Found: " + Integer.toString(cpu.registers.h));

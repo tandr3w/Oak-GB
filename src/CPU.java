@@ -30,9 +30,14 @@ public class CPU {
                     addToA(instruction.next_bytes[0]);
                     break;
                 }
+                if (instruction.operand == Operand.e8){
+                    addSignedTo16(Operand.SP, (byte) instruction.next_bytes[0]);
+                    break;
+                }
                 // otherwise, add from another register
                 addToA(registers.readValFromEnum(instruction.operand));
                 break;
+                
             case Operation.ADD16:
                 if (instruction.operandToSet == Operand.SP && instruction.operand == Operand.e8){
                     add16(Operand.SP, (byte) instruction.next_bytes[0]);
@@ -131,6 +136,24 @@ public class CPU {
         registers.a = result;
     }
 
+    public void addSignedTo16(Operand target, byte val){
+        int targetVal = registers.readValFromEnum(target);
+        int result = targetVal + val;
+
+        if (result < 0x00) {
+            result = result & 0xFFFF;
+        }
+
+        if (result > 0xFFFF){
+            result = result & 0xFFFF; 
+        }  
+
+        registers.set_f_zero(false);
+        registers.set_f_subtract(false);
+        registers.set_f_halfcarry((targetVal & 0xF) + (val & 0xF) > 0xF);
+        registers.set_f_carry((targetVal & 0xFF) + (val & 0xFF) > 0xFF);
+        registers.setValToEnum(target, result);
+    }
     // val is unsigned 8-bit
     // target is either HL or SP
     public void add16(Operand target, int val) {
