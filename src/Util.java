@@ -5,4 +5,12 @@ public class Util {
         String hex = Integer.toHexString(val);
         return hex;
     }
+    public static String hexByte(int val){
+        String hex = Integer.toHexString(val);
+        if (hex.length() == 1){
+            hex = "0" + hex;
+        }
+        hex = "0x" + hex;
+        return hex;
+    }
 }

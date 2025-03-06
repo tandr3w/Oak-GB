@@ -16,11 +16,11 @@ public class Unit_Tests {
             try{
                 if (opcodes.byteToInstruction(i) != null){
                     cpu.execute(opcodes.byteToInstruction(i));
-                    System.out.println("Testing passed on: " + Util.hexString(i));
+                    System.out.println("Testing passed on: " + Util.hexByte(i));
                 }
             }
             catch(Exception e){
-                System.out.println("Testing failed on: " + Util.hexString(i));
+                System.out.println("Testing failed on: " + Util.hexByte(i));
                 e.printStackTrace();
             }
         }
