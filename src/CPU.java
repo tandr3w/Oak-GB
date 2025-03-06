@@ -47,6 +47,15 @@ public class CPU {
                 add16(Operand.HL, registers.readValFromEnum(instruction.operand));
                 break;
 
+            case Operation.ADC:
+                if (instruction.operand == Operand.n8){
+                    adcToA(instruction.next_bytes[0]);
+                    break;
+                }
+                // otherwise, add from another register
+                adcToA(registers.readValFromEnum(instruction.operand));
+                break;
+
 
             case Operation.SUB:
                 if (instruction.operand == Operand.n8){
@@ -196,6 +205,23 @@ public class CPU {
         registers.set_f_carry(didOverflow);
         registers.set_f_halfcarry((targetVal & 0x0FFF) + (val & 0x0FFF) > 0x0FFF);
         registers.setValToEnum(target, result);
+    }
+
+    public void adcToA(int val){
+        int a = registers.a;
+        int result = val + a;
+        int prevCarryBit = (registers.f & 0b00010000) >> 4;
+        result += prevCarryBit;
+        boolean didOverflow = false;
+        if (result > 0xFF){
+            didOverflow = true;
+            result = result & 0xFF; 
+        }  
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(false);
+        registers.set_f_halfcarry((a & 0xF) + (val & 0xF) + (prevCarryBit & 0xF) > 0xF);
+        registers.set_f_carry(didOverflow);
+        registers.a = result;
     }
 
     public void andA(int val){
