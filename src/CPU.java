@@ -50,9 +50,8 @@ public class CPU {
             case Operation.ADC:
                 if (instruction.operand == Operand.n8){
                     adcToA(instruction.next_bytes[0]);
-                    break;
+                    break;   
                 }
-                // otherwise, add from another register
                 adcToA(registers.readValFromEnum(instruction.operand));
                 break;
 
@@ -64,6 +63,14 @@ public class CPU {
                 }
                 subFromA(registers.readValFromEnum(instruction.operand));
                 break;
+
+            case Operation.SBC:
+                if (instruction.operand == Operand.n8){
+                    sbcFromA(instruction.next_bytes[0]);
+                    break;   
+                }
+                sbcFromA(registers.readValFromEnum(instruction.operand));
+                break;
             
             case Operation.AND:
                 if (instruction.operand == Operand.n8){
@@ -72,6 +79,14 @@ public class CPU {
                 }
                 andA(registers.readValFromEnum(instruction.operand));
                 break;
+
+            case Operation.CP:
+                if (instruction.operand == Operand.n8){
+                    cpToA(instruction.next_bytes[0]);
+                    break;   
+                }
+                cpToA(registers.readValFromEnum(instruction.operand));
+                break;      
             
             case Operation.OR:
                 if (instruction.operand == Operand.n8){
@@ -196,6 +211,41 @@ public class CPU {
         registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) & 0x10) != 0);
         registers.a = result;
     }
+
+    public void sbcFromA(int val) {
+        int a = registers.a;
+        int result = a - val;
+        int prevCarryBit = (registers.f & 0b00010000) >> 4;
+        result -= prevCarryBit;
+        boolean didUnderflow = false;
+        if (result < 0x00) {
+            didUnderflow = true;
+            // java automatically converts negative ints to binary
+            result = result & 0xFF;
+        }
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(true);
+        registers.set_f_carry(didUnderflow);
+        registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) - (prevCarryBit & 0xF) & 0x10) != 0);
+        registers.a = result;
+    }
+
+    // Same as subtraction but only set the flag bits
+    public void cpToA(int val) {
+        int a = registers.a;
+        int result = a - val;
+        boolean didUnderflow = false;
+        if (result < 0x00) {
+            didUnderflow = true;
+            // java automatically converts negative ints to binary
+            result = result & 0xFF;
+        }
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(true);
+        registers.set_f_carry(didUnderflow);
+        registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) & 0x10) != 0);
+    }
+
 
     public void addSignedTo16(Operand target, byte val){
         int targetVal = registers.readValFromEnum(target);
