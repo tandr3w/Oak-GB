@@ -8,7 +8,6 @@ public class Util {
         if (hex.length() == 1){
             hex = "0" + hex;
         }
-        hex = "0x" + hex;
         return hex;
     }
 }
