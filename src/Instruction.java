@@ -36,6 +36,7 @@ enum Operation {
     RRCA,
     RCA,
     CPL,
+    CCF,
 }
 
 public class Instruction {

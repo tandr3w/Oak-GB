@@ -125,6 +125,12 @@ public class CPU {
                 registers.set_f_subtract(true);
                 registers.set_f_halfcarry(true);
                 break;
+            
+            case Operation.CCF:
+                registers.set_f_carry(registers.get_f_carry() == 0);
+                registers.set_f_subtract(false);
+                registers.set_f_halfcarry(false);
+                break;
 
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
