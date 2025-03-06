@@ -8,6 +8,7 @@ enum Operand {
     a8, // a8 is unsigned 8-bit that is added to FF00 to make a 16-bit address
     a16,
     NONE,
+    SPe8 // special operand for opcode 0xF8
 }
 
 enum Operation {

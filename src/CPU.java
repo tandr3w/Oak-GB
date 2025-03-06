@@ -277,6 +277,10 @@ public class CPU {
         registers.set_f_halfcarry(((targetVal & 0xF) - (1 & 0xF) & 0x10) != 0);
         registers.setValToEnum(target, result);
     }
+    
+    public void inc16(Operand target){
+        
+    }
 
     public void addSignedTo16(Operand target, byte val){
         int targetVal = registers.readValFromEnum(target);
