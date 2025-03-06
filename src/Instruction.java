@@ -25,6 +25,8 @@ enum Operation {
     CP,
     INC,
     DEC,
+    INC16,
+    DEC16,
 }
 
 public class Instruction {

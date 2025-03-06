@@ -23,6 +23,14 @@ public class Opcodes {
         opcodesArray[0x15] = new Instruction(Operation.DEC, Operand.D, Operand.NONE, 1);
         opcodesArray[0x25] = new Instruction(Operation.DEC, Operand.H, Operand.NONE, 1);
         opcodesArray[0x35] = new Instruction(Operation.DEC, Operand.MemHL, Operand.NONE, 1);
+        opcodesArray[0x03] = new Instruction(Operation.INC16, Operand.BC, Operand.NONE, 1);
+        opcodesArray[0x13] = new Instruction(Operation.INC16, Operand.DE, Operand.NONE, 1);
+        opcodesArray[0x23] = new Instruction(Operation.INC16, Operand.HL, Operand.NONE, 1);
+        opcodesArray[0x33] = new Instruction(Operation.INC16, Operand.SP, Operand.NONE, 1);
+        opcodesArray[0x0B] = new Instruction(Operation.DEC16, Operand.BC, Operand.NONE, 1);
+        opcodesArray[0x1B] = new Instruction(Operation.DEC16, Operand.DE, Operand.NONE, 1);
+        opcodesArray[0x2B] = new Instruction(Operation.DEC16, Operand.HL, Operand.NONE, 1);
+        opcodesArray[0x3B] = new Instruction(Operation.DEC16, Operand.SP, Operand.NONE, 1);
         opcodesArray[0x12] = new Instruction(Operation.LD, Operand.MemDE, Operand.A, 1);
         opcodesArray[0x19] = new Instruction(Operation.ADD16, Operand.HL, Operand.DE, 1);
         opcodesArray[0x1A] = new Instruction(Operation.LD, Operand.A, Operand.MemDE, 1);

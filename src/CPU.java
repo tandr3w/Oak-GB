@@ -112,6 +112,14 @@ public class CPU {
                 dec(instruction.operandToSet);
                 break;
 
+            case Operation.INC16:
+                inc16(instruction.operandToSet);
+                break;
+
+            case Operation.DEC16:
+                dec16(instruction.operandToSet);
+                break;
+
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
                 // get the value that needs to be loaded first
@@ -279,7 +287,20 @@ public class CPU {
     }
     
     public void inc16(Operand target){
-        
+        int targetVal = registers.readValFromEnum(target);
+        int result = targetVal + 1;
+        if (result > 0xFFFF){
+            result = result & 0xFFFF;
+        }
+        registers.setValToEnum(target, result);
+    }
+    public void dec16(Operand target){
+        int targetVal = registers.readValFromEnum(target);
+        int result = targetVal - 1;
+        if (result < 0x0000){
+            result = result & 0xFFFF;
+        }
+        registers.setValToEnum(target, result);
     }
 
     public void addSignedTo16(Operand target, byte val){
