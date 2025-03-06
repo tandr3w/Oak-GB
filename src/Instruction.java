@@ -12,6 +12,7 @@ enum Operand {
 }
 
 enum Operation {
+    NOP,
     ADD,
     ADD16,
     SUB,
@@ -19,6 +20,7 @@ enum Operation {
     LD16,
     LDI,
     LDD,
+    LDH,
     AND,
     OR,
     XOR,
@@ -29,6 +31,8 @@ enum Operation {
     DEC,
     INC16,
     DEC16,
+    RLCA,
+    RLA
 }
 
 public class Instruction {
@@ -50,6 +54,10 @@ public class Instruction {
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = operandToSet;
+        this.num_bytes = num_bytes;
+    }
+    public Instruction(Operation operation, int num_bytes) {
+        this.operation = operation;
         this.num_bytes = num_bytes;
     }
 

@@ -226,6 +226,48 @@ public class CPU {
                     break;
                 }
 
+            case Operation.LDH:
+                if (instruction.operand == Operand.A && instruction.operandToSet == Operand.C) {
+                    int address = registers.c + 0xFF00;
+                    memory[address] = registers.a;
+                    break;
+                }
+                if (instruction.operand == Operand.C && instruction.operandToSet == Operand.A) {
+                    int val = memory[registers.c + 0xFF00];
+                    registers.a = val;
+                    break;
+                }
+                if (instruction.operand == Operand.A && instruction.operandToSet == Operand.a8) { 
+                    int address = instruction.next_bytes[0] + 0xFF00;
+                    memory[address] = registers.a;
+                    break;
+                }
+                if (instruction.operand == Operand.a8 && instruction.operandToSet == Operand.A) {
+                    int val = memory[instruction.next_bytes[0] + 0xFF00];
+                    registers.a = val;
+                    break;
+                }
+                break;
+            case Operation.RLCA:
+                int firstCircularBit = (registers.a & 0b10000000) >> 7;
+                registers.a <<= 1;
+                registers.a |= firstCircularBit;
+                registers.set_f_zero(false);
+                registers.set_f_halfcarry(false);
+                registers.set_f_subtract(false);
+                registers.set_f_carry(firstCircularBit == 1);
+                break;
+            case Operation.RLA:
+                int firstBit = (registers.a & 0b10000000) >> 7;
+                registers.a <<= 1;
+                registers.set_f_zero(false);
+                registers.set_f_halfcarry(false);
+                registers.set_f_subtract(false);
+                registers.set_f_carry(firstBit == 1);
+                break;
+
+            case Operation.NOP:
+                break;
             default:
                 System.out.println("Not implemented!");
                 break;
