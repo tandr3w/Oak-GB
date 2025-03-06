@@ -37,6 +37,8 @@ enum Operation {
     RCA,
     CPL,
     CCF,
+    SCF,
+    DAA,
 }
 
 public class Instruction {

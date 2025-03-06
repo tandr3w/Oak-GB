@@ -132,6 +132,35 @@ public class CPU {
                 registers.set_f_halfcarry(false);
                 break;
 
+            case Operation.SCF:
+                registers.set_f_carry(true);
+                registers.set_f_subtract(false);
+                registers.set_f_halfcarry(false);
+                break;  
+            
+            case Operation.DAA:
+                int adjustment = 0;
+                if (registers.get_f_subtract() == 1){
+                    adjustment += registers.get_f_halfcarry() * 0x6;
+                    adjustment += registers.get_f_carry() * 0x60;
+                    registers.a -= adjustment;
+                    registers.a &= 0xFF;
+                }
+                else {
+                    if (registers.get_f_halfcarry() == 1 || ((registers.a & 0xF) > 0x9)){
+                        adjustment += 0x6;
+                    }
+                    if (registers.get_f_carry() == 1 || (registers.a > 0x99)){
+                        adjustment += 0x60;
+                        registers.set_f_carry(true);
+                    }
+                    registers.a += adjustment;
+                    registers.a &= 0xFF;
+                }
+                registers.set_f_zero(registers.a == 0);
+                registers.set_f_halfcarry(false);
+                break;
+
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
                 // get the value that needs to be loaded first

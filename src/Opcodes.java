@@ -46,6 +46,7 @@ public class Opcodes {
         opcodesArray[0x24] = new Instruction(Operation.INC, Operand.H, Operand.NONE, 1);
         opcodesArray[0x25] = new Instruction(Operation.DEC, Operand.H, Operand.NONE, 1);
         opcodesArray[0x26] = new Instruction(Operation.LD, Operand.H, Operand.n8, 2);
+        opcodesArray[0x27] = new Instruction(Operation.DAA, 1);
         opcodesArray[0x29] = new Instruction(Operation.ADD16, Operand.HL, Operand.HL, 1);
         opcodesArray[0x2A] = new Instruction(Operation.LDI, Operand.A, Operand.MemHL, 1);
         opcodesArray[0x2B] = new Instruction(Operation.DEC16, Operand.HL, Operand.NONE, 1);
@@ -53,7 +54,6 @@ public class Opcodes {
         opcodesArray[0x2D] = new Instruction(Operation.DEC, Operand.L, Operand.NONE, 1);
         opcodesArray[0x2E] = new Instruction(Operation.LD, Operand.L, Operand.n8, 2);
         opcodesArray[0x2F] = new Instruction(Operation.CPL, 1);
-        opcodesArray[0x3F] = new Instruction(Operation.CCF, 1);
 
         // ROW 3
         opcodesArray[0x31] = new Instruction(Operation.LD16, Operand.SP, Operand.n16, 3);
@@ -62,12 +62,14 @@ public class Opcodes {
         opcodesArray[0x34] = new Instruction(Operation.INC, Operand.MemHL, Operand.NONE, 1);
         opcodesArray[0x35] = new Instruction(Operation.DEC, Operand.MemHL, Operand.NONE, 1);
         opcodesArray[0x36] = new Instruction(Operation.LD, Operand.MemHL, Operand.n8, 2);
+        opcodesArray[0x37] = new Instruction(Operation.SCF, 1);
         opcodesArray[0x39] = new Instruction(Operation.ADD16, Operand.HL, Operand.SP, 1);
         opcodesArray[0x3A] = new Instruction(Operation.LDD, Operand.A, Operand.MemHL, 1);
         opcodesArray[0x3B] = new Instruction(Operation.DEC16, Operand.SP, Operand.NONE, 1);
         opcodesArray[0x3C] = new Instruction(Operation.INC, Operand.A, Operand.NONE, 1);
         opcodesArray[0x3D] = new Instruction(Operation.DEC, Operand.A, Operand.NONE, 1);
         opcodesArray[0x3E] = new Instruction(Operation.LD, Operand.A, Operand.n8, 2);
+        opcodesArray[0x3F] = new Instruction(Operation.CCF, 1);
 
         // ROW 4
         opcodesArray[0x40] = new Instruction(Operation.LD, Operand.B, Operand.B, 1);
