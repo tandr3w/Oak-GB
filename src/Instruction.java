@@ -32,7 +32,9 @@ enum Operation {
     INC16,
     DEC16,
     RLCA,
-    RLA
+    RLA,
+    RRCA,
+    RCA,
 }
 
 public class Instruction {
