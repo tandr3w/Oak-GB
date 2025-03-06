@@ -71,6 +71,14 @@ public class CPU {
                 }
                 orA(registers.readValFromEnum(instruction.operand));
                 break;
+            
+            case Operation.XOR:
+                if (instruction.operand == Operand.n8){
+                    xorA(instruction.next_bytes[0]);
+                    break;   
+                }
+                xorA(registers.readValFromEnum(instruction.operand));
+                break;    
 
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
@@ -201,6 +209,15 @@ public class CPU {
 
     public void orA(int val){
         int result = registers.a | val;
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(false);
+        registers.set_f_halfcarry(false);
+        registers.set_f_carry(false);
+        registers.a = result;
+    }
+
+    public void xorA(int val){
+        int result = registers.a ^ val;
         registers.set_f_zero(result == 0);
         registers.set_f_subtract(false);
         registers.set_f_halfcarry(false);
