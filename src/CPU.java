@@ -128,6 +128,35 @@ public class CPU {
                 registers.setValToEnum(instruction.operandToSet, valToLoad);
 
                 break;
+            // TODO: check if all cominations of operands are accounted for
+            case Operation.LD16:
+                int twoByteVal;
+                // There are no LD16 operations that have an n8 operand
+                if (instruction.operand == Operand.n16) {
+                    twoByteVal = ((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF);
+                }
+                
+                else if (instruction.operand == Operand.e8) {
+                    addSignedTo16(Operand.SP, (byte) instruction.next_bytes[0]);
+                    twoByteVal = registers.sp;
+                }
+                
+                // Otherwise, the operand is a 16-bit register
+                else {;
+                    twoByteVal = registers.readValFromEnum(instruction.operand);
+                }
+                
+
+                if (instruction.operandToSet == Operand.a16) {
+                    int address = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
+                    memory[address] = twoByteVal;
+                    break;
+                }
+
+                // operandToSet should be a register
+                registers.setValToEnum(instruction.operandToSet, twoByteVal);
+                break;
+                
             default:
                 System.out.println("Not implemented!");
                 break;
@@ -143,8 +172,8 @@ public class CPU {
         boolean didOverflow = false;
         if (result > 0xFF){
             didOverflow = true;
-            result = result & 0xFF; 
-        }  
+            result = result & 0xFF;
+        }
         registers.set_f_zero(result == 0);
         registers.set_f_subtract(false);
         registers.set_f_carry(didOverflow);
