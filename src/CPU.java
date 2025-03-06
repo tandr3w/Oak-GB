@@ -1,3 +1,4 @@
+package src;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
@@ -61,6 +62,10 @@ public class CPU {
                     valToLoad = memory[instruction.next_bytes[0] + 0xFF00];
                 }
                 
+                else if (instruction.operand == Operand.n8) {
+                    valToLoad = instruction.next_bytes[0];
+                }
+
                 // otherwise, the operant is a register
                 else {;
                     valToLoad = registers.readValFromEnum(instruction.operand);
@@ -123,8 +128,8 @@ public class CPU {
         registers.set_f_halfcarry(((a & 0xF) - (val & 0xF) & 0x10) != 0);
     }
 
-    // val is unsigned 8
-    // operant is either HL or SP
+    // val is unsigned 8-bit
+    // target is either HL or SP
     public void add16(Operand target, int val) {
         int targetVal = registers.readValFromEnum(target);
         int result = val + targetVal;
@@ -140,7 +145,7 @@ public class CPU {
         }
         registers.set_f_subtract(false);
         registers.set_f_carry(didOverflow);
-        registers.set_f_halfcarry((targetVal & 0xFF) + (val & 0xFF) > 0xFF);
+        registers.set_f_halfcarry(((targetVal & 0x0800) + (val & 0x0800)) > 0x0800);
         registers.setValToEnum(target, result);
     }
 
