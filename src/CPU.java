@@ -273,7 +273,7 @@ public class CPU {
             case Operation.RRCA:
                 int lastCircularBit = registers.a & 1;
                 registers.a = (registers.a >> 1) & 0xFF;
-                registers.a |= lastCircularBit;
+                registers.a |= lastCircularBit << 7;
                 registers.set_f_zero(false);
                 registers.set_f_halfcarry(false);
                 registers.set_f_subtract(false);
@@ -282,6 +282,7 @@ public class CPU {
             case Operation.RCA:
                 int lastBit = registers.a & 1;
                 registers.a = (registers.a >> 1) & 0xFF;
+                registers.a |= (registers.get_f_carry() << 7);
                 registers.set_f_zero(false);
                 registers.set_f_halfcarry(false);
                 registers.set_f_subtract(false);
