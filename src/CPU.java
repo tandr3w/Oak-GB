@@ -261,8 +261,7 @@ public class CPU {
                 int firstBit = (registers.a & 0b10000000) >> 7;
                 registers.a = (registers.a << 1) & 0xFF;
                 
-                int currentCarry = (registers.f >> 4) & 1;
-                registers.a = registers.a | currentCarry;
+                registers.a = registers.a | registers.get_f_carry();
 
                 registers.set_f_zero(false);
                 registers.set_f_halfcarry(false);

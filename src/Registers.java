@@ -148,6 +148,19 @@ public class Registers {
             f = f & 0b01111111;
         }    }
 
+    public int get_f_zero(){
+        return (f >> 7) & 1;
+    }    
+    public int get_f_subtract(){
+        return (f >> 6) & 1;
+    }    
+    public int get_f_halfcarry(){
+        return (f >> 5) & 1;
+    }    
+    public int get_f_carry(){
+        return (f >> 4) & 1;
+    }    
+
     public void set_f_subtract(boolean val){
         if (val){
             f = f | 0b01000000;
