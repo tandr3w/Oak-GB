@@ -7,8 +7,10 @@ public class Opcodes {
         opcodesArray = new Instruction[0x100]; // 0xFF represents 255 in binary, but array needs to hold 256 values
         opcodesArray[0x02] = new Instruction(Operation.LD, Operand.MemBC, Operand.A, 1);
         opcodesArray[0x09] = new Instruction(Operation.ADD16, Operand.HL, Operand.BC, 1);
+        opcodesArray[0x0A] = new Instruction(Operation.LD, Operand.A, Operand.MemBC, 1);
         opcodesArray[0x12] = new Instruction(Operation.LD, Operand.MemDE, Operand.A, 1);
         opcodesArray[0x19] = new Instruction(Operation.ADD16, Operand.HL, Operand.DE, 1);
+        opcodesArray[0x1A] = new Instruction(Operation.LD, Operand.A, Operand.MemDE, 1);
         opcodesArray[0x29] = new Instruction(Operation.ADD16, Operand.HL, Operand.HL, 1);
         opcodesArray[0x39] = new Instruction(Operation.ADD16, Operand.HL, Operand.SP, 1);
         opcodesArray[0x40] = new Instruction(Operation.LD, Operand.B, Operand.B, 1);
