@@ -260,6 +260,10 @@ public class CPU {
             case Operation.RLA:
                 int firstBit = (registers.a & 0b10000000) >> 7;
                 registers.a = (registers.a << 1) & 0xFF;
+                
+                int currentCarry = (registers.f >> 4) & 1;
+                registers.a = registers.a | currentCarry;
+
                 registers.set_f_zero(false);
                 registers.set_f_halfcarry(false);
                 registers.set_f_subtract(false);
