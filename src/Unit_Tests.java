@@ -17,11 +17,15 @@ public class Unit_Tests {
     public int run(){
         // Test add operation
         // Test all opcodes do not error
+        int cases_passed = 0;
+        int case_count = 0;
         for (int i=0; i<0x100; i++){
             try{
                 if (opcodes.byteToInstruction(i) != null){
+                    case_count += 1;
                     int test_result = test_json("test_jsons/" + Util.hexByte(i) + ".json", i);
                     if (test_result == 0){
+                        cases_passed += 1;
                         System.out.println("Testing passed on: " + Util.hexByte(i));
                     }
                     else {
@@ -34,7 +38,8 @@ public class Unit_Tests {
                 e.printStackTrace();
             }
         }
-        return 1;
+        System.out.println("\nCases passed: " + Integer.toString(cases_passed) + " / " + Integer.toString(case_count));
+        return cases_passed;
     }
 
     public static JSONArray readJsonArrayFile(String filePath) {
