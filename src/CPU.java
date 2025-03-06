@@ -250,7 +250,7 @@ public class CPU {
                 break;
             case Operation.RLCA:
                 int firstCircularBit = (registers.a & 0b10000000) >> 7;
-                registers.a <<= 1;
+                registers.a = (registers.a << 1) & 0xFF;
                 registers.a |= firstCircularBit;
                 registers.set_f_zero(false);
                 registers.set_f_halfcarry(false);
@@ -259,7 +259,7 @@ public class CPU {
                 break;
             case Operation.RLA:
                 int firstBit = (registers.a & 0b10000000) >> 7;
-                registers.a <<= 1;
+                registers.a = (registers.a << 1) & 0xFF;
                 registers.set_f_zero(false);
                 registers.set_f_halfcarry(false);
                 registers.set_f_subtract(false);
