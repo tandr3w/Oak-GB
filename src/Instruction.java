@@ -16,6 +16,7 @@ enum Operation {
     LD,
     LD16,
     AND,
+    OR,
 }
 
 public class Instruction {

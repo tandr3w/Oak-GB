@@ -99,10 +99,20 @@ public class Opcodes {
         opcodesArray[0xA5] = new Instruction(Operation.AND, Operand.L, 1);
         opcodesArray[0xA6] = new Instruction(Operation.AND, Operand.MemHL, 1);
         opcodesArray[0xA7] = new Instruction(Operation.AND, Operand.A, 1); 
+        opcodesArray[0xB0] = new Instruction(Operation.OR, Operand.B, 1);
+        opcodesArray[0xB1] = new Instruction(Operation.OR, Operand.C, 1);
+        opcodesArray[0xB2] = new Instruction(Operation.OR, Operand.D, 1);
+        opcodesArray[0xB3] = new Instruction(Operation.OR, Operand.E, 1);
+        opcodesArray[0xB4] = new Instruction(Operation.OR, Operand.H, 1);
+        opcodesArray[0xB5] = new Instruction(Operation.OR, Operand.L, 1);
+        opcodesArray[0xB6] = new Instruction(Operation.OR, Operand.MemHL, 1);
+        opcodesArray[0xB7] = new Instruction(Operation.OR, Operand.A, 1); 
         opcodesArray[0xC6] = new Instruction(Operation.ADD, Operand.n8, 2);  
         opcodesArray[0xD6] = new Instruction(Operation.SUB, Operand.n8, 2);  
         opcodesArray[0xE6] = new Instruction(Operation.AND, Operand.n8, 2);  
         opcodesArray[0xE8] = new Instruction(Operation.ADD, Operand.SP, Operand.e8, 2);  
+        opcodesArray[0xF6] = new Instruction(Operation.OR, Operand.n8, 2);  
+
     }
 
     public Instruction byteToInstruction(int readByte) {
