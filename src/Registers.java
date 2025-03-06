@@ -1,4 +1,3 @@
-package src;
 public class Registers {
     int a; // 8-bit integers
     int b;
