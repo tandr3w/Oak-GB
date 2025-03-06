@@ -15,6 +15,7 @@ enum Operation {
     SUB,
     LD,
     LD16,
+    AND,
 }
 
 public class Instruction {

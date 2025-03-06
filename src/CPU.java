@@ -55,7 +55,14 @@ public class CPU {
                 }
                 subFromA(registers.readValFromEnum(instruction.operand));
                 break;
-
+            
+            case Operation.AND:
+                if (instruction.operand == Operand.n8){
+                    andA(instruction.next_bytes[0]);
+                    break;   
+                }
+                andA(registers.readValFromEnum(instruction.operand));
+                break;
 
             case Operation.LD: // FOR 8-BIT LOAD OPERATIONS
                 // instruction.operand is the value that will be loaded
@@ -173,6 +180,15 @@ public class CPU {
         registers.set_f_carry(didOverflow);
         registers.set_f_halfcarry((targetVal & 0x0FFF) + (val & 0x0FFF) > 0x0FFF);
         registers.setValToEnum(target, result);
+    }
+
+    public void andA(int val){
+        int result = registers.a & val;
+        registers.set_f_zero(result == 0);
+        registers.set_f_subtract(false);
+        registers.set_f_halfcarry(true);
+        registers.set_f_carry(false);
+        registers.a = result;
     }
 
     public void loadROM(String ROMName) {
