@@ -20,6 +20,7 @@ enum Operation {
     XOR,
     ADC,
     SBC,
+    CP,
 }
 
 public class Instruction {

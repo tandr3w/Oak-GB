@@ -131,6 +131,14 @@ public class Opcodes {
         opcodesArray[0xB5] = new Instruction(Operation.OR, Operand.L, 1);
         opcodesArray[0xB6] = new Instruction(Operation.OR, Operand.MemHL, 1);
         opcodesArray[0xB7] = new Instruction(Operation.OR, Operand.A, 1); 
+        opcodesArray[0xB8] = new Instruction(Operation.CP, Operand.B, 1);
+        opcodesArray[0xB9] = new Instruction(Operation.CP, Operand.C, 1);
+        opcodesArray[0xBA] = new Instruction(Operation.CP, Operand.D, 1);
+        opcodesArray[0xBB] = new Instruction(Operation.CP, Operand.E, 1);
+        opcodesArray[0xBC] = new Instruction(Operation.CP, Operand.H, 1);
+        opcodesArray[0xBD] = new Instruction(Operation.CP, Operand.L, 1);
+        opcodesArray[0xBE] = new Instruction(Operation.CP, Operand.MemHL, 1);
+        opcodesArray[0xBF] = new Instruction(Operation.CP, Operand.A, 1); 
         opcodesArray[0xC6] = new Instruction(Operation.ADD, Operand.n8, 2);  
         opcodesArray[0xD6] = new Instruction(Operation.SUB, Operand.n8, 2);  
         opcodesArray[0xE6] = new Instruction(Operation.AND, Operand.n8, 2);  
