@@ -78,6 +78,8 @@ public class Instruction {
         this.num_bytes = num_bytes;
         this.prefixed = false;
     }
+
+    // prefixed instructions
     public Instruction(Operation operation, Operand operand, int num_bytes, boolean prefixed) {
         this.operation = operation;
         this.operand = operand;

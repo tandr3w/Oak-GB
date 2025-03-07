@@ -1,9 +1,11 @@
 public class Opcodes {
     public Instruction[] opcodesArray;
+    public Instruction[] prefixedOpcodesArray;
     public Opcodes() {
         // TODO: figure out how to handle prefixed/unprefixed opcodes
         // nvm its simple; switch to prefixed when CB instruction is executed
         opcodesArray = new Instruction[0xFF + 1];
+        prefixedOpcodesArray = new Instruction[0xFF + 1];
 
         // ROW 0
         opcodesArray[0x00] = new Instruction(Operation.NOP, Operand.NONE, 1);
@@ -264,15 +266,25 @@ public class Opcodes {
         opcodesArray[0xF9] = new Instruction(Operation.LD16, Operand.SP, Operand.HL, 1);
         opcodesArray[0xFA] = new Instruction(Operation.LD, Operand.A, Operand.a16, 3);
         opcodesArray[0xFE] = new Instruction(Operation.CP, Operand.n8, 2);  
-        opcodesArray[0xFF] = new Instruction(Operation.RST, Operand.RST38, 1);  
+        opcodesArray[0xFF] = new Instruction(Operation.RST, Operand.RST38, 1);
+        
+        
     }
 
-    public Instruction byteToInstruction(int readByte) {
-        if (opcodesArray[readByte] == null){
-            // System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
+    public Instruction byteToInstruction(int readByte, boolean prefixed) {
+        if (!prefixed) {
+            if (opcodesArray[readByte] == null){
+                // System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
+                return null;
+            }
+            return opcodesArray[readByte];
+        }
+        
+        if (prefixedOpcodesArray[readByte] == null){
             return null;
         }
-        return opcodesArray[readByte];
+        return prefixedOpcodesArray[readByte];
+        
     }
 
 }

@@ -24,7 +24,6 @@ public class CPU {
         registers.pc &= 0xFFFF; // overflow
         
         switch (instruction.operation){
-
             case Operation.ADD:
                 if (instruction.operand == Operand.n8){
                     addToA(instruction.next_bytes[0]);
