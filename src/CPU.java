@@ -724,7 +724,7 @@ public class CPU {
         registers.a = result;
     }
 
-    public void xorA(int val){
+    public void xorA(int val) {
         int result = registers.a ^ val;
         registers.set_f_zero(result == 0);
         registers.set_f_subtract(false);
@@ -732,6 +732,32 @@ public class CPU {
         registers.set_f_carry(false);
         registers.a = result;
     }
+
+    public void RLC(Operand target) {
+        int firstCircularBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
+        int shifted = (registers.a << 1) & 0xFF;
+        registers.setValToEnum(target, shifted);
+        registers.setValToEnum(target, registers.readValFromEnum(target) | firstCircularBit);
+        
+        registers.set_f_zero(false);
+        registers.set_f_halfcarry(false);
+        registers.set_f_subtract(false);
+        registers.set_f_carry(firstCircularBit == 1);
+    }
+
+    public void RL(Operand target) {
+        int firstCircularBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
+        int shifted = (registers.a << 1) & 0xFF;
+        registers.setValToEnum(target, shifted);
+        registers.setValToEnum(target, registers.readValFromEnum(target) | registers.get_f_carry());
+        registers.set_f_zero(false);
+        registers.set_f_halfcarry(false);
+        registers.set_f_subtract(false);
+        registers.set_f_carry(firstCircularBit == 1);
+    }
+
+    
+
 
     public void loadROM(String ROMName) {
         try {

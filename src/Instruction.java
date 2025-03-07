@@ -48,6 +48,13 @@ enum Operation {
     POP,
     PUSH,
     PREFIX, // opcode CB
+
+
+    // prefixed instructions
+    RLC,
+    RRC,
+    RL,
+    RR,
 }
 
 public class Instruction {
