@@ -26,12 +26,12 @@ public class CPU {
 
     public int executePrefixed(Instruction instruction){
         setNextBytes(instruction);
-        registers.pc += instruction.num_bytes;
+        registers.pc += instruction.num_bytes - 1;
         registers.pc &= 0xFFFF; // overflow
         
         switch (instruction.operation){
             case Operation.SWAP:
-                System.out.println("HI");
+                swap(instruction.operand);
                 break;
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
@@ -800,7 +800,17 @@ public class CPU {
         registers.set_f_carry(firstBit == 1);
     }
 
-
+    public void swap(Operand target){
+        int val = registers.readValFromEnum(target);
+        int lowerNibble = val & 0b00001111;
+        int upperNibble = val & 0b11110000;
+        int result = (lowerNibble << 4) | (upperNibble >> 4);
+        registers.setValToEnum(target, result);
+        registers.set_f_zero(result == 0);
+        registers.set_f_carry(false);
+        registers.set_f_halfcarry(false);
+        registers.set_f_subtract(false);
+    }
 
     public void loadROM(String ROMName) {
         try {
