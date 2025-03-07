@@ -1,9 +1,13 @@
 public class Opcodes {
     public Instruction[] opcodesArray;
+    public Instruction[] prefixOpcodesArray;
     public Opcodes() {
         // TODO: figure out how to handle prefixed/unprefixed opcodes
         // nvm its simple; switch to prefixed when CB instruction is executed
         opcodesArray = new Instruction[0x100]; // 0xFF represents 255 in binary, but array needs to hold 256 values
+        prefixOpcodesArray = new Instruction[0x100];
+
+        prefixOpcodesArray[0x31] = new Instruction(Operation.SWAP, Operand.B, 1);
 
         // ROW 0
         opcodesArray[0x00] = new Instruction(Operation.NOP, Operand.NONE, 1);
@@ -223,6 +227,7 @@ public class Opcodes {
         opcodesArray[0xC8] = new Instruction(Operation.RET, Operand.JumpZ, 1);  
         opcodesArray[0xC9] = new Instruction(Operation.RET, 1);  
         opcodesArray[0xCA] = new Instruction(Operation.JP, Operand.JumpZ, 3);
+        opcodesArray[0xCB] = new Instruction(Operation.PREFIX, 2);
         opcodesArray[0xCC] = new Instruction(Operation.CALL, Operand.JumpZ, Operand.a16, 3);    
         opcodesArray[0xCD] = new Instruction(Operation.CALL, Operand.a16, 3);  
         opcodesArray[0xCE] = new Instruction(Operation.ADC, Operand.n8, 2);  

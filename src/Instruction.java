@@ -47,6 +47,10 @@ enum Operation {
     RST,
     POP,
     PUSH,
+    PREFIX,
+
+    // PREFIX INSTRUCTIONS
+    SWAP,
 }
 
 public class Instruction {
@@ -56,7 +60,6 @@ public class Instruction {
     public Operand operandToSet; // 1st operand
     public int num_bytes;
     public int[] next_bytes;
-
 
     public Instruction(Operation operation, Operand operand, int num_bytes){
         this.operation = operation;

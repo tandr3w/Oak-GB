@@ -8,8 +8,8 @@ public class Unit_Tests {
     public Opcodes opcodes;
 
     public Unit_Tests(){
-        cpu = new CPU();
         opcodes = new Opcodes();
+        cpu = new CPU(opcodes);
     }
 
     public int run(){
@@ -17,6 +17,9 @@ public class Unit_Tests {
         int case_count = 0;
         int cases_not_implemented = 0;
         for (int i=0; i<0x100; i++){
+            if (i == 0xCB){
+                continue;
+            }
             try{
                 if (opcodes.byteToInstruction(i) != null){
                     case_count += 1;
@@ -27,6 +30,36 @@ public class Unit_Tests {
                     }
                     else {
                         System.out.println("Testing failed on: " + Util.hexByte(i) + " (error code: " + Integer.toString(test_result) + ")");
+                    }
+                }
+                else {
+                    cases_not_implemented += 1;
+                }
+            }
+            catch(Exception e){
+                System.out.println("Testing failed on: " + Util.hexByte(i));
+                e.printStackTrace();
+            }
+        }
+        System.out.println("\nCases passed: " + Integer.toString(cases_passed) + " / " + Integer.toString(case_count) + " (" + Integer.toString(cases_not_implemented - 11) + " not implemented)");
+        return cases_passed;
+    }
+
+    public int runPrefixed(){
+        int cases_passed = 0;
+        int case_count = 0;
+        int cases_not_implemented = 0;
+        for (int i=0; i<0x100; i++){
+            try{
+                if (opcodes.prefixOpcodesArray[i] != null){
+                    case_count += 1;
+                    int test_result = test_json("test_jsons/cb " + Util.hexByte(i) + ".json", 0xCB);
+                    if (test_result == 0){
+                        cases_passed += 1;
+                        System.out.println("Testing passed on: cb " + Util.hexByte(i));
+                    }
+                    else {
+                        System.out.println("Testing failed on: cb " + Util.hexByte(i) + " (error code: " + Integer.toString(test_result) + ")");
                     }
                 }
                 else {
