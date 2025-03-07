@@ -5,25 +5,50 @@ import java.io.FileInputStream;
 public class CPU {
     Registers registers;
     int[] memory;
+    Opcodes opcodes;
 
-    public CPU(){
+    public CPU(Opcodes opcodes){
         memory = new int[0xFFFF + 1]; // 65536 bytes
         registers = new Registers(this);
+        this.opcodes = opcodes;
+
         loadROM("ROMs/snake.gb"); // FIXME
     }
 
-    public int execute(Instruction instruction){
-        // Load correct number of bytes
+    public void setNextBytes(Instruction instruction){
         if (instruction.num_bytes > 1){
             instruction.next_bytes = new int[instruction.num_bytes - 1];
             for (int i=0; i<instruction.num_bytes-1; i++){
                 instruction.next_bytes[i] = memory[(registers.pc + i + 1) & 0xFFFF]; // &0xFFFF to account for overflow
             }
         }
+    }
+
+    public int executePrefixed(Instruction instruction){
+        setNextBytes(instruction);
         registers.pc += instruction.num_bytes;
         registers.pc &= 0xFFFF; // overflow
         
         switch (instruction.operation){
+            case Operation.SWAP:
+                System.out.println("HI");
+                break;
+        }
+
+        return registers.pc;
+    }
+
+    public int execute(Instruction instruction){
+        // Load correct number of bytes
+        setNextBytes(instruction);
+        registers.pc += instruction.num_bytes;
+        registers.pc &= 0xFFFF; // overflow
+        
+        switch (instruction.operation){
+            case Operation.PREFIX:
+                int nextByte = instruction.next_bytes[0];
+                executePrefixed(opcodes.prefixOpcodesArray[nextByte]);
+                break;
             case Operation.ADD:
                 if (instruction.operand == Operand.n8){
                     addToA(instruction.next_bytes[0]);
@@ -493,9 +518,7 @@ public class CPU {
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;
-
-            case Operation.PREFIX:
-                
+                                
         }
         return registers.pc;
     }

@@ -47,10 +47,10 @@ enum Operation {
     RST,
     POP,
     PUSH,
-    PREFIX, // opcode CB
+    PREFIX,
 
-
-    // prefixed instructions
+    // PREFIX INSTRUCTIONS
+    SWAP,
     RLC,
     RRC,
     RL,
