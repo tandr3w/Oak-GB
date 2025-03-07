@@ -274,19 +274,13 @@ public class Opcodes {
         
     }
 
-    public Instruction byteToInstruction(int readByte, boolean prefixed) {
-        if (!prefixed) {
-            if (opcodesArray[readByte] == null){
-                // System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
-                return null;
-            }
-            return opcodesArray[readByte];
-        }
-
-        if (prefixedOpcodesArray[readByte] == null){
+    public Instruction byteToInstruction(int readByte) {
+        if (opcodesArray[readByte] == null){
+            // System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
             return null;
         }
-        return prefixedOpcodesArray[readByte];
+        return opcodesArray[readByte];
     }
+    
 
 }
