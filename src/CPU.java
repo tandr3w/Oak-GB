@@ -472,6 +472,25 @@ public class CPU {
                 }
                 break;
 
+            case Operation.PUSH:
+                add16ToStack(registers.readValFromEnum(instruction.operand));
+                break;
+
+            case Operation.POP:
+                if (instruction.operand == Operand.AF){
+                    int val = pop16FromStack();
+                    registers.a = (val & 0xFF00) >> 8;
+                    int lowerByte = val & 0xFF;
+                    registers.set_f_zero((lowerByte & 0b10000000) != 0);
+                    registers.set_f_subtract((lowerByte & 0b01000000) != 0);
+                    registers.set_f_halfcarry((lowerByte & 0b00100000) != 0);
+                    registers.set_f_carry((lowerByte & 0b00010000) != 0);
+                }
+                else {
+                    registers.setValToEnum(instruction.operand, pop16FromStack());
+                }
+                break;
+
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;

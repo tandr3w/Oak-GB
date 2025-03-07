@@ -48,6 +48,8 @@ public class Registers {
                 return get_de();
             case Operand.HL:
                 return get_hl();
+            case Operand.AF:
+                return get_af();
             case Operand.MemBC:
                 return cpu.memory[get_bc()];
             case Operand.MemDE:
@@ -92,6 +94,9 @@ public class Registers {
                 break;
             case Operand.HL:
                 set_hl(val);
+                break;
+            case Operand.AF:
+                set_af(val);
                 break;
             case Operand.SP:
                 sp = val;

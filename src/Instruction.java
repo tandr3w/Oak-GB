@@ -1,5 +1,5 @@
 enum Operand {
-    A, B, C, D, E, H, L, BC, DE, HL,
+    A, B, C, D, E, H, L, BC, DE, HL, AF,
     MemHL, MemBC, MemDE,
     SP, PC,
     
@@ -10,7 +10,7 @@ enum Operand {
     NONE,
     JumpNZ, JumpNC, JumpZ, JumpC, // For jumps
     SPe8, // special operand for opcode 0xF8
-    RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38,
+    RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38, 
 }
 
 enum Operation {
