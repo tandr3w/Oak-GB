@@ -764,7 +764,7 @@ public class CPU {
         int firstCircularBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
         int shifted = (registers.a << 1) & 0xFF;
         registers.setValToEnum(target, shifted | firstCircularBit);
-        registers.set_f_zero(false);
+        registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstCircularBit == 1);
@@ -774,7 +774,7 @@ public class CPU {
         int firstBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
         int shifted = (registers.a << 1) & 0xFF;
         registers.setValToEnum(target, shifted | registers.get_f_carry());
-        registers.set_f_zero(false);
+        registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstBit == 1);
@@ -784,7 +784,7 @@ public class CPU {
         int firstCircularBit = (registers.readValFromEnum(target) & 0b00000001) << 7;
         int shifted = (registers.a >> 1);
         registers.setValToEnum(target, shifted | firstCircularBit);
-        registers.set_f_zero(false);
+        registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstCircularBit == 1);
@@ -794,7 +794,7 @@ public class CPU {
         int firstBit = (registers.readValFromEnum(target) & 0b00000001) << 7;
         int shifted = (registers.a >> 1);
         registers.setValToEnum(target, shifted | registers.get_f_carry());
-        registers.set_f_zero(false);
+        registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstBit == 1);
