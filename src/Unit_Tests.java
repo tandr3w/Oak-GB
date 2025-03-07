@@ -21,7 +21,7 @@ public class Unit_Tests {
                 continue;
             }
             try{
-                if (opcodes.byteToInstruction(i) != null){
+                if (opcodes.byteToInstruction(i, false) != null){
                     case_count += 1;
                     int test_result = test_json("test_jsons/" + Util.hexByte(i) + ".json", i);
                     if (test_result == 0){
@@ -107,7 +107,7 @@ public class Unit_Tests {
             cpu.registers.f = initial.getInt("f");
             cpu.registers.h = initial.getInt("h");
             cpu.registers.l = initial.getInt("l");
-            cpu.execute(opcodes.byteToInstruction(opcode));
+            cpu.execute(opcodes.byteToInstruction(opcode, false));
 
             JSONObject end = testCase.getJSONObject("final");
             JSONArray endRam = end.getJSONArray("ram");

@@ -3,14 +3,14 @@ enum Operand {
     MemHL, MemBC, MemDE,
     SP, PC,
     
-    n8, e8, n16, // for when we are using a given number instead of a register value
+    n3, n8, e8, n16,
     
     a8, // a8 is unsigned 8-bit that is added to FF00 to make a 16-bit address
     a16,
     NONE,
     JumpNZ, JumpNC, JumpZ, JumpC, // For jumps
     SPe8, // special operand for opcode 0xF8
-    RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38, 
+    RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38,
 }
 
 enum Operation {
@@ -51,6 +51,10 @@ enum Operation {
 
     // PREFIX INSTRUCTIONS
     SWAP,
+    RLC,
+    RRC,
+    RL,
+    RR,
 }
 
 public class Instruction {
