@@ -6,11 +6,17 @@ public class CPU {
     Registers registers;
     int[] memory;
     Opcodes opcodes;
+    boolean lowPowerMode;
+    boolean halted;
+    boolean interrupts;
 
     public CPU(Opcodes opcodes){
         memory = new int[0xFFFF + 1]; // 65536 bytes
         registers = new Registers(this);
         this.opcodes = opcodes;
+        lowPowerMode = false;
+        halted = false;
+        interrupts = false;
 
         loadROM("ROMs/snake.gb"); // FIXME
     }
