@@ -11,6 +11,7 @@ enum Operand {
     JumpNZ, JumpNC, JumpZ, JumpC, // For jumps
     SPe8, // special operand for opcode 0xF8
     RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38,
+    BIT0, BIT1, BIT2, BIT3, BIT4, BIT5, BIT6, BIT7,
 }
 
 enum Operation {
@@ -55,6 +56,7 @@ enum Operation {
     RRC,
     RL,
     RR,
+    BIT,
 }
 
 public class Instruction {

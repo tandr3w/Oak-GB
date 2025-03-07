@@ -33,8 +33,38 @@ public class CPU {
             case Operation.SWAP:
                 swap(instruction.operand);
                 break;
+            case Operation.BIT:
+                int val = registers.readValFromEnum(instruction.operand);
+                if (instruction.operandToSet == Operand.BIT0){
+                    registers.set_f_zero((val & 0b00000001) == 0);
+                }
+                if (instruction.operandToSet == Operand.BIT1){
+                    registers.set_f_zero((val & 0b00000010) == 0);
+                }
+                if (instruction.operandToSet == Operand.BIT2){
+                    registers.set_f_zero((val & 0b00000100) == 0);
+                }
+                if (instruction.operandToSet == Operand.BIT3){
+                    registers.set_f_zero((val & 0b00001000) == 0);
+                }
+                if (instruction.operandToSet == Operand.BIT4){
+                    registers.set_f_zero((val & 0b00010000) == 0);
+                }
+                if (instruction.operandToSet == Operand.BIT5){
+                    registers.set_f_zero((val & 0b00100000) == 0);
+                }
+                if (instruction.operandToSet == Operand.BIT6){
+                    registers.set_f_zero((val & 0b01000000) == 0);
+                }
+                if (instruction.operandToSet == Operand.BIT7){
+                    registers.set_f_zero((val & 0b10000000) == 0);
+                }
+                registers.set_f_subtract(false);
+                registers.set_f_halfcarry(true);
+                break;
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
+                break;
         }
 
         return registers.pc;
