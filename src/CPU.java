@@ -33,6 +33,8 @@ public class CPU {
             case Operation.SWAP:
                 System.out.println("HI");
                 break;
+            default:
+                System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
         }
 
         return registers.pc;
@@ -518,7 +520,7 @@ public class CPU {
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;
-                                
+
         }
         return registers.pc;
     }
