@@ -107,7 +107,7 @@ public class Unit_Tests {
             cpu.registers.f = initial.getInt("f");
             cpu.registers.h = initial.getInt("h");
             cpu.registers.l = initial.getInt("l");
-            cpu.execute(opcodes.byteToInstruction(opcode, false));
+            cpu.execute(opcodes.byteToInstruction(opcode));
 
             JSONObject end = testCase.getJSONObject("final");
             JSONArray endRam = end.getJSONArray("ram");
