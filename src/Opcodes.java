@@ -8,6 +8,13 @@ public class Opcodes {
         prefixOpcodesArray = new Instruction[0x100];
 
         prefixOpcodesArray[0x30] = new Instruction(Operation.SWAP, Operand.B, 1);
+        prefixOpcodesArray[0x31] = new Instruction(Operation.SWAP, Operand.C, 1);
+        prefixOpcodesArray[0x32] = new Instruction(Operation.SWAP, Operand.D, 1);
+        prefixOpcodesArray[0x33] = new Instruction(Operation.SWAP, Operand.E, 1);
+        prefixOpcodesArray[0x34] = new Instruction(Operation.SWAP, Operand.H, 1);
+        prefixOpcodesArray[0x35] = new Instruction(Operation.SWAP, Operand.L, 1);
+        prefixOpcodesArray[0x36] = new Instruction(Operation.SWAP, Operand.MemHL, 1);
+        prefixOpcodesArray[0x37] = new Instruction(Operation.SWAP, Operand.A, 1);
 
         // ROW 0
         opcodesArray[0x00] = new Instruction(Operation.NOP, Operand.NONE, 1);
