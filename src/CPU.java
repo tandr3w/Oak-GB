@@ -89,6 +89,33 @@ public class CPU {
                     registers.setValToEnum(instruction.operand, (valToSet | 0b10000000));
                 }
                 break;
+            case Operation.RES:
+                int valToReset = registers.readValFromEnum(instruction.operand);
+                if (instruction.operandToSet == Operand.BIT0){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b11111110));
+                }
+                if (instruction.operandToSet == Operand.BIT1){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b11111101));
+                }
+                if (instruction.operandToSet == Operand.BIT2){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b11111011));
+                }
+                if (instruction.operandToSet == Operand.BIT3){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b11110111));
+                }
+                if (instruction.operandToSet == Operand.BIT4){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b11101111));
+                }
+                if (instruction.operandToSet == Operand.BIT5){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b11011111));
+                }
+                if (instruction.operandToSet == Operand.BIT6){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b10111111));
+                }
+                if (instruction.operandToSet == Operand.BIT7){
+                    registers.setValToEnum(instruction.operand, (valToReset & 0b01111111));
+                }
+                break;
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;
