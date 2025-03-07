@@ -3,7 +3,7 @@ enum Operand {
     MemHL, MemBC, MemDE,
     SP, PC,
     
-    n8, e8, n16, // for when we are using a given number instead of a register value
+    n3, n8, e8, n16,
     
     a8, // a8 is unsigned 8-bit that is added to FF00 to make a 16-bit address
     a16,
@@ -47,6 +47,7 @@ enum Operation {
     RST,
     POP,
     PUSH,
+    PREFIX, // opcode CB
 }
 
 public class Instruction {
@@ -56,36 +57,22 @@ public class Instruction {
     public Operand operandToSet; // 1st operand
     public int num_bytes;
     public int[] next_bytes;
-    public boolean prefixed;
-
 
     public Instruction(Operation operation, Operand operand, int num_bytes){
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = null;
         this.num_bytes = num_bytes;
-        this.prefixed = false;
     }
     public Instruction(Operation operation, Operand operandToSet, Operand operand, int num_bytes){
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = operandToSet;
         this.num_bytes = num_bytes;
-        this.prefixed = false;
     }
     public Instruction(Operation operation, int num_bytes) {
         this.operation = operation;
         this.num_bytes = num_bytes;
-        this.prefixed = false;
-    }
-
-    // prefixed instructions
-    public Instruction(Operation operation, Operand operand, int num_bytes, boolean prefixed) {
-        this.operation = operation;
-        this.operand = operand;
-        this.operandToSet = null;
-        this.num_bytes = num_bytes;
-        this.prefixed = true;
     }
 
     // TODO: add more constructors for other operations

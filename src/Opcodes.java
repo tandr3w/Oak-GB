@@ -279,12 +279,11 @@ public class Opcodes {
             }
             return opcodesArray[readByte];
         }
-        
+
         if (prefixedOpcodesArray[readByte] == null){
             return null;
         }
         return prefixedOpcodesArray[readByte];
-        
     }
 
 }

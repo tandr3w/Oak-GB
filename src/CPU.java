@@ -493,6 +493,9 @@ public class CPU {
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;
+
+            case Operation.PREFIX:
+                
         }
         return registers.pc;
     }
