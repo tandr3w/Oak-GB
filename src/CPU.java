@@ -166,7 +166,7 @@ public class CPU {
                 // get the value that needs to be loaded first
                 int valToLoad;
                 if (instruction.operand == Operand.a16){
-                    valToLoad = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
+                    valToLoad = memory[((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF)];
                 }
                 
                 else if (instruction.operand == Operand.a8) {
@@ -184,7 +184,7 @@ public class CPU {
                 
                 if (instruction.operandToSet == Operand.a16) {
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
-                    int address = memory[((instruction.next_bytes[0] & 0xFF) << 8) | (instruction.next_bytes[1] & 0xFF)];
+                    int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
                     memory[address] = valToLoad;
                     break;
                 }
