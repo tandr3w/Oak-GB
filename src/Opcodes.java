@@ -230,7 +230,7 @@ public class Opcodes {
 
         // ROW D
         opcodesArray[0xD0] = new Instruction(Operation.RET, Operand.JumpNC, 1);  
-        opcodesArray[0xD5] = new Instruction(Operation.POP, Operand.DE, 1);   
+        opcodesArray[0xD1] = new Instruction(Operation.POP, Operand.DE, 1);   
         opcodesArray[0xD2] = new Instruction(Operation.JP, Operand.JumpNC, 3); 
         opcodesArray[0xD4] = new Instruction(Operation.CALL, Operand.JumpNC, Operand.a16, 3); 
         opcodesArray[0xD5] = new Instruction(Operation.PUSH, Operand.DE, 1);   
@@ -250,6 +250,7 @@ public class Opcodes {
         opcodesArray[0xE7] = new Instruction(Operation.RST, Operand.RST20, 1);  
         opcodesArray[0xE8] = new Instruction(Operation.ADD, Operand.SP, Operand.e8, 2);
         opcodesArray[0xE9] = new Instruction(Operation.JP, Operand.MemHL, 1);  
+        opcodesArray[0xEA] = new Instruction(Operation.LD, Operand.a16, Operand.A, 3);
         opcodesArray[0xEE] = new Instruction(Operation.XOR, Operand.n8, 2);    
         opcodesArray[0xEF] = new Instruction(Operation.RST, Operand.RST28, 1);  
         // ROW F
@@ -261,13 +262,14 @@ public class Opcodes {
         opcodesArray[0xF7] = new Instruction(Operation.RST, Operand.RST30, 1);  
         opcodesArray[0xF8] = new Instruction(Operation.LD16, Operand.HL, Operand.SPe8, 2);
         opcodesArray[0xF9] = new Instruction(Operation.LD16, Operand.SP, Operand.HL, 1);
+        opcodesArray[0xFA] = new Instruction(Operation.LD, Operand.A, Operand.a16, 3);
         opcodesArray[0xFE] = new Instruction(Operation.CP, Operand.n8, 2);  
         opcodesArray[0xFF] = new Instruction(Operation.RST, Operand.RST38, 1);  
     }
 
     public Instruction byteToInstruction(int readByte) {
         if (opcodesArray[readByte] == null){
-            // System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
+            System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
             return null;
         }
         return opcodesArray[readByte];
