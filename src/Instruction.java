@@ -57,6 +57,7 @@ enum Operation {
     RL,
     RR,
     BIT,
+    SET,
 }
 
 public class Instruction {

@@ -62,6 +62,33 @@ public class CPU {
                 registers.set_f_subtract(false);
                 registers.set_f_halfcarry(true);
                 break;
+            case Operation.SET:
+                int valToSet = registers.readValFromEnum(instruction.operand);
+                if (instruction.operandToSet == Operand.BIT0){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b00000001));
+                }
+                if (instruction.operandToSet == Operand.BIT1){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b00000010));
+                }
+                if (instruction.operandToSet == Operand.BIT2){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b00000100));
+                }
+                if (instruction.operandToSet == Operand.BIT3){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b00001000));
+                }
+                if (instruction.operandToSet == Operand.BIT4){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b00010000));
+                }
+                if (instruction.operandToSet == Operand.BIT5){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b00100000));
+                }
+                if (instruction.operandToSet == Operand.BIT6){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b01000000));
+                }
+                if (instruction.operandToSet == Operand.BIT7){
+                    registers.setValToEnum(instruction.operand, (valToSet | 0b10000000));
+                }
+                break;
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;
