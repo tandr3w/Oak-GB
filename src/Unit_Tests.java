@@ -21,7 +21,7 @@ public class Unit_Tests {
                 continue;
             }
             try{
-                if (opcodes.byteToInstruction(i, false) != null){
+                if (opcodes.byteToInstruction(i) != null){
                     case_count += 1;
                     int test_result = test_json("test_jsons/" + Util.hexByte(i) + ".json", i);
                     if (test_result == 0){
