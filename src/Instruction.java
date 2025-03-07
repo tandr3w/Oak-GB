@@ -9,7 +9,8 @@ enum Operand {
     a16,
     NONE,
     JumpNZ, JumpNC, JumpZ, JumpC, // For jumps
-    SPe8 // special operand for opcode 0xF8
+    SPe8, // special operand for opcode 0xF8
+    RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38,
 }
 
 enum Operation {

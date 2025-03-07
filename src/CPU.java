@@ -433,6 +433,18 @@ public class CPU {
                     }
                 }
                 break;
+            
+            case Operation.RST:
+                add16ToStack(registers.pc);
+                if (instruction.operand == Operand.RST00){jumpTo(0x00);}
+                if (instruction.operand == Operand.RST08){jumpTo(0x08);}
+                if (instruction.operand == Operand.RST10){jumpTo(0x10);}
+                if (instruction.operand == Operand.RST18){jumpTo(0x18);}
+                if (instruction.operand == Operand.RST20){jumpTo(0x20);}
+                if (instruction.operand == Operand.RST28){jumpTo(0x28);}
+                if (instruction.operand == Operand.RST30){jumpTo(0x30);}
+                if (instruction.operand == Operand.RST38){jumpTo(0x38);}
+                break;
 
             default:
                 System.out.println("Attmpted run of operation that has not been implemented!");
