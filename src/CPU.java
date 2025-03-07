@@ -445,9 +445,35 @@ public class CPU {
                 if (instruction.operand == Operand.RST30){jumpTo(0x30);}
                 if (instruction.operand == Operand.RST38){jumpTo(0x38);}
                 break;
+            
+            case Operation.RET:
+                if (instruction.operand == null){
+                    jumpTo(pop16FromStack());
+                }
+                if (instruction.operand == Operand.JumpNZ){
+                    if (registers.get_f_zero() == 0){
+                        jumpTo(pop16FromStack());
+                    }
+                }
+                if (instruction.operand == Operand.JumpNC){
+                    if (registers.get_f_carry() == 0){
+                        jumpTo(pop16FromStack());
+                    }
+                }
+                if (instruction.operand == Operand.JumpC){
+                    if (registers.get_f_carry() == 1){
+                        jumpTo(pop16FromStack());
+                    }
+                }
+                if (instruction.operand == Operand.JumpZ){
+                    if (registers.get_f_zero() == 1){
+                        jumpTo(pop16FromStack());
+                    }
+                }
+                break;
 
             default:
-                System.out.println("Attmpted run of operation that has not been implemented!");
+                System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;
         }
         return registers.pc;
@@ -465,6 +491,16 @@ public class CPU {
         registers.sp--;
         registers.sp &= 0xFFFF;
         memory[registers.sp] = val & 0xFF;
+    }
+
+    public int pop16FromStack(){
+        int val = memory[registers.sp];
+        registers.sp++;
+        registers.sp &= 0xFFFF;
+        val |= memory[registers.sp] << 8;
+        registers.sp++;
+        registers.sp &= 0xFFFF;
+        return val;
     }
     
     public void addToA(int val){

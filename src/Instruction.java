@@ -46,6 +46,7 @@ enum Operation {
     RET,
     RST,
     POP,
+    PUSH,
 }
 
 public class Instruction {

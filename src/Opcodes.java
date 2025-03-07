@@ -212,11 +212,14 @@ public class Opcodes {
         opcodesArray[0xBF] = new Instruction(Operation.CP, Operand.A, 1); 
 
         // ROW C
+        opcodesArray[0xC0] = new Instruction(Operation.RET, Operand.JumpNZ, 1);  
         opcodesArray[0xC2] = new Instruction(Operation.JP, Operand.JumpNZ, 3);  
         opcodesArray[0xC3] = new Instruction(Operation.JP, Operand.a16, 3);  
         opcodesArray[0xC4] = new Instruction(Operation.CALL, Operand.JumpNZ, Operand.a16, 3);  
         opcodesArray[0xC6] = new Instruction(Operation.ADD, Operand.n8, 2);  
-        opcodesArray[0xC7] = new Instruction(Operation.RST, Operand.RST00, 1);  
+        opcodesArray[0xC7] = new Instruction(Operation.RST, Operand.RST00, 1); 
+        opcodesArray[0xC8] = new Instruction(Operation.RET, Operand.JumpZ, 1);  
+        opcodesArray[0xC9] = new Instruction(Operation.RET, 1);  
         opcodesArray[0xCA] = new Instruction(Operation.JP, Operand.JumpZ, 3);
         opcodesArray[0xCC] = new Instruction(Operation.CALL, Operand.JumpZ, Operand.a16, 3);    
         opcodesArray[0xCD] = new Instruction(Operation.CALL, Operand.a16, 3);  
@@ -224,10 +227,12 @@ public class Opcodes {
         opcodesArray[0xCF] = new Instruction(Operation.RST, Operand.RST08, 1);  
 
         // ROW D
+        opcodesArray[0xD0] = new Instruction(Operation.RET, Operand.JumpNC, 1);  
         opcodesArray[0xD2] = new Instruction(Operation.JP, Operand.JumpNC, 3); 
         opcodesArray[0xD4] = new Instruction(Operation.CALL, Operand.JumpNC, Operand.a16, 3);  
         opcodesArray[0xD6] = new Instruction(Operation.SUB, Operand.n8, 2);  
         opcodesArray[0xD7] = new Instruction(Operation.RST, Operand.RST10, 1);  
+        opcodesArray[0xD8] = new Instruction(Operation.RET, Operand.JumpC, 1);  
         opcodesArray[0xDA] = new Instruction(Operation.JP, Operand.JumpC, 3);  
         opcodesArray[0xDC] = new Instruction(Operation.CALL, Operand.JumpC, Operand.a16, 3);    
         opcodesArray[0xDE] = new Instruction(Operation.SBC, Operand.n8, 2);  
