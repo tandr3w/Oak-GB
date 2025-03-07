@@ -6,7 +6,58 @@ public class Opcodes {
         // nvm its simple; switch to prefixed when CB instruction is executed
         opcodesArray = new Instruction[0x100]; // 0xFF represents 255 in binary, but array needs to hold 256 values
         prefixOpcodesArray = new Instruction[0x100];
+        
+        prefixOpcodesArray[0x00] = new Instruction(Operation.RLC, Operand.B, 1);
+        prefixOpcodesArray[0x01] = new Instruction(Operation.RLC, Operand.C, 1);
+        prefixOpcodesArray[0x02] = new Instruction(Operation.RLC, Operand.D, 1);
+        prefixOpcodesArray[0x03] = new Instruction(Operation.RLC, Operand.E, 1);
+        prefixOpcodesArray[0x04] = new Instruction(Operation.RLC, Operand.H, 1);
+        prefixOpcodesArray[0x05] = new Instruction(Operation.RLC, Operand.L, 1);
+        prefixOpcodesArray[0x06] = new Instruction(Operation.RLC, Operand.MemHL, 1);
+        prefixOpcodesArray[0x07] = new Instruction(Operation.RLC, Operand.A, 1);
+        prefixOpcodesArray[0x08] = new Instruction(Operation.RRC, Operand.B, 1);
+        prefixOpcodesArray[0x09] = new Instruction(Operation.RRC, Operand.C, 1);
+        prefixOpcodesArray[0x0A] = new Instruction(Operation.RRC, Operand.D, 1);
+        prefixOpcodesArray[0x0B] = new Instruction(Operation.RRC, Operand.E, 1);
+        prefixOpcodesArray[0x0C] = new Instruction(Operation.RRC, Operand.H, 1);
+        prefixOpcodesArray[0x0D] = new Instruction(Operation.RRC, Operand.L, 1);
+        prefixOpcodesArray[0x0E] = new Instruction(Operation.RRC, Operand.MemHL, 1);
+        prefixOpcodesArray[0x0F] = new Instruction(Operation.RRC, Operand.A, 1);
 
+        prefixOpcodesArray[0x10] = new Instruction(Operation.RL, Operand.B, 1);
+        prefixOpcodesArray[0x11] = new Instruction(Operation.RL, Operand.C, 1);
+        prefixOpcodesArray[0x12] = new Instruction(Operation.RL, Operand.D, 1);
+        prefixOpcodesArray[0x13] = new Instruction(Operation.RL, Operand.E, 1);
+        prefixOpcodesArray[0x14] = new Instruction(Operation.RL, Operand.H, 1);
+        prefixOpcodesArray[0x15] = new Instruction(Operation.RL, Operand.L, 1);
+        prefixOpcodesArray[0x16] = new Instruction(Operation.RL, Operand.MemHL, 1);
+        prefixOpcodesArray[0x17] = new Instruction(Operation.RL, Operand.A, 1);
+        prefixOpcodesArray[0x18] = new Instruction(Operation.RR, Operand.B, 1);
+        prefixOpcodesArray[0x19] = new Instruction(Operation.RR, Operand.C, 1);
+        prefixOpcodesArray[0x1A] = new Instruction(Operation.RR, Operand.D, 1);
+        prefixOpcodesArray[0x1B] = new Instruction(Operation.RR, Operand.E, 1);
+        prefixOpcodesArray[0x1C] = new Instruction(Operation.RR, Operand.H, 1);
+        prefixOpcodesArray[0x1D] = new Instruction(Operation.RR, Operand.L, 1);
+        prefixOpcodesArray[0x1E] = new Instruction(Operation.RR, Operand.MemHL, 1);
+        prefixOpcodesArray[0x1F] = new Instruction(Operation.RR, Operand.A, 1);
+
+        prefixOpcodesArray[0x20] = new Instruction(Operation.SLA, Operand.B, 1);
+        prefixOpcodesArray[0x21] = new Instruction(Operation.SLA, Operand.C, 1);
+        prefixOpcodesArray[0x22] = new Instruction(Operation.SLA, Operand.D, 1);
+        prefixOpcodesArray[0x23] = new Instruction(Operation.SLA, Operand.E, 1);
+        prefixOpcodesArray[0x24] = new Instruction(Operation.SLA, Operand.H, 1);
+        prefixOpcodesArray[0x25] = new Instruction(Operation.SLA, Operand.L, 1);
+        prefixOpcodesArray[0x26] = new Instruction(Operation.SLA, Operand.MemHL, 1);
+        prefixOpcodesArray[0x27] = new Instruction(Operation.SLA, Operand.A, 1);
+        prefixOpcodesArray[0x28] = new Instruction(Operation.SRA, Operand.B, 1);
+        prefixOpcodesArray[0x29] = new Instruction(Operation.SRA, Operand.C, 1);
+        prefixOpcodesArray[0x2A] = new Instruction(Operation.SRA, Operand.D, 1);
+        prefixOpcodesArray[0x2B] = new Instruction(Operation.SRA, Operand.E, 1);
+        prefixOpcodesArray[0x2C] = new Instruction(Operation.SRA, Operand.H, 1);
+        prefixOpcodesArray[0x2D] = new Instruction(Operation.SRA, Operand.L, 1);
+        prefixOpcodesArray[0x2E] = new Instruction(Operation.SRA, Operand.MemHL, 1);
+        prefixOpcodesArray[0x2F] = new Instruction(Operation.SRA, Operand.A, 1);
+        
         prefixOpcodesArray[0x30] = new Instruction(Operation.SWAP, Operand.B, 1);
         prefixOpcodesArray[0x31] = new Instruction(Operation.SWAP, Operand.C, 1);
         prefixOpcodesArray[0x32] = new Instruction(Operation.SWAP, Operand.D, 1);
@@ -15,7 +66,17 @@ public class Opcodes {
         prefixOpcodesArray[0x35] = new Instruction(Operation.SWAP, Operand.L, 1);
         prefixOpcodesArray[0x36] = new Instruction(Operation.SWAP, Operand.MemHL, 1);
         prefixOpcodesArray[0x37] = new Instruction(Operation.SWAP, Operand.A, 1);
+        prefixOpcodesArray[0x38] = new Instruction(Operation.SRL, Operand.B, 1);
+        prefixOpcodesArray[0x39] = new Instruction(Operation.SRL, Operand.C, 1);
+        prefixOpcodesArray[0x3A] = new Instruction(Operation.SRL, Operand.D, 1);
+        prefixOpcodesArray[0x3B] = new Instruction(Operation.SRL, Operand.E, 1);
+        prefixOpcodesArray[0x3C] = new Instruction(Operation.SRL, Operand.H, 1);
+        prefixOpcodesArray[0x3D] = new Instruction(Operation.SRL, Operand.L, 1);
+        prefixOpcodesArray[0x3E] = new Instruction(Operation.SRL, Operand.MemHL, 1);
+        prefixOpcodesArray[0x3F] = new Instruction(Operation.SRL, Operand.A, 1);
 
+
+        
         prefixOpcodesArray[0x40] = new Instruction(Operation.BIT, Operand.BIT0, Operand.B, 1);
         prefixOpcodesArray[0x41] = new Instruction(Operation.BIT, Operand.BIT0, Operand.C, 1);
         prefixOpcodesArray[0x42] = new Instruction(Operation.BIT, Operand.BIT0, Operand.D, 1);

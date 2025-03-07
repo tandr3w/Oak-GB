@@ -122,6 +122,28 @@ public class CPU {
                     registers.setValToEnum(instruction.operand, (valToReset & 0b01111111));
                 }
                 break;
+            case Operation.RLC:
+                RLC(instruction.operand);
+                break;
+            case Operation.RL:
+                RL(instruction.operand);
+                break;
+            case Operation.RRC:
+                RRC(instruction.operand);
+                break;
+            case Operation.RR:
+                RR(instruction.operand);
+                break;
+            case Operation.SLA:
+                SLA(instruction.operand);
+                break;
+            case Operation.SRA:
+                SRA(instruction.operand);
+                break;
+            case Operation.SRL:
+                SRL(instruction.operand);
+                break;
+
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
                 break;
@@ -849,10 +871,13 @@ public class CPU {
     }
 
 
+
+    
     // TODO: NEED TO UPDATE ZERO FLAG
     public void RLC(Operand target) {
+
         int firstCircularBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
-        int shifted = (registers.a << 1) & 0xFF;
+        int shifted = (registers.readValFromEnum(target) << 1) & 0xFF;
         registers.setValToEnum(target, shifted | firstCircularBit);
         registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
@@ -862,7 +887,7 @@ public class CPU {
 
     public void RL(Operand target) {
         int firstBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
-        int shifted = (registers.a << 1) & 0xFF;
+        int shifted = (registers.readValFromEnum(target) << 1) & 0xFF;
         registers.setValToEnum(target, shifted | registers.get_f_carry());
         registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
@@ -871,9 +896,9 @@ public class CPU {
     }
 
     public void RRC(Operand target) {
-        int firstCircularBit = (registers.readValFromEnum(target) & 0b00000001) << 7;
-        int shifted = (registers.a >> 1);
-        registers.setValToEnum(target, shifted | firstCircularBit);
+        int firstCircularBit = (registers.readValFromEnum(target) & 0b00000001);
+        int shifted = (registers.readValFromEnum(target) >> 1);
+        registers.setValToEnum(target, shifted | (firstCircularBit << 7));
         registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
@@ -881,9 +906,40 @@ public class CPU {
     }
 
     public void RR(Operand target) {
-        int firstBit = (registers.readValFromEnum(target) & 0b00000001) << 7;
-        int shifted = (registers.a >> 1);
-        registers.setValToEnum(target, shifted | registers.get_f_carry());
+        int firstBit = (registers.readValFromEnum(target) & 0b00000001);
+        int shifted = (registers.readValFromEnum(target) >> 1);
+        registers.setValToEnum(target, shifted | (registers.get_f_carry() << 7));
+        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        registers.set_f_halfcarry(false);
+        registers.set_f_subtract(false);
+        registers.set_f_carry(firstBit == 1);
+    }
+
+    public void SLA(Operand target) {
+        int firstBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
+        int shifted = (registers.readValFromEnum(target) << 1);
+        registers.setValToEnum(target, shifted & 0xFF); // handle overflow
+        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        registers.set_f_halfcarry(false);
+        registers.set_f_subtract(false);
+        registers.set_f_carry(firstBit == 1);
+    }
+
+    public void SRA(Operand target) {
+        int firstBit = (registers.readValFromEnum(target) & 0b00000001);
+        int bitSeven = (registers.readValFromEnum(target) & 0b10000000);
+        int shifted = (registers.readValFromEnum(target) >> 1);
+        registers.setValToEnum(target, shifted | bitSeven);
+        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        registers.set_f_halfcarry(false);
+        registers.set_f_subtract(false);
+        registers.set_f_carry(firstBit == 1);
+    }
+
+    public void SRL(Operand target) {
+        int firstBit = (registers.readValFromEnum(target) & 0b00000001);
+        int shifted = (registers.readValFromEnum(target) >> 1);
+        registers.setValToEnum(target, shifted);
         registers.set_f_zero(registers.readValFromEnum(target) == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
