@@ -10,7 +10,7 @@ enum Operand {
     NONE,
     JumpNZ, JumpNC, JumpZ, JumpC, // For jumps
     SPe8, // special operand for opcode 0xF8
-    RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38, 
+    RST00, RST08, RST10, RST18, RST20, RST28, RST30, RST38,
 }
 
 enum Operation {
@@ -56,6 +56,7 @@ public class Instruction {
     public Operand operandToSet; // 1st operand
     public int num_bytes;
     public int[] next_bytes;
+    public boolean prefixed;
 
 
     public Instruction(Operation operation, Operand operand, int num_bytes){
@@ -63,16 +64,26 @@ public class Instruction {
         this.operand = operand;
         this.operandToSet = null;
         this.num_bytes = num_bytes;
+        this.prefixed = false;
     }
     public Instruction(Operation operation, Operand operandToSet, Operand operand, int num_bytes){
         this.operation = operation;
         this.operand = operand;
         this.operandToSet = operandToSet;
         this.num_bytes = num_bytes;
+        this.prefixed = false;
     }
     public Instruction(Operation operation, int num_bytes) {
         this.operation = operation;
         this.num_bytes = num_bytes;
+        this.prefixed = false;
+    }
+    public Instruction(Operation operation, Operand operand, int num_bytes, boolean prefixed) {
+        this.operation = operation;
+        this.operand = operand;
+        this.operandToSet = null;
+        this.num_bytes = num_bytes;
+        this.prefixed = true;
     }
 
     // TODO: add more constructors for other operations
