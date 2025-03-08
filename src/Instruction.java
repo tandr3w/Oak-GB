@@ -57,9 +57,13 @@ enum Operation {
     RRC,
     RL,
     RR,
+    SLA,
+    SRA,
+    SRL,
     BIT,
     SET,
     RES,
+
 }
 
 public class Instruction {

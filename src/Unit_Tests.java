@@ -71,7 +71,7 @@ public class Unit_Tests {
                 e.printStackTrace();
             }
         }
-        System.out.println("\nCases passed: " + Integer.toString(cases_passed) + " / " + Integer.toString(case_count) + " (" + Integer.toString(cases_not_implemented - 11) + " not implemented)");
+        System.out.println("\nCases passed: " + Integer.toString(cases_passed) + " / " + Integer.toString(case_count) + " (" + Integer.toString(cases_not_implemented) + " not implemented)");
         return cases_passed;
     }
 
