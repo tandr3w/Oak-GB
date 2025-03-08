@@ -18,6 +18,8 @@ public class Memory {
         SCX_address = 0xFF43;
         LY_address = 0xFF44;
         LYC_address = 0xFF45;
+
+        // Default values
         memoryArray[LCDC_address] = 0x91;
         memoryArray[STAT_address] = 0x85;
         memoryArray[SCY_address] = 0x00;
