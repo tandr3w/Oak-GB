@@ -6,12 +6,13 @@ public class CPU {
     Registers registers;
     int[] memory;
     Opcodes opcodes;
+        // TODO store flags in memory
     boolean lowPowerMode;
     boolean halted;
     boolean interrupts;
 
-    public CPU(Opcodes opcodes){
-        memory = new int[0xFFFF + 1]; // 65536 bytes
+    public CPU(Opcodes opcodes, Memory memory){
+        this.memory = memory.memoryArray; // 65536 bytes
         registers = new Registers(this);
         this.opcodes = opcodes;
         lowPowerMode = false;
@@ -973,5 +974,9 @@ public class CPU {
             System.out.println("error");
             e.printStackTrace();
         }
+    }
+
+    private void setHardwareRegisters(){
+
     }
 }
