@@ -1,6 +1,8 @@
 public class Main {
     public static void main(String[] args){
-        Unit_Tests tests = new Unit_Tests();
+        Opcodes opcodes = new Opcodes();
+        CPU cpu = new CPU(opcodes);
+        Unit_Tests tests = new Unit_Tests(cpu, opcodes);
         // tests.run();
         System.out.println("\nTesting Prefixed Instructions:\n");
         tests.runPrefixed();

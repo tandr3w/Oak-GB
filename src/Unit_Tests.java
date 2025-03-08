@@ -7,9 +7,9 @@ public class Unit_Tests {
     public CPU cpu;
     public Opcodes opcodes;
 
-    public Unit_Tests(){
-        opcodes = new Opcodes();
-        cpu = new CPU(opcodes);
+    public Unit_Tests(CPU cpu, Opcodes opcodes){
+        this.opcodes = opcodes;
+        this.cpu = cpu;
     }
 
     public int run(){

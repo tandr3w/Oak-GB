@@ -49,6 +49,7 @@ enum Operation {
     POP,
     PUSH,
     PREFIX,
+    STOP, HALT, RETI,
 
     // PREFIX INSTRUCTIONS
     SWAP,
