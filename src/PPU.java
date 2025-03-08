@@ -1,33 +1,33 @@
-import java.swing.*;
+import javax.swing.*;
 import java.awt.*;
 
 public class PPU {
-    int[] = memory
+    int[] memory;
     boolean VRAMInUse;
     // TODO: Implement two queues for pixel FIFO
 
     public PPU(Memory memory) {
         VRAMInUse = false;
-        this.memory = Memory.memoryArray;
+        this.memory = memory.memoryArray;
     }
 
     // "MODE 2"
-    public OAMScan() {
+    public void OAMScan() {
 
     }
 
     // "MODE 3"
-    public drawPixels() {
+    public void drawPixels() {
 
     }
 
     // "MODE 0"
-    public HBank() {
+    public void HBank() {
         
     }
 
     // "MODE 1"
-    public VBank() {
+    public void VBank() {
 
     }
 
