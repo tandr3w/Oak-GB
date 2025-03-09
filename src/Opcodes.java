@@ -4,8 +4,8 @@ public class Opcodes {
     public Opcodes() {
         // TODO: figure out how to handle prefixed/unprefixed opcodes
         // nvm its simple; switch to prefixed when CB instruction is executed
-        opcodesArray = new Instruction[0x100]; // 0xFF represents 255 in binary, but array needs to hold 256 values
-        prefixOpcodesArray = new Instruction[0x100];
+        opcodesArray = new Instruction[0xFF + 1];
+        prefixOpcodesArray = new Instruction[0xFF + 1];
         
         prefixOpcodesArray[0x00] = new Instruction(Operation.RLC, Operand.B, 1);
         prefixOpcodesArray[0x01] = new Instruction(Operation.RLC, Operand.C, 1);

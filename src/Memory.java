@@ -9,6 +9,8 @@ public class Memory {
     int LY_address;
     int LYC_address;
 
+    int BGP_address;
+
     int[] memoryArray;
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
@@ -19,6 +21,8 @@ public class Memory {
         LY_address = 0xFF44;
         LYC_address = 0xFF45;
 
+        BGP_address = 0xFF47;
+
         // Default values
         memoryArray[LCDC_address] = 0x91;
         memoryArray[STAT_address] = 0x85;
@@ -26,6 +30,7 @@ public class Memory {
         memoryArray[SCX_address] = 0x00;
         memoryArray[LY_address] = 0x00;
         memoryArray[LYC_address] = 0x00;
+        memoryArray[BGP_address] = 0xFC; // 0b1111100 - initially maps to black, black, black, white
     }
 
     // LCDC commands
@@ -84,4 +89,37 @@ public class Memory {
     public void setBGWindowEnable(boolean val) {
         setBitInLCDC(0, val);
     }
+
+    // LY and LYC
+    public int getLY() {
+        return memoryArray[LY_address];
+    }
+    public int getLYC() {
+        return memoryArray[LYC_address];
+    }
+
+    public void setLY(int val) {
+        memoryArray[LY_address] = val;
+    }
+    
+    public void setLYC(int val) {
+        memoryArray[LYC_address] = val;
+    }
+
+    public int getWY() {
+        return memoryArray[WY_address];
+    }
+
+    public int getWX() {
+        return memoryArray[WX_address];
+    }
+
+    public void setWY(int val) {
+        memoryArray[WY_address] = val;
+    }
+
+    public void setWX(int val) {
+        memoryArray[WX_address] = val;
+    }
+
 }

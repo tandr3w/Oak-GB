@@ -975,8 +975,4 @@ public class CPU {
             e.printStackTrace();
         }
     }
-
-    private void setHardwareRegisters(){
-
-    }
 }
