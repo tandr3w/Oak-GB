@@ -10,4 +10,8 @@ public class Util {
         }
         return hex;
     }
+
+    public static int getIthBit(int byteVal, int bitNum){
+        return (byteVal >> bitNum) & 1;
+    }
 }

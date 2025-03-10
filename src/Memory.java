@@ -16,9 +16,11 @@ public class Memory {
         memoryArray = new int[0xFFFF + 1];
         LCDC_address = 0xFF40; // Settings for display
         STAT_address = 0xFF41;
-        SCY_address = 0xFF42;
-        SCX_address = 0xFF43;
-        LY_address = 0xFF44; 
+        SCY_address = 0xFF42; // y position of the background to start drawing from (scroll)
+        SCX_address = 0xFF43; // x position of the background to start drawing from (scroll)
+        WY_address = 0xFF4A; // y position of the window to start drawing from
+        WX_address = 0xFF4B; // x position - 7 of the window to start drawing from
+        LY_address = 0xFF44; // current position we are drawing at (offset from start)
         LYC_address = 0xFF45;
 
         BGP_address = 0xFF47; // Color palette
@@ -28,6 +30,8 @@ public class Memory {
         memoryArray[STAT_address] = 0x85;
         memoryArray[SCY_address] = 0x00;
         memoryArray[SCX_address] = 0x00;
+        memoryArray[WY_address] = 0x00;
+        memoryArray[WX_address] = 0x00;
         memoryArray[LY_address] = 0x00;
         memoryArray[LYC_address] = 0x00;
         memoryArray[BGP_address] = 0xFC; // 0b1111100 - initially maps to black, black, black, white
@@ -90,6 +94,9 @@ public class Memory {
         setBitInLCDC(0, val);
     }
 
+    public int getSCY(){
+        return memoryArray[SCY_address];
+    }
     // LY and LYC
     public int getLY() {
         return memoryArray[LY_address];
