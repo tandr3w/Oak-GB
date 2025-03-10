@@ -5,7 +5,7 @@ public class Main {
         CPU cpu = new CPU(opcodes, memory);
         PPU ppu = new PPU(memory);
         Unit_Tests tests = new Unit_Tests(cpu, opcodes);
-        // tests.run();
+        tests.run();
         System.out.println("\nTesting Prefixed Instructions:\n");
         tests.runPrefixed();
     }

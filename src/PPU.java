@@ -1,6 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 
+enum Color {
+    WHITE,
+    LGREY,
+    DGREY,
+    BLACK,
+}
+
 public class PPU extends JFrame {
     Memory memory;
     int[] spriteBuffer;

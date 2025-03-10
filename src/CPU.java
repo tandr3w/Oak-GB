@@ -6,12 +6,12 @@ public class CPU {
     Registers registers;
     int[] memory;
     Opcodes opcodes;
-        // TODO store flags in memory
     boolean lowPowerMode;
     boolean halted;
     boolean interrupts;
 
     public CPU(Opcodes opcodes, Memory memory){
+        // TODO: use a function to set memory so we can restrict access to protect parts
         this.memory = memory.memoryArray; // 65536 bytes
         registers = new Registers(this);
         this.opcodes = opcodes;
