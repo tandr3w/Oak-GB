@@ -35,6 +35,7 @@ public class CPU {
         setNextBytes(instruction);
         registers.pc += instruction.num_bytes - 1;
         registers.pc &= 0xFFFF; // overflow
+        int num_cycles = 4 * instruction.num_bytes; // FIXME: check if you should add 1 here??
         
         switch (instruction.operation){
             case Operation.SWAP:
@@ -150,10 +151,11 @@ public class CPU {
                 break;
         }
 
-        return registers.pc;
+        return num_cycles;
     }
 
     public int execute(Instruction instruction){
+        int num_cycles = 4 * instruction.num_bytes;
         // Load correct number of bytes
         setNextBytes(instruction);
         registers.pc += instruction.num_bytes;
@@ -162,7 +164,7 @@ public class CPU {
         switch (instruction.operation){
             case Operation.PREFIX:
                 int nextByte = instruction.next_bytes[0];
-                executePrefixed(opcodes.prefixOpcodesArray[nextByte]);
+                num_cycles += executePrefixed(opcodes.prefixOpcodesArray[nextByte]);
                 break;
             case Operation.ADD:
                 if (instruction.operand == Operand.n8){
@@ -306,10 +308,12 @@ public class CPU {
                 int valToLoad;
                 if (instruction.operand == Operand.a16){
                     valToLoad = memory[((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF)];
+                    num_cycles += 4;
                 }
                 
                 else if (instruction.operand == Operand.a8) {
                     valToLoad = memory[instruction.next_bytes[0] + 0xFF00];
+                    num_cycles += 4;
                 }
                 
                 else if (instruction.operand == Operand.n8) {
@@ -325,12 +329,14 @@ public class CPU {
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
                     int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
                     memory[address] = valToLoad;
+                    num_cycles += 4;
                     break;
                 }
 
                 if (instruction.operandToSet == Operand.a8) {
                     int address = instruction.next_bytes[0] + 0xFF00;
                     memory[address] = valToLoad;
+                    num_cycles += 4;
                     break;
                 }
 
@@ -361,7 +367,7 @@ public class CPU {
                     int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
                     memory[address] = (twoByteVal & 0xFF);
                     memory[(address+1) & 0xFFFF] = (twoByteVal & 0xFF00) >> 8; 
-
+                    num_cycles += 8;
                     break;
                 }
 
@@ -378,13 +384,14 @@ public class CPU {
 
                     // operandToSet is always A
                     registers.setValToEnum(instruction.operandToSet, val);
+                    num_cycles += 4;
                     break;
                 }
                 if (instruction.operandToSet == Operand.MemHL) {
                     // instruction.operand should always be A
                     memory[registers.get_hl()] = registers.readValFromEnum(instruction.operand);
                     inc16(Operand.HL);
-
+                    num_cycles += 4;
                     break;
                 }
                 break;
@@ -392,6 +399,7 @@ public class CPU {
             case Operation.LDD:
                 if (instruction.operand == Operand.MemHL) {
                     int val = memory[registers.get_hl()];
+                    num_cycles += 4;
                     dec16(Operand.HL);
 
                     // operandToSet is always A
@@ -401,6 +409,7 @@ public class CPU {
                 if (instruction.operandToSet == Operand.MemHL) {
                     // instruction.operand should always be A
                     memory[registers.get_hl()] = registers.readValFromEnum(instruction.operand);
+                    num_cycles += 4;
                     dec16(Operand.HL);
 
                     break;
@@ -410,20 +419,24 @@ public class CPU {
                 if (instruction.operand == Operand.A && instruction.operandToSet == Operand.C) {
                     int address = registers.c + 0xFF00;
                     memory[address] = registers.a;
+                    num_cycles += 4;
                     break;
                 }
                 if (instruction.operand == Operand.C && instruction.operandToSet == Operand.A) {
                     int val = memory[registers.c + 0xFF00];
                     registers.a = val;
+                    num_cycles += 4;
                     break;
                 }
                 if (instruction.operand == Operand.A && instruction.operandToSet == Operand.a8) { 
                     int address = instruction.next_bytes[0] + 0xFF00;
                     memory[address] = registers.a;
+                    num_cycles += 4;
                     break;
                 }
                 if (instruction.operand == Operand.a8 && instruction.operandToSet == Operand.A) {
                     int val = memory[instruction.next_bytes[0] + 0xFF00];
+                    num_cycles += 4;
                     registers.a = val;
                     break;
                 }
@@ -541,12 +554,14 @@ public class CPU {
                 if (instruction.operand == Operand.a16 && instruction.operandToSet == null){
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     add16ToStack(registers.pc);
+                    num_cycles += 12;
                     jumpTo(addr);
                 }
                 if (instruction.operandToSet == Operand.JumpNZ){
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 0){
                         add16ToStack(registers.pc);
+                        num_cycles += 12;
                         jumpTo(addr);
                     }
                 }
@@ -554,6 +569,7 @@ public class CPU {
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 0){
                         add16ToStack(registers.pc);
+                        num_cycles += 12;
                         jumpTo(addr);
                     }
                 }
@@ -561,6 +577,7 @@ public class CPU {
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 1){
                         add16ToStack(registers.pc);
+                        num_cycles += 12;
                         jumpTo(addr);
                     }
                 }
@@ -568,6 +585,7 @@ public class CPU {
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 1){
                         add16ToStack(registers.pc);
+                        num_cycles += 12;
                         jumpTo(addr);
                     }
                 }
@@ -583,30 +601,36 @@ public class CPU {
                 if (instruction.operand == Operand.RST28){jumpTo(0x28);}
                 if (instruction.operand == Operand.RST30){jumpTo(0x30);}
                 if (instruction.operand == Operand.RST38){jumpTo(0x38);}
+                num_cycles += 12;
                 break;
             
             case Operation.RET:
                 if (instruction.operand == null){
                     jumpTo(pop16FromStack());
+                    num_cycles += 12;
                 }
                 if (instruction.operand == Operand.JumpNZ){
                     if (registers.get_f_zero() == 0){
                         jumpTo(pop16FromStack());
+                        num_cycles += 12;
                     }
                 }
                 if (instruction.operand == Operand.JumpNC){
                     if (registers.get_f_carry() == 0){
                         jumpTo(pop16FromStack());
+                        num_cycles += 12;
                     }
                 }
                 if (instruction.operand == Operand.JumpC){
                     if (registers.get_f_carry() == 1){
                         jumpTo(pop16FromStack());
+                        num_cycles += 12;
                     }
                 }
                 if (instruction.operand == Operand.JumpZ){
                     if (registers.get_f_zero() == 1){
                         jumpTo(pop16FromStack());
+                        num_cycles += 12;
                     }
                 }
                 break;
@@ -618,6 +642,7 @@ public class CPU {
             case Operation.POP:
                 if (instruction.operand == Operand.AF){
                     int val = pop16FromStack();
+                    num_cycles += 8;
                     registers.a = (val & 0xFF00) >> 8;
                     int lowerByte = val & 0xFF;
                     registers.set_f_zero((lowerByte & 0b10000000) != 0);
@@ -627,6 +652,7 @@ public class CPU {
                 }
                 else {
                     registers.setValToEnum(instruction.operand, pop16FromStack());
+                    num_cycles += 8;
                 }
                 break;
 
@@ -635,7 +661,7 @@ public class CPU {
                 break;
 
         }
-        return registers.pc;
+        return num_cycles;
     }
 
     public void jumpTo(int val){
