@@ -122,34 +122,22 @@ public class Memory {
         memoryArray[WX_address] = val;
     }
 
-    public Color getPaletteColor(int id){
-        int colorBits;
+    public int getPaletteColor(int id){
         if (id == 0b00){
-            colorBits = memoryArray[BGP_address] & 0b11;
+            return memoryArray[BGP_address] & 0b11;
         }
         else if (id == 0b01){
-            colorBits = memoryArray[BGP_address] & 0b1100 >> 2;
+            return memoryArray[BGP_address] & 0b1100 >> 2;
         }
         else if (id == 0b10){
-            colorBits = memoryArray[BGP_address] & 0b110000 >> 4;
+            return memoryArray[BGP_address] & 0b110000 >> 4;
         }
         else if (id == 0b11){
-            colorBits = memoryArray[BGP_address] & 0b11000000 >> 6;
+            return memoryArray[BGP_address] & 0b11000000 >> 6;
         }
         else {
             System.out.println("Err: attempted access of invalid palette color ID");
-            colorBits = 0;
-        }
-
-        switch (colorBits){
-            case 0b00:
-                return Color.WHITE;
-            case 0b01:
-                return Color.LGREY;
-            case 0b10:
-                return Color.DGREY;
-            case 0b11:
-                return Color.BLACK; 
+            return 0;
         }
     }
 
