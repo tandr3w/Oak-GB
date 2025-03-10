@@ -16,10 +16,10 @@ public class Memory {
         memoryArray = new int[0xFFFF + 1];
         LCDC_address = 0xFF40; // Settings for display
         STAT_address = 0xFF41;
-        SCY_address = 0xFF42; // Y positon of background to start drawing from
-        SCX_address = 0xFF43; // X positon of background to start drawing from
-        LY_address = 0xFF44; // Y position of viewing area to start drawing from
-        LYC_address = 0xFF45; // X position - 7 of viewing area to start drawing from
+        SCY_address = 0xFF42;
+        SCX_address = 0xFF43;
+        LY_address = 0xFF44; 
+        LYC_address = 0xFF45;
 
         BGP_address = 0xFF47; // Color palette
 
