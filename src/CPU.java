@@ -9,6 +9,7 @@ public class CPU {
     boolean lowPowerMode;
     boolean halted;
     boolean interrupts;
+    int additionalCycles;
 
     public CPU(Opcodes opcodes, Memory memory){
         // TODO: use a function to set memory so we can restrict access to protect parts
@@ -18,6 +19,7 @@ public class CPU {
         lowPowerMode = false;
         halted = false;
         interrupts = false;
+        additionalCycles = 0;
 
         loadROM("ROMs/snake.gb"); // FIXME
     }
@@ -35,7 +37,7 @@ public class CPU {
         setNextBytes(instruction);
         registers.pc += instruction.num_bytes - 1;
         registers.pc &= 0xFFFF; // overflow
-        int num_cycles = 4 * instruction.num_bytes; // FIXME: check if you should add 1 here??
+        int num_cycles = 4 * (instruction.num_bytes-1);
         
         switch (instruction.operation){
             case Operation.SWAP:
@@ -156,6 +158,7 @@ public class CPU {
 
     public int execute(Instruction instruction){
         int num_cycles = 4 * instruction.num_bytes;
+        additionalCycles = 0;
         // Load correct number of bytes
         setNextBytes(instruction);
         registers.pc += instruction.num_bytes;
@@ -172,6 +175,7 @@ public class CPU {
                     break;
                 }
                 if (instruction.operand == Operand.e8){
+                    num_cycles += 8;
                     addSignedTo16(Operand.SP, (byte) instruction.next_bytes[0]);
                     break;
                 }
@@ -185,6 +189,9 @@ public class CPU {
                     break;
                 }
                 // Add to HL
+                if (instruction.operand == Operand.BC || instruction.operand == Operand.DE || instruction.operand == Operand.HL || instruction.operand == Operand.SP){
+                    num_cycles += 4;
+                }
                 add16(Operand.HL, registers.readValFromEnum(instruction.operand));
                 break;
 
@@ -254,10 +261,12 @@ public class CPU {
                 break;
 
             case Operation.INC16:
+                num_cycles += 4;
                 inc16(instruction.operandToSet);
                 break;
 
             case Operation.DEC16:
+                num_cycles += 4;
                 dec16(instruction.operandToSet);
                 break;
 
@@ -354,6 +363,7 @@ public class CPU {
                 }
                 
                 else if (instruction.operand == Operand.SPe8) {
+                    num_cycles += 4;
                     twoByteVal = returnAddSignedTo16(Operand.SP, (byte) instruction.next_bytes[0]);
                 }
                 
@@ -361,7 +371,11 @@ public class CPU {
                 else {;
                     twoByteVal = registers.readValFromEnum(instruction.operand);
                 }
-                
+
+                if (instruction.operandToSet == Operand.SP && instruction.operand == Operand.HL){
+                    num_cycles += 4;
+                }
+            
                 if (instruction.operandToSet == Operand.a16) {
                     // LITTLE ENDIAN
                     int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
@@ -488,33 +502,38 @@ public class CPU {
             case Operation.JP:
                 if (instruction.operand == Operand.a16){
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
+                    num_cycles += 4;
                     jumpTo(addr);
                 }
                 if (instruction.operand == Operand.JumpNZ){
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 0){
+                        num_cycles += 4;
                         jumpTo(addr);
                     }
                 }
                 if (instruction.operand == Operand.JumpNC){
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 0){
+                        num_cycles += 4;
                         jumpTo(addr);
                     }
                 }
                 if (instruction.operand == Operand.JumpC){
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 1){
+                        num_cycles += 4;
                         jumpTo(addr);
                     }
                 }
                 if (instruction.operand == Operand.JumpZ){
                     int addr = (instruction.next_bytes[1] & 0xFF) << 8 | (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 1){
+                        num_cycles += 4;
                         jumpTo(addr);
                     }
                 }
-                if (instruction.operand == Operand.MemHL){
+                if (instruction.operand == Operand.HL){
                     jumpTo(registers.get_hl());
                 }
                 break;
@@ -523,29 +542,35 @@ public class CPU {
                 if (instruction.operand == Operand.e8 && instruction.operandToSet == null){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     jumpTo((registers.pc + toAdd) & 0xFFFF);
+                    num_cycles += 4;
                 }
                 if (instruction.operandToSet == Operand.JumpNZ){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 0){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
+                        num_cycles += 4;
                     }
                 }
                 if (instruction.operandToSet == Operand.JumpNC){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 0){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
+                        num_cycles += 4;
                     }
                 }
                 if (instruction.operandToSet == Operand.JumpC){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_carry() == 1){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
+                        num_cycles += 4;
                     }
                 }
                 if (instruction.operandToSet == Operand.JumpZ){
                     int toAdd = (byte) (instruction.next_bytes[0] & 0xFF);
                     if (registers.get_f_zero() == 1){
                         jumpTo((registers.pc + toAdd) & 0xFFFF);
+                        num_cycles += 4;
+
                     }
                 }
                 break;
@@ -605,9 +630,10 @@ public class CPU {
                 break;
             
             case Operation.RET:
+                num_cycles += 4;
                 if (instruction.operand == null){
                     jumpTo(pop16FromStack());
-                    num_cycles += 12;
+                    num_cycles += 8;
                 }
                 if (instruction.operand == Operand.JumpNZ){
                     if (registers.get_f_zero() == 0){
@@ -636,6 +662,7 @@ public class CPU {
                 break;
 
             case Operation.PUSH:
+                num_cycles += 12;
                 add16ToStack(registers.readValFromEnum(instruction.operand));
                 break;
 
@@ -661,6 +688,7 @@ public class CPU {
                 break;
 
         }
+        num_cycles += additionalCycles;
         return num_cycles;
     }
 
@@ -902,72 +930,78 @@ public class CPU {
     
     // TODO: NEED TO UPDATE ZERO FLAG
     public void RLC(Operand target) {
-
-        int firstCircularBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
-        int shifted = (registers.readValFromEnum(target) << 1) & 0xFF;
-        registers.setValToEnum(target, shifted | firstCircularBit);
-        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        int val = registers.readValFromEnum(target);
+        int firstCircularBit = (val) >> 7;
+        int shifted = ((val << 1) & 0xFF) | firstCircularBit;
+        registers.setValToEnum(target, shifted);
+        registers.set_f_zero(shifted == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstCircularBit == 1);
     }
 
     public void RL(Operand target) {
-        int firstBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
-        int shifted = (registers.readValFromEnum(target) << 1) & 0xFF;
-        registers.setValToEnum(target, shifted | registers.get_f_carry());
-        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        int val = registers.readValFromEnum(target);
+        int firstBit = (val & 0b10000000) >> 7;
+        int shifted = ((val << 1) & 0xFF) | registers.get_f_carry();
+        registers.setValToEnum(target, shifted);
+        registers.set_f_zero(shifted == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstBit == 1);
     }
 
     public void RRC(Operand target) {
-        int firstCircularBit = (registers.readValFromEnum(target) & 0b00000001);
-        int shifted = (registers.readValFromEnum(target) >> 1);
-        registers.setValToEnum(target, shifted | (firstCircularBit << 7));
-        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        int val = registers.readValFromEnum(target);
+        int firstCircularBit = (val & 0b00000001);
+        int shifted = (val >> 1) | (firstCircularBit << 7);
+        registers.setValToEnum(target, shifted);
+        registers.set_f_zero(shifted == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstCircularBit == 1);
     }
 
     public void RR(Operand target) {
-        int firstBit = (registers.readValFromEnum(target) & 0b00000001);
-        int shifted = (registers.readValFromEnum(target) >> 1);
-        registers.setValToEnum(target, shifted | (registers.get_f_carry() << 7));
-        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        int val = registers.readValFromEnum(target);
+        int firstBit = (val & 0b00000001);
+        int shifted = (val >> 1) | (registers.get_f_carry() << 7);
+        registers.setValToEnum(target, shifted);
+        registers.set_f_zero(shifted == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstBit == 1);
     }
 
     public void SLA(Operand target) {
-        int firstBit = (registers.readValFromEnum(target) & 0b10000000) >> 7;
-        int shifted = (registers.readValFromEnum(target) << 1);
-        registers.setValToEnum(target, shifted & 0xFF); // handle overflow
-        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        int val = registers.readValFromEnum(target);
+        int firstBit = (val & 0b10000000) >> 7;
+        int shifted = (val << 1) & 0xFF;
+        registers.setValToEnum(target, shifted); // handle overflow
+        registers.set_f_zero(shifted == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstBit == 1);
     }
 
     public void SRA(Operand target) {
-        int firstBit = (registers.readValFromEnum(target) & 0b00000001);
-        int bitSeven = (registers.readValFromEnum(target) & 0b10000000);
-        int shifted = (registers.readValFromEnum(target) >> 1);
-        registers.setValToEnum(target, shifted | bitSeven);
-        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        int val = registers.readValFromEnum(target);
+        int firstBit = (val & 0b00000001);
+        int bitSeven = (val & 0b10000000);
+        int shifted = (val >> 1) | bitSeven;
+        registers.setValToEnum(target, shifted);
+        registers.set_f_zero(shifted == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstBit == 1);
     }
 
     public void SRL(Operand target) {
-        int firstBit = (registers.readValFromEnum(target) & 0b00000001);
-        int shifted = (registers.readValFromEnum(target) >> 1);
+        int val = registers.readValFromEnum(target);
+        int firstBit = (val & 0b00000001);
+        int shifted = (val >> 1);
         registers.setValToEnum(target, shifted);
-        registers.set_f_zero(registers.readValFromEnum(target) == 0);
+        registers.set_f_zero(shifted == 0);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
         registers.set_f_carry(firstBit == 1);

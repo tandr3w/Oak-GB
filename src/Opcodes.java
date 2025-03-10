@@ -525,7 +525,7 @@ public class Opcodes {
         opcodesArray[0xE6] = new Instruction(Operation.AND, Operand.n8, 2);
         opcodesArray[0xE7] = new Instruction(Operation.RST, Operand.RST20, 1);
         opcodesArray[0xE8] = new Instruction(Operation.ADD, Operand.SP, Operand.e8, 2);
-        opcodesArray[0xE9] = new Instruction(Operation.JP, Operand.MemHL, 1);
+        opcodesArray[0xE9] = new Instruction(Operation.JP, Operand.HL, 1);
         opcodesArray[0xEA] = new Instruction(Operation.LD, Operand.a16, Operand.A, 3);
         opcodesArray[0xEE] = new Instruction(Operation.XOR, Operand.n8, 2);
         opcodesArray[0xEF] = new Instruction(Operation.RST, Operand.RST28, 1);

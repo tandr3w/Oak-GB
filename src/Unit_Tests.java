@@ -107,10 +107,12 @@ public class Unit_Tests {
             cpu.registers.f = initial.getInt("f");
             cpu.registers.h = initial.getInt("h");
             cpu.registers.l = initial.getInt("l");
-            cpu.execute(opcodes.byteToInstruction(opcode));
+            int t_cycles = cpu.execute(opcodes.byteToInstruction(opcode));
 
             JSONObject end = testCase.getJSONObject("final");
             JSONArray endRam = end.getJSONArray("ram");
+            JSONArray cycles = testCase.getJSONArray("cycles");
+
 
             for (int j=0; j<endRam.length(); j++){
                 JSONArray ramElement = endRam.getJSONArray(j);
@@ -152,6 +154,10 @@ public class Unit_Tests {
             if (cpu.registers.l != end.getInt("l")){
                 System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("l")) + " Found: " + Integer.toString(cpu.registers.l));
                 return 11;}
+            if (t_cycles != cycles.length()*4){
+                System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(cycles.length()*4) + " Found: " + Integer.toString(t_cycles));
+                return 12;
+            }
         }
         return 0;
     }

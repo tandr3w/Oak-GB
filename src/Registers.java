@@ -51,10 +51,13 @@ public class Registers {
             case Operand.AF:
                 return get_af();
             case Operand.MemBC:
+                cpu.additionalCycles += 4;
                 return cpu.memory[get_bc()];
             case Operand.MemDE:
+                cpu.additionalCycles += 4;
                 return cpu.memory[get_de()];
             case Operand.MemHL:
+                cpu.additionalCycles += 4;
                 return cpu.memory[get_hl()];
             case Operand.SP:
                 return sp;
@@ -103,12 +106,15 @@ public class Registers {
                 break;
             case Operand.MemBC:
                 cpu.memory[get_bc()] = val;
+                cpu.additionalCycles += 4;
                 break;
             case Operand.MemDE:
                 cpu.memory[get_de()] = val;
+                cpu.additionalCycles += 4;
                 break;
             case Operand.MemHL:
                 cpu.memory[get_hl()] = val;
+                cpu.additionalCycles += 4;
                 break;
             default:
                 throw new Error("Attempted Read Of Invalid Register Operand: " + operand.name());
