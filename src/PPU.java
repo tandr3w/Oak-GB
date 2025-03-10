@@ -37,7 +37,7 @@ public class PPU extends JFrame {
         display = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // drawPixels(g);
+                // TODO: drawPixels(g);
             }
         };
         add(display);
@@ -103,7 +103,7 @@ public class PPU extends JFrame {
                 xPos = i - memory.getWY();
             }
             int horizontalTileIndex = xPos / 8;
-            int dataPos = displayDataLocation + xPos + yPos*32; // Get index of the tile identifier in memory
+            int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
             int tileIdentifier;
             if (signed){
                 tileIdentifier = (int) ((byte) memory.memoryArray[dataPos]);
@@ -133,6 +133,11 @@ public class PPU extends JFrame {
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
         }
     }
+    // public void drawPixels(Graphics g) {
+    //     fetchPixels();
+    //     g.setColor(Color.BLACK); // FIXME temporary
+    //     g.fillRect(80, 72, 1, 1);
+    // }
 
     // public void render() {
     //     memory.setLY(0);
