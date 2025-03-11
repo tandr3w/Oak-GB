@@ -21,7 +21,7 @@ public class Main {
                 t_cyclesThisUpdate += cycles;
                 // Timer update here passing in cycles
                 // PPU update function here passing in cycles
-                // Interrupts here
+                cpu.doInterrupts();
             }
             // PPU update function here
         }

@@ -14,4 +14,13 @@ public class Util {
     public static int getIthBit(int byteVal, int bitNum){
         return (byteVal >> bitNum) & 1;
     }
+
+    public static int setBit(int byteVal, int bitNum, boolean val){
+        if (val){
+            return byteVal | (1 << bitNum);
+        }
+        else {
+            return byteVal | (0xF ^ (1 << bitNum));
+        }
+    }
 }

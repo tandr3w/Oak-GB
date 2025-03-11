@@ -1078,7 +1078,38 @@ public class CPU {
         }
     }
 
+    public void requestInterrupt(int id){
+        memory[0xFF0F] = Util.setBit(memory[0xFF0F], id, true);
+    }
+
     public void doInterrupts(){
-        
+        if (!interrupts){
+            return;
+        }
+        int interruptRequest = memory[0xFF0F];
+        int enabled = memory[0xFFFF];
+        if (interruptRequest > 0){
+            for (int i=0; i<5; i++){
+                if (Util.getIthBit(interruptRequest, i) == 1 && Util.getIthBit(enabled, i) == 1){
+                    interrupts = false;
+                    memory[0xFF0F] = Util.setBit(interruptRequest, i, false);
+                    add16ToStack(registers.pc);
+                    switch (i){
+                        case 0:
+                            registers.pc = 0x40; // V-Blank
+                            break;
+                        case 1:
+                            registers.pc = 0x48; // LCD
+                            break;
+                        case 2:
+                            registers.pc = 0x50; // Timer
+                            break;
+                        case 3:
+                            registers.pc = 0x60; // Joypad
+                            break;
+                    }
+                }
+            }
+        }
     }
 }
