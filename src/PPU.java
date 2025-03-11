@@ -131,7 +131,7 @@ public class PPU extends JFrame {
             // 7-xPos converts bit number from the left to bit number from the right
             int bit1 = Util.getIthBit(byte1, 7-xPos);
             int bit2 = Util.getIthBit(byte2, 7-xPos);
-            int colorID = memory.getPaletteColor((bit2 << 1) | bit1);
+            int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
         }
     }
@@ -151,7 +151,7 @@ public class PPU extends JFrame {
             // Bit 4: palette number, 0 = from 0xFF48, 1 = from 0xFF49
             // // Bit 0-3: unused
             int attributes = memory.memoryArray[SPRITEADDRESS + indexStart + 3];
-            boolean bgPriority = Util.getIthBit(attributes, 7) == 1;
+            boolean bgPriority = Util.getIthBit(attributes, 7) == 1; // TODO: implement this
             boolean yFlip = Util.getIthBit(attributes, 6) == 1;
             boolean xFlip = Util.getIthBit(attributes, 5) == 1;
             boolean palette = Util.getIthBit(attributes, 4) == 1;
@@ -185,7 +185,13 @@ public class PPU extends JFrame {
                     }
                     int bit1 = Util.getIthBit(byte1, whichBit);
                     int bit2 = Util.getIthBit(byte2, whichBit);
-                    int colorID = memory.getPaletteColor((bit2 << 1) | bit1);
+                    int colorID;
+                    if (palette){
+                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address+2);
+                    }
+                    else {
+                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address+1);
+                    }
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
