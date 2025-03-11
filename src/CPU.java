@@ -1077,4 +1077,8 @@ public class CPU {
             e.printStackTrace();
         }
     }
+
+    public void doInterrupts(){
+        
+    }
 }

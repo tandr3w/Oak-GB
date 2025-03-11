@@ -11,16 +11,19 @@ public class Main {
         tests.runPrefixed();
 
         // TODO: Main loop
-        int MAXCYCLES = 69905; // processor runs 4194304 cycles/second, but screen is updating at 60FPS
-        int t_cyclesThisUpdate = 0;
         cpu.loadROM("ROMs/snake.gb");
-        while (t_cyclesThisUpdate < MAXCYCLES){
-            int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
-            t_cyclesThisUpdate += cycles;
-            // Timer update here passing in cycles
-            // PPU update function here passing in cycles
-            // Interrupts here
+
+        while (true){ // Main Loop
+            int MAXCYCLES = 69905; // processor runs 4194304 cycles/second, but screen is updating at 60FPS
+            int t_cyclesThisUpdate = 0;
+            while (t_cyclesThisUpdate < MAXCYCLES){
+                int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
+                t_cyclesThisUpdate += cycles;
+                // Timer update here passing in cycles
+                // PPU update function here passing in cycles
+                // Interrupts here
+            }
+            // PPU update function here
         }
-        // PPU render function here
     }
 }
