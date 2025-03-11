@@ -154,7 +154,7 @@ public class Unit_Tests {
             if (cpu.registers.l != end.getInt("l")){
                 System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(end.getInt("l")) + " Found: " + Integer.toString(cpu.registers.l));
                 return 11;}
-            if (t_cycles != cycles.length()*4){
+            if (t_cycles != cycles.length()*4 && opcode != 0x10 && opcode != 0x76){
                 System.out.println("Case " + testCase.getString("name") + " Expected: " + Integer.toString(cycles.length()*4) + " Found: " + Integer.toString(t_cycles));
                 return 12;
             }

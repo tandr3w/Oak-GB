@@ -6,7 +6,7 @@ public class CPU {
     Registers registers;
     int[] memory;
     Opcodes opcodes;
-    boolean lowPowerMode;
+    boolean stopMode;
     boolean halted;
     boolean interrupts;
     int additionalCycles;
@@ -16,7 +16,7 @@ public class CPU {
         this.memory = memory.memoryArray; // 65536 bytes
         registers = new Registers(this);
         this.opcodes = opcodes;
-        lowPowerMode = false;
+        stopMode = false;
         halted = false;
         interrupts = false;
         additionalCycles = 0;
@@ -695,6 +695,14 @@ public class CPU {
                 enableInterrupts();
                 num_cycles += 12;
                 jumpTo(pop16FromStack());
+                break;
+
+            case Operation.STOP:
+                stopMode = true;
+                break;
+
+            case Operation.HALT:
+                halted = true;
                 break;
 
             default:
