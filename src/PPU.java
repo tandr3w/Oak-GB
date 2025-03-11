@@ -189,11 +189,10 @@ public class PPU extends JFrame {
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
-                    screenData[memory.getLY()][spriteCol] = colourPaletteTranslator[colorID];
+                    screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
                 }
             }
         }
-
     }
 
     // public void drawPixels(Graphics g) {
