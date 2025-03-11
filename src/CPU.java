@@ -695,6 +695,7 @@ public class CPU {
                 enableInterrupts();
                 num_cycles += 12;
                 jumpTo(pop16FromStack());
+                break;
 
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
