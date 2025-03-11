@@ -43,15 +43,6 @@ public class CPU {
         registers.pc &= 0xFFFF; // overflow
         int num_cycles = 4 * (instruction.num_bytes-1);
 
-        if (enableInterruptsNext){
-            interrupts = true;
-            enableInterruptsNext = false;
-        }
-        if (disableInterruptsNext){
-            interrupts = false;
-            disableInterruptsNext = false;
-        }
-        
         switch (instruction.operation){
             case Operation.SWAP:
                 swap(instruction.operand);
@@ -176,6 +167,15 @@ public class CPU {
         setNextBytes(instruction);
         registers.pc += instruction.num_bytes;
         registers.pc &= 0xFFFF; // overflow
+        
+        if (enableInterruptsNext){
+            interrupts = true;
+            enableInterruptsNext = false;
+        }
+        if (disableInterruptsNext){
+            interrupts = false;
+            disableInterruptsNext = false;
+        }
         
         switch (instruction.operation){
             case Operation.PREFIX:
