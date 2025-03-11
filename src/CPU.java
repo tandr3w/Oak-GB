@@ -682,6 +682,19 @@ public class CPU {
                     num_cycles += 8;
                 }
                 break;
+            
+            case Operation.DI:
+                disableInterrupts();
+                break;
+            
+            case Operation.EI:
+                enableInterrupts();
+                break;
+
+            case Operation.RETI:
+                enableInterrupts();
+                num_cycles += 12;
+                jumpTo(pop16FromStack());
 
             default:
                 System.out.println("Attempted run of operation that has not been implemented: " + instruction.operation.name());
@@ -690,6 +703,13 @@ public class CPU {
         }
         num_cycles += additionalCycles;
         return num_cycles;
+    }
+
+    public void disableInterrupts(){
+        interrupts = false;
+    }
+    public void enableInterrupts(){
+        interrupts = true;
     }
 
     public void jumpTo(int val){

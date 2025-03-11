@@ -50,6 +50,7 @@ enum Operation {
     PUSH,
     PREFIX,
     STOP, HALT, RETI,
+    DI, EI,
 
     // PREFIX INSTRUCTIONS
     SWAP,
