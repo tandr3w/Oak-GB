@@ -94,6 +94,9 @@ public class Memory {
         setBitInLCDC(0, val);
     }
 
+    public int getSCX(){
+        return memoryArray[SCX_address];
+    }
     public int getSCY(){
         return memoryArray[SCY_address];
     }
