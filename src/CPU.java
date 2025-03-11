@@ -9,6 +9,8 @@ public class CPU {
     boolean stopMode;
     boolean halted;
     boolean interrupts;
+    boolean enableInterruptsNext;
+    boolean disableInterruptsNext;
     int additionalCycles;
 
     public CPU(Opcodes opcodes, Memory memory){
@@ -16,9 +18,11 @@ public class CPU {
         this.memory = memory.memoryArray; // 65536 bytes
         registers = new Registers(this);
         this.opcodes = opcodes;
-        stopMode = false;
+        stopMode = false; // TODO: actually use these
         halted = false;
         interrupts = false;
+        enableInterruptsNext = false;
+        disableInterruptsNext = false;
         additionalCycles = 0;
 
         loadROM("ROMs/snake.gb"); // FIXME
@@ -38,6 +42,15 @@ public class CPU {
         registers.pc += instruction.num_bytes - 1;
         registers.pc &= 0xFFFF; // overflow
         int num_cycles = 4 * (instruction.num_bytes-1);
+
+        if (enableInterruptsNext){
+            interrupts = true;
+            enableInterruptsNext = false;
+        }
+        if (disableInterruptsNext){
+            interrupts = false;
+            disableInterruptsNext = false;
+        }
         
         switch (instruction.operation){
             case Operation.SWAP:
@@ -692,9 +705,9 @@ public class CPU {
                 break;
 
             case Operation.RETI:
-                enableInterrupts();
                 num_cycles += 12;
                 jumpTo(pop16FromStack());
+                interrupts = true;
                 break;
 
             case Operation.STOP:
@@ -715,10 +728,10 @@ public class CPU {
     }
 
     public void disableInterrupts(){
-        interrupts = false;
+        disableInterruptsNext = false;
     }
     public void enableInterrupts(){
-        interrupts = true;
+        enableInterruptsNext = true;
     }
 
     public void jumpTo(int val){
