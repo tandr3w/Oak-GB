@@ -1,9 +1,9 @@
-// Code for this file is heavily insipred from http://www.codeslinger.co.uk/pages/projects/gameboy/graphics.html
+// Code for this file is heavily insipred by http://www.codeslinger.co.uk/pages/projects/gameboy/graphics.html
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PPU extends JFrame {
+public class PPU extends JPanel {
     Memory memory;
     int[] spriteBuffer;
     Queue backgroundFIFO; // 16 pixels max
@@ -13,7 +13,7 @@ public class PPU extends JFrame {
     int[][] colourPaletteTranslator;
     int[][][] screenData;
 
-    private JPanel display;
+
 
     public PPU(Memory memory) {
 
@@ -28,24 +28,10 @@ public class PPU extends JFrame {
         };
         
         int[][][] screenData = new int[144][160][3];
-
-        setTitle("Gameboy Emulator");
-        setSize(160, 144); // TODO: add support for upscaling
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // opens the display in the middle of the screen
-        setFocusable(true);
-
-        display = new JPanel() {
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                // TODO: drawPixels(g);
-            }
-        };
-        add(display);
-        setVisible(true);
-        requestFocus();
     }
+    
+
+
 
     public void drawScanlineBG(){
         // Draws tiles for one scanline
@@ -80,16 +66,16 @@ public class PPU extends JFrame {
             }
             else {
                 displayDataLocation = 0x9800;
-            }  
+            }
         }
 
         // memory[displayDataLocation --> displayDataLocation + 1023] holds a 32x32 grid of tile identification numbers
         // giving the tiles from left to right and then top down
-        // Find which 
+        // Find which
         int yPos = 0; // Get the Y position on the 256x256 display that we are currently drawing at
         if (!windowEnabled){
             yPos = memory.getSCY() + memory.getLY();
-        }  
+        }
         else {
             yPos = memory.getLY() - memory.getWY();
         }
@@ -100,7 +86,7 @@ public class PPU extends JFrame {
             int xPos; // Get x position on the 256x256 display we are currently drawing on
             if (!windowEnabled){
                 xPos = i + memory.getSCX();
-            }  
+            }
             else {
                 xPos = i - (memory.getWX() - 7);
             }
@@ -128,7 +114,7 @@ public class PPU extends JFrame {
             int byte2 = memory.memoryArray[tileMemLocation + byteInTile + 1];
             int xIndex = xPos % 8;
             // we need the xIndex'th byte from the left of both of the bytes
-            // 7-xPos converts bit number from the left to bit number from the right
+            // 7-xPos converts bit number from the left to bit number3 from the right
             int bit1 = Util.getIthBit(byte1, 7-xPos);
             int bit2 = Util.getIthBit(byte2, 7-xPos);
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
@@ -151,7 +137,7 @@ public class PPU extends JFrame {
             // Bit 4: palette number, 0 = from 0xFF48, 1 = from 0xFF49
             // // Bit 0-3: unused
             int attributes = memory.memoryArray[SPRITEADDRESS + indexStart + 3];
-            boolean bgPriority = Util.getIthBit(attributes, 7) == 1; // TODO: implement this
+            boolean bgPriority = Util.getIthBit(attributes, 7) == 1;
             boolean yFlip = Util.getIthBit(attributes, 6) == 1;
             boolean xFlip = Util.getIthBit(attributes, 5) == 1;
             boolean palette = Util.getIthBit(attributes, 4) == 1;
@@ -195,35 +181,73 @@ public class PPU extends JFrame {
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
+                    if (bgPriority & screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0]) {
+                        continue; // Don't render if the background takes priority AND if the background is not white
+                    }
+                    
                     screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
                 }
             }
         }
     }
 
-    // public void drawPixels(Graphics g) {
-    //     fetchPixels();
-    //     g.setColor(Color.BLACK); // FIXME temporary
-    //     g.fillRect(80, 72, 1, 1);
-    // }
+    public void drawNextScanline() {
+        // TODO: implement interupt requests
+        drawScanlineBG();
+        drawScanlineSprite();
+    }
 
-    // public void render() {
-    //     memory.setLY(0);
-    //     while (memory.getLY() <= 143) {
-    //         if (memory.getLY() == memory.getLYC()) {
-    //             // some sort of interupt thingy happens idk lol
-    //             // FIXME
-    //         }
-    //         OAMScan();
-    //         display.repaint(); // triggers the display object's paintComponent automatically
-    //         HBank();
-    //         memory.setLY(memory.getLY() + 1); // Don't have to account for overflow
-    //     }
-    //     while (memory.getLY() <= 153) {
-    //         VBank();
-    //         memory.setLY(memory.getLY() + 1);
-    //     }
-    // }
+    // called using .repaint()
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        renderScreen(g);
+    }
+
+    public void renderScreen(Graphics g) {
+        for (int y = 0; y < 144; y++) {
+            for (int x = 0; x < 160; x++) {
+                int[] rgb = screenData[y][x];
+                Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
+                g.setColor(pixelColor);
+                g.fillRect(x, y, 1, 1);
+            }
+        }
+    }
+
+    public void updateStatus() {
+        int status = memory.getLCDStatus();
+
+        // if LCD is not enabled
+        if (memory.getLCDEnable() == 0) {
+            memory.setLY(456);
+            status &= 0b11111100;
+            status = Util.setBit(status, 0, true);
+            return;
+        }
+
+        int LY = memory.getLY();
+        int currMode = status & 0b11;
+        int mode;
+        boolean reqInt = false;
+
+        
+        if (LY < 144) {
+            // TODO: implement other 3 modes
+        }
+
+        else {
+            // MODE 1 - VBLANK
+            mode = 1;
+            status = Util.setBit(status, 0, true);
+            status = Util.setBit(status, 1, false);
+            reqInt = Util.getIthBit(status, 4) == 1;
+        }
+
+    }
+
+    public void updateGraphics() {
+
+    }
 
     // // "MODE 2"
     // public void OAMScan() {
@@ -246,48 +270,6 @@ public class PPU extends JFrame {
     //     }
     // }
 
-    // // "MODE 3"
-    // public void drawPixels(Graphics g) {
-    //     fetchPixels();
-    //     g.setColor(Color.BLACK); // FIXME temporary
-    //     g.fillRect(80, 72, 1, 1);
-    // }
-
-    // public void fetchPixels() {
-    //     // scroll registers are re-read on each new fetch
-    //     // low 3 bits of SCX are NOT re-read (only at the beginning of scanline)
-
-
-    //     int fetcherX = 0; // internal x-pos counter
-    //     int fetcherY = 0;
-    //     int windowLineCounter = 0; // incremented when scanline has window pixels; reset in VBlank (i'm just gonna reset it here for convenience)
-    //     int tileMapAddr;
-    //     // fetch tile number
-    //     if ((memory.getWindowEnable() == 1) & (memory.getBGTileMapArea() == 1) & (memory.getLY() < memory.getWY())) { // scanline is outside of window
-    //         tileMapAddr = 0x9C00;
-    //     }
-    //     else {
-    //         tileMapAddr = 0x9800; // default value
-    //     }
-
-    //     // fetch tile data (low)
-
-    //     // fetch tile data (high)
-
-    //     // sleep (until backgroundFIFO is NOT empty)
-    //     while (backgroundFIFO.length() != 0){
-    //     }
-
-    //     // push to FIFO --> only happens if backgroundFIFO is empty
-    //     if (backgroundFIFO.length() == 0) {
-            
-    //         // push LSB then MSB if tile is flipped horizontally
-    //         // otherwise, push normally
-    //     }
-
-        
-    // }
-
     // "MODE 0"
     public void HBank() {
         // PPU doesn't do anything in between scanlines
@@ -296,6 +278,7 @@ public class PPU extends JFrame {
     // "MODE 1"
     public void VBank() {
         // PPU doesn't do anything in between screens
+        memory.requestInterrupt(0);
     }
 
     // gets data from the map

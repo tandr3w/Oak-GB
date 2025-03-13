@@ -1078,10 +1078,6 @@ public class CPU {
         }
     }
 
-    public void requestInterrupt(int id){
-        memory[0xFF0F] = Util.setBit(memory[0xFF0F], id, true);
-    }
-
     public void doInterrupts(){
         if (!interrupts){
             return;

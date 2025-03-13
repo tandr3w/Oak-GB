@@ -151,4 +151,15 @@ public class Memory {
         }
     }
 
+    public int getLCDStatus() {
+        return memoryArray[STAT_address];
+    }
+
+    public void setLCDStatus(int val) {
+        memoryArray[STAT_address] = val;
+    }
+
+    public void requestInterrupt(int id){
+        memoryArray[0xFF0F] = Util.setBit(memoryArray[0xFF0F], id, true);
+    }
 }
