@@ -45,6 +45,7 @@ public class PPU extends JPanel {
                 windowEnabled = true;
             }
         }
+        
         if (memory.getAddressingMode() == 1){
             tileDataLocation = 0x8000;
         }
@@ -151,7 +152,7 @@ public class PPU extends JPanel {
                 // Get the index of the row of the pixels on the sprite we are printing
                 // e.g. if scan line is on 10 and our sprite is on 9, print the 2nd (index 1) row of pixels
                 if (yFlip){
-                    spriteRow = yPos + ySize - currentScanline; // count from end of sprite
+                    spriteRow = yPos + ySize - 1 - currentScanline; // count from end of sprite
                 }
                 else {
                     spriteRow = currentScanline - yPos;
@@ -207,9 +208,6 @@ public class PPU extends JPanel {
             for (int x = 0; x < 160; x++) {
                 int[] rgb = screenData[y][x];
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
-                if (y==0) {
-                    System.out.println(rgb[0]);
-                }
                 g.setColor(pixelColor);
                 g.fillRect(x, y, 1, 1);
             }
