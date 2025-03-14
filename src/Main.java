@@ -5,7 +5,7 @@ public class Main extends JFrame {
     private Memory memory;
     private CPU cpu;
     private PPU ppu;
-    private Timer gameLoopTimer;
+    private Timer gameLoop;
 
     public Main() {
         opcodes = new Opcodes();
@@ -13,11 +13,13 @@ public class Main extends JFrame {
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
 
-        Unit_Tests tests = new Unit_Tests(cpu, opcodes);
+        // Unit_Tests tests = new Unit_Tests(cpu, opcodes);
         // tests.run();
-        System.out.println("\nTesting Prefixed Instructions:\n");
+        // System.out.println("\nTesting Prefixed Instructions:\n");
         // tests.runPrefixed();
-        memory.loadROM("ROMs/snake.gb");
+        
+        // https://github.com/mattcurrie/dmg-acid2
+        memory.loadROM("dmg-acid2.gb"); // graphics testing ROM
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -30,8 +32,8 @@ public class Main extends JFrame {
         setVisible(true);
 
         int delay = 16; // 1000 / 60 --> 16.6667
-        gameLoopTimer = new Timer(delay, e -> runFrame());
-        gameLoopTimer.start();
+        gameLoop = new Timer(delay, e -> runFrame());
+        gameLoop.start();
     }
 
     private void runFrame() {
@@ -40,9 +42,10 @@ public class Main extends JFrame {
         while (t_cyclesThisFrame < MAXCYCLES) {
             int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
             t_cyclesThisFrame += cycles;
+            
+            // TODO: Add Timer update function
+            ppu.updateGraphics(cycles);
             cpu.doInterrupts();
-            // TODO: Add CPU Timer update function
-            ppu.update(getGraphics());
         }
         ppu.repaint();
     }
@@ -52,6 +55,7 @@ public class Main extends JFrame {
     }
 
     // same as
+    
     // public static void main(String[] args) {
     //     SwingUtilities.invokeLater(new Runnable() {
     //         @Override
@@ -60,4 +64,17 @@ public class Main extends JFrame {
     //         }
     //     });
     // }
+
+
+    /*
+    
+    move this somewhere later
+    TMAFrequencies = new int[] {
+        4096,
+        262144,
+        65536,
+        16384,
+    };
+
+    */
 }

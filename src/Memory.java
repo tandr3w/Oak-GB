@@ -15,6 +15,11 @@ public class Memory {
 
     int BGP_address;
 
+    // Timer control addresses
+    int TIMO_address;
+    int TMA_address;
+    int TMC_address;
+
     int[] memoryArray;
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
@@ -29,6 +34,10 @@ public class Memory {
 
         BGP_address = 0xFF47; // Color palette
 
+        TIMO_address = 0xFF05; // Also called TIMA
+        TMA_address = 0xFF06;
+        TMC_address = 0xFF07; // Also called TAC
+
         // Default values
         memoryArray[LCDC_address] = 0x91;
         memoryArray[STAT_address] = 0x85;
@@ -39,6 +48,10 @@ public class Memory {
         memoryArray[LY_address] = 0x00;
         memoryArray[LYC_address] = 0x00;
         memoryArray[BGP_address] = 0xFC; // 0b1111100 - initially maps to black, black, black, white
+
+        memoryArray[TIMO_address] = 0x00;
+        memoryArray[TMA_address] = 0x00;
+        memoryArray[TMC_address] = 0xF8;
     }
 
     // LCDC commands

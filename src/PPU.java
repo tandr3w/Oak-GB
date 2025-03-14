@@ -23,15 +23,14 @@ public class PPU extends JPanel {
         spriteFIFO = new Queue(16);
         colourPaletteTranslator = new int[][] {
             {255, 255, 255}, // 0b00
-            {192, 192, 192}, // 0b01
-            {96, 96, 96}, // 0b10
+            {170, 170, 170}, // 0b01
+            {85, 85, 85}, // 0b10
             {0, 0, 0} // 0b11
         };
         
         screenData = new int[144][160][3];
         setPreferredSize(new Dimension(160, 144));
     }
-
 
 
     public void drawScanlineBG(){
@@ -289,8 +288,11 @@ public class PPU extends JPanel {
                 memory.setLY(0);
                 return;
             }
-            drawScanlineBG();
-            drawScanlineSprite();
+            if (LY < 144) {
+                drawScanlineBG();
+                drawScanlineSprite();
+                return;
+            }
         }
     }
 
