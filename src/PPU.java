@@ -27,7 +27,7 @@ public class PPU extends JPanel {
             {85, 85, 85}, // 0b10
             {0, 0, 0} // 0b11
         };
-        
+
         screenData = new int[144][160][3];
         setPreferredSize(new Dimension(160, 144));
     }
@@ -295,34 +295,3 @@ public class PPU extends JPanel {
             }
         }
     }
-
-    // // "MODE 2"
-    // public void OAMScan() {
-    //     // 80 T cycles - 40 OAM entries checked
-    //     spriteBuffer = new int[10];
-    //     int numObjects = 0; // can't exceed 10
-    //     int LY = memory.getLY();
-
-    //     for (int addr = 0xFE00; addr <= 0xFE9F; addr += 4){
-    //         // add 2 T cycles / dots
-    //         // I think we need to update timings here because the LCDC.2 flag that controls object sizes is updated mid scan
-    //         int y = memory.memoryArray[addr];
-    //         // int x = memory.memoryArray[addr+1];
-    //         int height = 8 + 8 * memory.getOBJSize();
-    //         // GBEDG says to check if (x > 0), but pandocs says that PPU doesn't check x-coord for OAM scan
-    //         if ((LY + 16 >= y) & (LY + 16 < y + height) & (numObjects < 10)){
-    //             numObjects++;
-    //             spriteBuffer[numObjects+1] = addr; // stores address of the OAM for now
-    //         }
-    //     }
-    // }
-
-    // "MODE 0"
-    public void HBank() {
-        // PPU doesn't do anything in between scanlines
-    }
-
-    // gets data from the map
-    // private int getTileData() {
-    // }
-}
