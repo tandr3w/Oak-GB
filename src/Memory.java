@@ -14,6 +14,7 @@ public class Memory {
     int LYC_address;
 
     int BGP_address;
+    int OBP_address;
 
     // Timer control addresses
     int TIMO_address;
@@ -33,6 +34,7 @@ public class Memory {
         LYC_address = 0xFF45;
 
         BGP_address = 0xFF47; // Color palette
+        OBP_address = 0xFF48; // OBP1 is 0xFF49; OBP is typically left uninitialized
 
         TIMO_address = 0xFF05; // Also called TIMA
         TMA_address = 0xFF06;
@@ -154,13 +156,13 @@ public class Memory {
             return memoryArray[address] & 0b11;
         }
         else if (id == 0b01){
-            return memoryArray[address] & 0b1100 >> 2;
+            return (memoryArray[address] & 0b1100) >> 2;
         }
         else if (id == 0b10){
-            return memoryArray[address] & 0b110000 >> 4;
+            return (memoryArray[address] & 0b110000) >> 4;
         }
         else if (id == 0b11){
-            return memoryArray[address] & 0b11000000 >> 6;
+            return (memoryArray[address] & 0b11000000) >> 6;
         }
         else {
             System.out.println("Err: attempted access of invalid palette color ID");
@@ -174,6 +176,10 @@ public class Memory {
 
     public void setLCDStatus(int val) {
         memoryArray[STAT_address] = val;
+    }
+
+    public boolean isClockEnabled() {
+        return Util.getIthBit(memoryArray[TMC_address], 2) == 1;
     }
 
     public void loadROM(String ROMName) {
@@ -196,4 +202,5 @@ public class Memory {
     public void requestInterrupt(int id){
         memoryArray[0xFF0F] = Util.setBit(memoryArray[0xFF0F], id, true);
     }
+    
 }

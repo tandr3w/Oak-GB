@@ -158,7 +158,7 @@ public class CPU {
         return num_cycles;
     }
 
-    public int execute(Instruction instruction){
+    public int execute(Instruction instruction) {
         int num_cycles = 4 * instruction.num_bytes;
         additionalCycles = 0;
         // Load correct number of bytes
@@ -175,6 +175,9 @@ public class CPU {
             disableInterruptsNext = false;
         }
         
+        // if (instruction.operation != Operation.NOP) {
+        //     System.out.println(instruction.operation);
+        // }
         switch (instruction.operation){
             case Operation.PREFIX:
                 int nextByte = instruction.next_bytes[0];

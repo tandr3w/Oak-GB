@@ -7,11 +7,20 @@ public class Main extends JFrame {
     private PPU ppu;
     private Timer gameLoop;
 
+    private int[] TMAFrequencies;
+
     public Main() {
         opcodes = new Opcodes();
         memory = new Memory();
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
+        
+        TMAFrequencies = new int[] {
+            4096,
+            262144,
+            65536,
+            16384,
+        };
 
         // Unit_Tests tests = new Unit_Tests(cpu, opcodes);
         // tests.run();
@@ -19,7 +28,7 @@ public class Main extends JFrame {
         // tests.runPrefixed();
         
         // https://github.com/mattcurrie/dmg-acid2
-        memory.loadROM("dmg-acid2.gb"); // graphics testing ROM
+        memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -32,6 +41,7 @@ public class Main extends JFrame {
         setVisible(true);
 
         int delay = 16; // 1000 / 60 --> 16.6667
+        // FIXME: CHANGE DELAY LATER
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
     }
@@ -48,6 +58,14 @@ public class Main extends JFrame {
             cpu.doInterrupts();
         }
         ppu.repaint();
+    }
+
+    public void updateTimers(int cycles) {
+        // doDividerRegisters(cycles);
+
+        if (memory.isClockEnabled()) {
+            
+        }
     }
 
     public static void main(String[] args) {

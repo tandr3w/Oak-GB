@@ -6,8 +6,8 @@ import java.awt.*;
 public class PPU extends JPanel {
     Memory memory;
     int[] spriteBuffer;
-    Queue backgroundFIFO; // 16 pixels max
-    Queue spriteFIFO;
+    // Queue backgroundFIFO; // 16 pixels max
+    // Queue spriteFIFO;
 
     // the GB stores colours as 2 bit numbers that we have to translate in to RGB colours
     int[][] colourPaletteTranslator;
@@ -19,8 +19,8 @@ public class PPU extends JPanel {
     public PPU(Memory memory) {
 
         this.memory = memory;
-        backgroundFIFO = new Queue(16);
-        spriteFIFO = new Queue(16);
+        // backgroundFIFO = new Queue(16);
+        // spriteFIFO = new Queue(16);
         colourPaletteTranslator = new int[][] {
             {255, 255, 255}, // 0b00
             {170, 170, 170}, // 0b01
@@ -123,10 +123,10 @@ public class PPU extends JPanel {
     }
 
     public void drawScanlineSprite(){
-        boolean using8x16SpriteSize = (memory.getOBJSize() == 1);
         int SPRITEADDRESS = 0xFE00;
 
         for (int spriteNum = 0; spriteNum < 40; spriteNum++){
+            
             int indexStart = spriteNum * 4; // Sprites are 4 bytes each
             // Get sprite attributes
             int yPos = memory.memoryArray[SPRITEADDRESS + indexStart]-16;
@@ -143,13 +143,9 @@ public class PPU extends JPanel {
             boolean palette = Util.getIthBit(attributes, 4) == 1;
 
             int currentScanline = memory.getLY();
+            int ySize = 8 + 8*memory.getOBJSize();
 
-            int ySize = 8;
-            if (using8x16SpriteSize){
-                ySize = 16;
-            }
-
-            if (currentScanline >= yPos && currentScanline < (yPos + ySize)){
+            if ((currentScanline >= yPos) && (currentScanline < (yPos + ySize))){
                 int spriteRow;
                 // Get the index of the row of the pixels on the sprite we are printing
                 // e.g. if scan line is on 10 and our sprite is on 9, print the 2nd (index 1) row of pixels
@@ -173,18 +169,18 @@ public class PPU extends JPanel {
                     int bit2 = Util.getIthBit(byte2, whichBit);
                     int colorID;
                     if (palette){
-                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address+2);
+                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address+1); // accesses OBP instead of BGP
                     }
                     else {
-                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address+1);
+                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address);
                     }
+                    System.out.println((bit2 << 1) | bit1);
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
-                    if (bgPriority & screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0]) {
+                    if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
                         continue; // Don't render if the background takes priority AND if the background is not white
                     }
-                    
                     screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
                 }
             }
@@ -197,13 +193,22 @@ public class PPU extends JPanel {
         renderScreen(g);
     }
 
+    public void drawScanline() {
+        if (memory.getBGWindowEnable() == 1) {
+            drawScanlineBG();
+        }
+        if (memory.getOBJEnable() == 1) {
+            drawScanlineSprite();
+        }
+    }
+
     public void renderScreen(Graphics g) {
         for (int y = 0; y < 144; y++) {
             for (int x = 0; x < 160; x++) {
                 int[] rgb = screenData[y][x];
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
                 g.setColor(pixelColor);
-                g.fillRect(x, y, 1, 1);
+                g.fillRect(x, y, 2, 2);
             }
         }
     }
@@ -249,7 +254,7 @@ public class PPU extends JPanel {
             reqInt = Util.getIthBit(status, 4) == 1;
         }
 
-        if ((mode != prevMode) & reqInt) {
+        if ((mode != prevMode) && reqInt) {
             memory.requestInterrupt(1);
         }
 
@@ -289,9 +294,9 @@ public class PPU extends JPanel {
                 return;
             }
             if (LY < 144) {
-                drawScanlineBG();
-                drawScanlineSprite();
+                drawScanline();
                 return;
             }
         }
     }
+}
