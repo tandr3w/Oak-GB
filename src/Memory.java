@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class Memory {
     // Hardware register addresses
     int LCDC_address;
@@ -157,6 +161,23 @@ public class Memory {
 
     public void setLCDStatus(int val) {
         memoryArray[STAT_address] = val;
+    }
+
+    public void loadROM(String ROMName) {
+        try {
+            File ROMFile = new File(ROMName);
+            FileInputStream in = new FileInputStream(ROMFile);
+            long size = ROMFile.length();
+            byte[] contents = new byte[(int) size];
+            in.read(contents);
+            for (int i=0; i<size; i++){
+                memoryArray[i] = (contents[i] & 0xFF);
+            }
+            in.close();
+        } catch (IOException e) {
+            System.out.println("error");
+            e.printStackTrace();
+        }
     }
 
     public void requestInterrupt(int id){

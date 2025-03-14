@@ -13,6 +13,7 @@ public class PPU extends JPanel {
     int[][] colourPaletteTranslator;
     int[][][] screenData;
 
+    int remainingCycles; // Number from 0 - 456; represents T-cycles
 
 
     public PPU(Memory memory) {
@@ -27,9 +28,9 @@ public class PPU extends JPanel {
             {0, 0, 0} // 0b11
         };
         
-        int[][][] screenData = new int[144][160][3];
+        screenData = new int[144][160][3];
+        setPreferredSize(new Dimension(160, 144));
     }
-    
 
 
 
@@ -226,13 +227,25 @@ public class PPU extends JPanel {
         }
 
         int LY = memory.getLY();
-        int currMode = status & 0b11;
+        int prevMode = status & 0b11;
         int mode;
         boolean reqInt = false;
 
         
         if (LY < 144) {
-            // TODO: implement other 3 modes
+            status = Util.setBit(status, 1, true);
+            status = Util.setBit(status, 0, false);
+
+            if (remainingCycles >= 456-80) {
+                mode = 2;
+                reqInt = Util.getIthBit(status, 5) == 1;
+            }
+            else if (remainingCycles >= 456-80-172) {
+                mode = 3;
+            }
+            else {
+                mode = 0;
+            }
         }
 
         else {
@@ -243,6 +256,21 @@ public class PPU extends JPanel {
             reqInt = Util.getIthBit(status, 4) == 1;
         }
 
+        if ((mode != prevMode) & reqInt) {
+            memory.requestInterrupt(1);
+        }
+
+        if (LY == memory.getLYC()) {
+            status = Util.setBit(status, 2, true);
+            if (Util.getIthBit(status, 6) == 1) {
+                memory.requestInterrupt(1);
+            }
+        }
+        else {
+            status = Util.setBit(status, 2, false);
+        }
+
+        memory.setLCDStatus(status);
     }
 
     public void updateGraphics() {
@@ -273,12 +301,6 @@ public class PPU extends JPanel {
     // "MODE 0"
     public void HBank() {
         // PPU doesn't do anything in between scanlines
-    }
-
-    // "MODE 1"
-    public void VBank() {
-        // PPU doesn't do anything in between screens
-        memory.requestInterrupt(0);
     }
 
     // gets data from the map

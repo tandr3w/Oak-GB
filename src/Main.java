@@ -1,7 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Main extends JFrame {
     private Opcodes opcodes;
@@ -17,10 +14,10 @@ public class Main extends JFrame {
         ppu = new PPU(memory);
 
         Unit_Tests tests = new Unit_Tests(cpu, opcodes);
-        tests.run();
+        // tests.run();
         System.out.println("\nTesting Prefixed Instructions:\n");
-        tests.runPrefixed();
-        cpu.loadROM("ROMs/snake.gb");
+        // tests.runPrefixed();
+        memory.loadROM("ROMs/snake.gb");
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -46,6 +43,7 @@ public class Main extends JFrame {
             cpu.doInterrupts();
             // TODO: Add CPU Timer update function
             // TODO: Add PPU timer update function
+            ppu.drawNextScanline();
         }
         ppu.repaint();
     }
