@@ -42,8 +42,7 @@ public class Main extends JFrame {
             t_cyclesThisFrame += cycles;
             cpu.doInterrupts();
             // TODO: Add CPU Timer update function
-            // TODO: Add PPU timer update function
-            ppu.drawNextScanline();
+            ppu.update(getGraphics());
         }
         ppu.repaint();
     }

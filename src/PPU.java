@@ -192,12 +192,6 @@ public class PPU extends JPanel {
         }
     }
 
-    public void drawNextScanline() {
-        // TODO: implement interupt requests
-        drawScanlineBG();
-        drawScanlineSprite();
-    }
-
     // called using .repaint()
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -215,7 +209,7 @@ public class PPU extends JPanel {
         }
     }
 
-    public void updateStatus() {
+    public void updateLCDStatus() {
         int status = memory.getLCDStatus();
 
         // if LCD is not enabled
@@ -273,8 +267,31 @@ public class PPU extends JPanel {
         memory.setLCDStatus(status);
     }
 
-    public void updateGraphics() {
+    public void updateGraphics(int t_cycles) {
+        updateLCDStatus();
+        if (memory.getLCDEnable() == 0) {
+            return;
+        }
+        
+        remainingCycles -= t_cycles;
+        int LY = memory.getLY();
+        
+        if (remainingCycles <= 0) {
+            LY++;
+            memory.setLY(LY);
+            remainingCycles = 456;
 
+            if (LY == 144) {
+                memory.requestInterrupt(1);
+                return;
+            }
+            if (LY > 153) {
+                memory.setLY(0);
+                return;
+            }
+            drawScanlineBG();
+            drawScanlineSprite();
+        }
     }
 
     // // "MODE 2"
