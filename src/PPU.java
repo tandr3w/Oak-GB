@@ -208,7 +208,7 @@ public class PPU extends JPanel {
                 int[] rgb = screenData[y][x];
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
                 g.setColor(pixelColor);
-                g.fillRect(x, y, 2, 2);
+                g.fillRect(x, y, 1, 1);
             }
         }
     }
