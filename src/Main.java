@@ -28,7 +28,8 @@ public class Main extends JFrame {
         // tests.runPrefixed();
         
         // https://github.com/mattcurrie/dmg-acid2
-        memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+        // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+        memory.loadROM("ROMs/snake.gb");
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -40,7 +41,7 @@ public class Main extends JFrame {
         ppu.requestFocus();
         setVisible(true);
 
-        int delay = 16; // 1000 / 60 --> 16.6667
+        int delay = 1000; // 1000 / 60 --> 16.6667
         // FIXME: CHANGE DELAY LATER
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
@@ -60,6 +61,7 @@ public class Main extends JFrame {
         ppu.repaint();
     }
 
+    // TODO: implement timer update function
     public void updateTimers(int cycles) {
         // doDividerRegisters(cycles);
 

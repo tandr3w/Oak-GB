@@ -174,7 +174,6 @@ public class PPU extends JPanel {
                     else {
                         colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address);
                     }
-                    System.out.println((bit2 << 1) | bit1);
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
@@ -207,6 +206,9 @@ public class PPU extends JPanel {
             for (int x = 0; x < 160; x++) {
                 int[] rgb = screenData[y][x];
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
+                if (y==0) {
+                    System.out.println(rgb[0]);
+                }
                 g.setColor(pixelColor);
                 g.fillRect(x, y, 1, 1);
             }
