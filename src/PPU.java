@@ -19,6 +19,7 @@ public class PPU extends JPanel {
     public PPU(Memory memory) {
 
         this.memory = memory;
+        remainingCycles = 456;
         // backgroundFIFO = new Queue(16);
         // spriteFIFO = new Queue(16);
         colourPaletteTranslator = new int[][] {
@@ -193,9 +194,9 @@ public class PPU extends JPanel {
     }
 
     public void drawScanline() {
-        // if (memory.getBGWindowEnable() == 1) {
-        //     drawScanlineBG();
-        // }
+        if (memory.getBGWindowEnable() == 1) {
+            drawScanlineBG();
+        }
         if (memory.getOBJEnable() == 1) {
             drawScanlineSprite();
         }
@@ -283,6 +284,10 @@ public class PPU extends JPanel {
         int LY = memory.getLY();
         
         if (remainingCycles <= 0) {
+
+            if (LY < 144) {
+                drawScanline();
+            }
             LY++;
             memory.setLY(LY);
             remainingCycles = 456;
@@ -295,10 +300,7 @@ public class PPU extends JPanel {
                 memory.setLY(0);
                 return;
             }
-            if (LY < 144) {
-                drawScanline();
-                return;
-            }
+            return;
         }
     }
 }
