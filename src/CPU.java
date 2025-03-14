@@ -24,8 +24,6 @@ public class CPU {
         enableInterruptsNext = false;
         disableInterruptsNext = false;
         additionalCycles = 0;
-
-        loadROM("ROMs/snake.gb"); // FIXME
     }
 
     public void setNextBytes(Instruction instruction){
@@ -160,7 +158,7 @@ public class CPU {
         return num_cycles;
     }
 
-    public int execute(Instruction instruction){
+    public int execute(Instruction instruction) {
         int num_cycles = 4 * instruction.num_bytes;
         additionalCycles = 0;
         // Load correct number of bytes
@@ -177,6 +175,9 @@ public class CPU {
             disableInterruptsNext = false;
         }
         
+        // if (instruction.operation != Operation.NOP) {
+        //     System.out.println(instruction.operation);
+        // }
         switch (instruction.operation){
             case Operation.PREFIX:
                 int nextByte = instruction.next_bytes[0];
@@ -1059,27 +1060,6 @@ public class CPU {
         registers.set_f_carry(false);
         registers.set_f_halfcarry(false);
         registers.set_f_subtract(false);
-    }
-
-    public void loadROM(String ROMName) {
-        try {
-            File ROMFile = new File(ROMName);
-            FileInputStream in = new FileInputStream(ROMFile);
-            long size = ROMFile.length();
-            byte[] contents = new byte[(int) size];
-            in.read(contents);
-            for (int i=0; i<size; i++){
-                memory[i] = (contents[i] & 0xFF);
-            }
-            in.close();
-        } catch (IOException e) {
-            System.out.println("error");
-            e.printStackTrace();
-        }
-    }
-
-    public void requestInterrupt(int id){
-        memory[0xFF0F] = Util.setBit(memory[0xFF0F], id, true);
     }
 
     public void doInterrupts(){

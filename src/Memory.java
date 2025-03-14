@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class Memory {
     // Hardware register addresses
     int LCDC_address;
@@ -10,6 +14,12 @@ public class Memory {
     int LYC_address;
 
     int BGP_address;
+    int OBP_address;
+
+    // Timer control addresses
+    int TIMO_address;
+    int TMA_address;
+    int TMC_address;
 
     int[] memoryArray;
     public Memory() {
@@ -24,6 +34,11 @@ public class Memory {
         LYC_address = 0xFF45;
 
         BGP_address = 0xFF47; // Color palette
+        OBP_address = 0xFF48; // OBP1 is 0xFF49; OBP is typically left uninitialized
+
+        TIMO_address = 0xFF05; // Also called TIMA
+        TMA_address = 0xFF06;
+        TMC_address = 0xFF07; // Also called TAC
 
         // Default values
         memoryArray[LCDC_address] = 0x91;
@@ -35,6 +50,10 @@ public class Memory {
         memoryArray[LY_address] = 0x00;
         memoryArray[LYC_address] = 0x00;
         memoryArray[BGP_address] = 0xFC; // 0b1111100 - initially maps to black, black, black, white
+
+        memoryArray[TIMO_address] = 0x00;
+        memoryArray[TMA_address] = 0x00;
+        memoryArray[TMC_address] = 0xF8;
     }
 
     // LCDC commands
@@ -137,13 +156,13 @@ public class Memory {
             return memoryArray[address] & 0b11;
         }
         else if (id == 0b01){
-            return memoryArray[address] & 0b1100 >> 2;
+            return (memoryArray[address] & 0b1100) >> 2;
         }
         else if (id == 0b10){
-            return memoryArray[address] & 0b110000 >> 4;
+            return (memoryArray[address] & 0b110000) >> 4;
         }
         else if (id == 0b11){
-            return memoryArray[address] & 0b11000000 >> 6;
+            return (memoryArray[address] & 0b11000000) >> 6;
         }
         else {
             System.out.println("Err: attempted access of invalid palette color ID");
@@ -151,4 +170,37 @@ public class Memory {
         }
     }
 
+    public int getLCDStatus() {
+        return memoryArray[STAT_address];
+    }
+
+    public void setLCDStatus(int val) {
+        memoryArray[STAT_address] = val;
+    }
+
+    public boolean isClockEnabled() {
+        return Util.getIthBit(memoryArray[TMC_address], 2) == 1;
+    }
+
+    public void loadROM(String ROMName) {
+        try {
+            File ROMFile = new File(ROMName);
+            FileInputStream in = new FileInputStream(ROMFile);
+            long size = ROMFile.length();
+            byte[] contents = new byte[(int) size];
+            in.read(contents);
+            for (int i=0; i<size; i++){
+                memoryArray[i] = (contents[i] & 0xFF);
+            }
+            in.close();
+        } catch (IOException e) {
+            System.out.println("error");
+            e.printStackTrace();
+        }
+    }
+
+    public void requestInterrupt(int id){
+        memoryArray[0xFF0F] = Util.setBit(memoryArray[0xFF0F], id, true);
+    }
+    
 }
