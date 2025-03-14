@@ -129,8 +129,8 @@ public class PPU extends JFrame {
             int xIndex = xPos % 8;
             // we need the xIndex'th byte from the left of both of the bytes
             // 7-xPos converts bit number from the left to bit number from the right
-            int bit1 = Util.getIthBit(byte1, 7-xPos);
-            int bit2 = Util.getIthBit(byte2, 7-xPos);
+            int bit1 = Util.getIthBit(byte1, 7-xIndex);
+            int bit2 = Util.getIthBit(byte2, 7-xIndex);
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
         }
