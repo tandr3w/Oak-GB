@@ -193,9 +193,9 @@ public class PPU extends JPanel {
     }
 
     public void drawScanline() {
-        if (memory.getBGWindowEnable() == 1) {
-            drawScanlineBG();
-        }
+        // if (memory.getBGWindowEnable() == 1) {
+        //     drawScanlineBG();
+        // }
         if (memory.getOBJEnable() == 1) {
             drawScanlineSprite();
         }
