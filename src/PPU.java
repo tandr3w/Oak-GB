@@ -13,6 +13,7 @@ public class PPU extends JPanel {
     int[][][] screenData;
     int prevLY = -1;
     int prevLYC = -1;
+    int internalWindowCounter = 0;
 
     int remainingCycles; // Number from 0 - 456; represents T-cycles
 
@@ -55,15 +56,18 @@ public class PPU extends JPanel {
             }
         }
 
+        boolean hadWindow = false;
         // memory[displayDataLocation --> displayDataLocation + 1023] holds a 32x32 grid of tile identification numbers
         // giving the tiles from left to right and then top down
         // Find which
         int yPos; // Get the Y position on the 256x256 display that we are currently drawing at
-
         for (int i = 0; i<160; i++){
+            boolean windowActuallyEnabled = false; // kms
             int xPos = i + memory.getSCX(); // Get x position on the 256x256 display we are currently drawing on
             if (windowEnabled && i >= windowX){
-                yPos = memory.getLY() - memory.getWY();
+                hadWindow = true;
+                windowActuallyEnabled = true;
+                yPos = internalWindowCounter;
                 xPos = i - windowX;
                 if (memory.getWindowTileMapArea() == 1){ // We are rendering window instead of BG at this pixel
                     displayDataLocation = 0x9C00;
@@ -83,7 +87,13 @@ public class PPU extends JPanel {
             }
             int verticalTileIndex = yPos / 8;
             int horizontalTileIndex = xPos / 8;
-            int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
+            int dataPos;
+            if (windowActuallyEnabled){
+                dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
+            }
+            else {
+                dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
+            }
             short tileIdentifier;
             if (signed){
                 tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
@@ -120,6 +130,9 @@ public class PPU extends JPanel {
             //     System.out.println("Signed: " + signed);
 
             // }
+        }
+        if (hadWindow){
+            internalWindowCounter++;
         }
     }
 
@@ -219,6 +232,7 @@ public class PPU extends JPanel {
         // if LCD is not enabled
         if (memory.getLCDEnable() == 0) {
             memory.setLY(0);
+            internalWindowCounter = 0;
             remainingCycles = 456;
             status &= 0b11111100;
             status = Util.setBit(status, 0, true);
@@ -300,9 +314,11 @@ public class PPU extends JPanel {
             }
             if (LY > 153) {
                 memory.setLY(0);
+                internalWindowCounter = 0;
                 return;
             }
 
+            System.out.println("Window counter:" + internalWindowCounter);
             LY++;
             memory.setLY(LY);
             remainingCycles = 456;
