@@ -286,11 +286,6 @@ public class PPU extends JPanel {
         int LY = memory.getLY();
         
         if (remainingCycles <= 0) {
-            try {
-                Thread.sleep(50); // Adjust the delay (in milliseconds) as needed.
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             LY++;
             memory.setLY(LY);
             remainingCycles = 456;
