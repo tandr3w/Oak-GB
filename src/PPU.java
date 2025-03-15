@@ -36,15 +36,10 @@ public class PPU extends JPanel {
 
     public void drawScanlineBG(){
         // Draws tiles for one scanline
-        boolean windowEnabled = false;
+        int windowX = memory.getWX() - 7;
         int tileDataLocation; // location of the start of the tile data
         int displayDataLocation; // location of the start of the window or background data
         boolean signed = false;
-        if (memory.getWindowEnable() == 1){
-            if (memory.getWY() <= memory.getLY()){ // Check if current line is inside window region
-                windowEnabled = true;
-            }
-        }
         if (memory.getAddressingMode() == 1){
             tileDataLocation = 0x8000;
         }
@@ -53,41 +48,40 @@ public class PPU extends JPanel {
             signed = true; // Signed bytes are used as identifiers
         }
 
-        if (windowEnabled){
-            if (memory.getWindowTileMapArea() == 1){ // We are rendering window instead of BG at this pixel
-                displayDataLocation = 0x9C00;
-            }
-            else {
-                displayDataLocation = 0x9800;
-            }
-        }
-        else {
-            if (memory.getBGTileMapArea() == 1){
-                displayDataLocation = 0x9C00;
-            }
-            else {
-                displayDataLocation = 0x9800;
+        boolean windowEnabled = false;
+        if (memory.getWindowEnable() == 1){
+            if (memory.getWY() <= memory.getLY()){ // Check if current line is inside window region
+                windowEnabled = true;
             }
         }
 
         // memory[displayDataLocation --> displayDataLocation + 1023] holds a 32x32 grid of tile identification numbers
         // giving the tiles from left to right and then top down
         // Find which
-        int yPos = 0; // Get the Y position on the 256x256 display that we are currently drawing at
-        if (!windowEnabled){
-            yPos = memory.getSCY() + memory.getLY();
-        }
-        else {
-            yPos = memory.getLY() - memory.getWY();
-        }
-
-        int verticalTileIndex = yPos / 8;
+        int yPos; // Get the Y position on the 256x256 display that we are currently drawing at
 
         for (int i = 0; i<160; i++){
             int xPos = i + memory.getSCX(); // Get x position on the 256x256 display we are currently drawing on
-            if (windowEnabled && i >= (memory.getWX() - 7)){
-                xPos = i - (memory.getWX() - 7);
+            if (windowEnabled && i >= windowX){
+                yPos = memory.getLY() - memory.getWY();
+                xPos = i - windowX;
+                if (memory.getWindowTileMapArea() == 1){ // We are rendering window instead of BG at this pixel
+                    displayDataLocation = 0x9C00;
+                }
+                else {
+                    displayDataLocation = 0x9800;
+                }
             }
+            else {
+                yPos = memory.getSCY() + memory.getLY();
+                if (memory.getBGTileMapArea() == 1){
+                    displayDataLocation = 0x9C00;
+                }
+                else {
+                    displayDataLocation = 0x9800;
+                }
+            }
+            int verticalTileIndex = yPos / 8;
             int horizontalTileIndex = xPos / 8;
             int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
             short tileIdentifier;
@@ -117,6 +111,15 @@ public class PPU extends JPanel {
             int bit2 = Util.getIthBit(byte2, 7-xIndex);
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
+            // if (i == 0){
+            //     System.out.println("Color ID: " + colorID);
+            //     System.out.println("XPos: " + xPos);
+            //     System.out.println("dataPos: " + dataPos);
+            //     System.out.println("xIndex: " + xIndex);
+            //     System.out.println("byteInTile: " + byteInTile);
+            //     System.out.println("Signed: " + signed);
+
+            // }
         }
     }
 
