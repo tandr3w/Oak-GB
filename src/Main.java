@@ -6,6 +6,10 @@ public class Main extends JFrame {
     private CPU cpu;
     private PPU ppu;
 
+    private Tilemap tilemap;
+    private JFrame tilemapFrame;
+
+
     private Timer gameLoop;
     private int[] TMAFrequencies;
     private final int CLOCKSPEED;
@@ -17,6 +21,7 @@ public class Main extends JFrame {
         memory = new Memory();
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
+        tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
             4096,
@@ -52,6 +57,17 @@ public class Main extends JFrame {
         ppu.requestFocus();
         setVisible(true);
 
+        // Create and display the tile map window
+
+        tilemap = new Tilemap(memory, ppu);
+        tilemapFrame = new JFrame("Tile Map");
+        tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        tilemapFrame.add(tilemap);
+        tilemapFrame.setSize(512, 256);
+        tilemapFrame.setLocation(69, 69);
+        tilemapFrame.setResizable(false);
+        tilemapFrame.setVisible(true);
+
         int delay = 16; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
@@ -66,6 +82,7 @@ public class Main extends JFrame {
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
+            tilemap.repaint();
         }
         ppu.repaint();
     }
