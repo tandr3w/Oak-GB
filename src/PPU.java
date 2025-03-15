@@ -286,7 +286,6 @@ public class PPU extends JPanel {
         int LY = memory.getLY();
         
         if (remainingCycles <= 0) {
-            
             LY++;
             memory.setLY(LY);
             remainingCycles = 456;
