@@ -1074,9 +1074,7 @@ public class CPU {
             for (int i=0; i<5; i++){
                 if (Util.getIthBit(interruptRequest, i) == 1 && Util.getIthBit(enabled, i) == 1){
                     interrupts = false;
-                    System.out.println("Flags: " + memory[0xFF0F]);
                     memory[0xFF0F] = Util.setBit(interruptRequest, i, false);
-                    System.out.println("Flags: " + memory[0xFF0F]);
                     add16ToStack(registers.pc);
                     switch (i){
                         case 0:
