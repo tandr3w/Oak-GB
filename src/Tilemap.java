@@ -65,7 +65,7 @@ public class Tilemap extends JPanel {
                         int screenX = offsetX + tileX * 8 + pixelX;
                         int screenY = offsetY + tileY * 8 + pixelY;
 
-                        g.etColor(new Color(rgb[0], rgb[1], rgb[2]));
+                        g.setColor(new Color(rgb[0], rgb[1], rgb[2]));
                         g.fillRect(screenX, screenY, 1, 1);
                     }
                 }

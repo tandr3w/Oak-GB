@@ -20,6 +20,7 @@ public class Main extends JFrame implements KeyListener {
 
     private boolean initLoad = true;
     private int MAXCYCLES = 69905;
+    private boolean DEBUG = false;
 
     // private int MAXCYCLES = 456;
     private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -77,8 +78,10 @@ public class Main extends JFrame implements KeyListener {
         tilemapFrame.setLocation(69, 69);
         tilemapFrame.setResizable(false);
         tilemapFrame.setVisible(true);
-        int delay = 1;
-        // int delay = 16; // 1000 / 60 --> 16.6667
+        int delay = 16; // 1000 / 60 --> 16.6667
+        if (DEBUG){
+            delay = 1;
+        }
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
     }
@@ -97,7 +100,7 @@ public class Main extends JFrame implements KeyListener {
     }
 
     private void runFrame() {
-        if (pressesToTrigger > 0){
+        if (pressesToTrigger > 0 || !DEBUG){
             System.out.println("Line: " + memory.getLY());
             // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
             // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
@@ -110,7 +113,7 @@ public class Main extends JFrame implements KeyListener {
                 ppu.updateGraphics(cycles);
                 cpu.doInterrupts();
             }
-            if (!initLoad && pressesToTrigger < 3){
+            if (!DEBUG || (!initLoad && pressesToTrigger < 3)){
                 ppu.repaint();
                 tilemap.repaint();
             }
