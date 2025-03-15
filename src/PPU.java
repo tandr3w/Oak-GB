@@ -233,18 +233,21 @@ public class PPU extends JPanel {
 
         
         if (LY < 144) {
-            status = Util.setBit(status, 1, true);
-            status = Util.setBit(status, 0, false);
-
             if (remainingCycles >= 456-80) {
                 mode = 2;
+                status = Util.setBit(status, 1, true);
+                status = Util.setBit(status, 0, false);
                 reqInt = Util.getIthBit(status, 5) == 1;
             }
             else if (remainingCycles >= 456-80-172) {
                 mode = 3;
+                status = Util.setBit(status, 1, true);
+                status = Util.setBit(status, 0, true);
             }
             else {
                 mode = 0;
+                status = Util.setBit(status, 1, false);
+                status = Util.setBit(status, 0, false);
             }
         }
 
@@ -263,7 +266,7 @@ public class PPU extends JPanel {
         if (LY == memory.getLYC()) {
             status = Util.setBit(status, 2, true);
             if (Util.getIthBit(status, 6) == 1) {
-                memory.requestInterrupt(1);                
+                memory.requestInterrupt(1);
             }
         }
         else {
