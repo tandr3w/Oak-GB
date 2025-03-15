@@ -1068,11 +1068,15 @@ public class CPU {
         }
         int interruptRequest = memory[0xFF0F];
         int enabled = memory[0xFFFF];
+        // System.out.println("Enabled: " + enabled);
+        // System.out.println("Flags: " + memory[0xFF0F]);
         if (interruptRequest > 0){
             for (int i=0; i<5; i++){
                 if (Util.getIthBit(interruptRequest, i) == 1 && Util.getIthBit(enabled, i) == 1){
                     interrupts = false;
+                    System.out.println("Flags: " + memory[0xFF0F]);
                     memory[0xFF0F] = Util.setBit(interruptRequest, i, false);
+                    System.out.println("Flags: " + memory[0xFF0F]);
                     add16ToStack(registers.pc);
                     switch (i){
                         case 0:
@@ -1083,7 +1087,6 @@ public class CPU {
                             break;
                         case 2:
                             registers.pc = 0x50; // Timer
-                            System.out.println(2);
                             break;
                         case 4:
                             registers.pc = 0x60; // Joypad

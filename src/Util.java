@@ -20,7 +20,7 @@ public class Util {
             return byteVal | (1 << bitNum);
         }
         else {
-            return byteVal | (0xF ^ (1 << bitNum));
+            return byteVal & ~(1 << bitNum);
         }
     }
 }

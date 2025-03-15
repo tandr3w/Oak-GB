@@ -8,7 +8,7 @@ public class PPU extends JPanel {
     int[] spriteBuffer;
     // Queue backgroundFIFO; // 16 pixels max
     // Queue spriteFIFO;
-
+    boolean bruh = true;
     // the GB stores colours as 2 bit numbers that we have to translate in to RGB colours
     int[][] colourPaletteTranslator;
     int[][][] screenData;
@@ -261,7 +261,11 @@ public class PPU extends JPanel {
         if (LY == memory.getLYC()) {
             status = Util.setBit(status, 2, true);
             if (Util.getIthBit(status, 6) == 1) {
-                memory.requestInterrupt(1);
+                if (bruh){
+                    memory.requestInterrupt(1);
+                    bruh = false;
+                    System.out.println("HI!");
+                }
             }
         }
         else {
@@ -291,7 +295,7 @@ public class PPU extends JPanel {
             remainingCycles = 456;
 
             if (LY == 144) {
-                memory.requestInterrupt(1);
+                memory.requestInterrupt(0);
                 return;
             }
             if (LY > 153) {
