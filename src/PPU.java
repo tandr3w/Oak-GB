@@ -217,9 +217,11 @@ public class PPU extends JPanel {
 
         // if LCD is not enabled
         if (memory.getLCDEnable() == 0) {
-            memory.setLY(456);
+            memory.setLY(0);
+            remainingCycles = 456;
             status &= 0b11111100;
             status = Util.setBit(status, 0, true);
+            memory.setLCDStatus(status);
             return;
         }
 
