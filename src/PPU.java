@@ -2,7 +2,6 @@
 
 import javax.swing.*;
 import java.awt.*;
-
 public class PPU extends JPanel {
     Memory memory;
     int[] spriteBuffer;
@@ -138,7 +137,10 @@ public class PPU extends JPanel {
 
     public void drawScanlineSprite(){
         int SPRITEADDRESS = 0xFE00;
-        int[] alreadyDrawn = new int[160];
+        int[] minxPosAtPos = new int[160];
+        for (int i=0; i<160; i++){
+            minxPosAtPos[i] = 1000;
+        }
 
         for (int spriteNum = 0; spriteNum < 40; spriteNum++){
             
@@ -200,10 +202,10 @@ public class PPU extends JPanel {
                     if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
                         continue; // Don't render if the background takes priority AND if the background is not white
                     }
-                    if (alreadyDrawn[xPos+spriteCol]!=1) {
+                    if (xPos < minxPosAtPos[xPos+spriteCol]) {
                         screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
                     }
-                    alreadyDrawn[xPos+spriteCol] = 1;
+                    minxPosAtPos[xPos+spriteCol] = xPos;
                 }
             }
         }
