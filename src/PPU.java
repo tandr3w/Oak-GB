@@ -12,6 +12,7 @@ public class PPU extends JPanel {
     int[][] colourPaletteTranslator;
     int[][][] screenData;
     int prevLY = -1;
+    int prevLYC = -1;
 
     int remainingCycles; // Number from 0 - 456; represents T-cycles
 
@@ -260,7 +261,7 @@ public class PPU extends JPanel {
             memory.requestInterrupt(1);
         }
         
-        if (LY == memory.getLYC() && (LY != prevLY)) {
+        if (LY == memory.getLYC() && (LY != prevLY || memory.getLYC() != prevLYC)) {
             status = Util.setBit(status, 2, true);
             if (Util.getIthBit(status, 6) == 1) {
                 memory.requestInterrupt(1);
@@ -276,6 +277,7 @@ public class PPU extends JPanel {
     public void updateGraphics(int cycles) {
         updateLCDStatus();
         prevLY = memory.getLY();
+        prevLYC = memory.getLYC();
         if (memory.getLCDEnable() == 0) {
             return;
         }
