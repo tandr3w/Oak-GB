@@ -22,6 +22,9 @@ public class Memory {
     int TMC_address;
     int DIV_address;
 
+    int IF_address;
+    int IE_address;
+
     int[] memoryArray;
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
@@ -42,6 +45,10 @@ public class Memory {
         TMC_address = 0xFF07; // Also called TAC
         DIV_address = 0xFF04; // Divider register
 
+        IF_address = 0xFF0F;
+        IE_address = 0xFFFF;
+
+
         // Default values
         memoryArray[LCDC_address] = 0x91;
         memoryArray[STAT_address] = 0x85;
@@ -57,6 +64,9 @@ public class Memory {
         memoryArray[TMA_address] = 0x00;
         memoryArray[TMC_address] = 0xF8;
         memoryArray[DIV_address] = 0xAB; // 171
+
+        memoryArray[IF_address] = 0xE1;
+        memoryArray[IE_address] = 0x00;
     }
 
     // LCDC commands
