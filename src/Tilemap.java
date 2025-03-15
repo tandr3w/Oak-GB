@@ -51,7 +51,6 @@ public class Tilemap extends JPanel {
                 } else {
                     tileMemLocation += tileIdentifier * 16;
                 }
-
                 for (int pixelY = 0; pixelY < 8; pixelY++) {
                     int byteInTile = pixelY * 2;
                     int byte1 = memory.memoryArray[tileMemLocation + byteInTile];
@@ -66,7 +65,7 @@ public class Tilemap extends JPanel {
                         int screenX = offsetX + tileX * 8 + pixelX;
                         int screenY = offsetY + tileY * 8 + pixelY;
 
-                        g.setColor(new Color(rgb[0], rgb[1], rgb[2]));
+                        g.etColor(new Color(rgb[0], rgb[1], rgb[2]));
                         g.fillRect(screenX, screenY, 1, 1);
                     }
                 }
@@ -83,5 +82,8 @@ public class Tilemap extends JPanel {
 
         g.setColor(Color.RED);
         g.drawRect(viewportX, viewportY, 160, 144);
+        g.setColor(Color.BLUE);
+
+        g.drawRect(0, memory.getLY() + SCY, 400, 1);
     }
 }

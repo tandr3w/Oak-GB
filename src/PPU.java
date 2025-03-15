@@ -44,7 +44,7 @@ public class PPU extends JPanel {
             tileDataLocation = 0x8000;
         }
         else {
-            tileDataLocation = 0x9000;
+            tileDataLocation = 0x8800;
             signed = true; // Signed bytes are used as identifiers
         }
 
@@ -61,11 +61,9 @@ public class PPU extends JPanel {
         // Find which
         int yPos; // Get the Y position on the 256x256 display that we are currently drawing at
         for (int i = 0; i<160; i++){
-            boolean windowActuallyEnabled = false; // kms
-            int xPos = i + memory.getSCX(); // Get x position on the 256x256 display we are currently drawing on
+            int xPos = (i + memory.getSCX()) % 256; // Get x position on the 256x256 display we are currently drawing on
             if (windowEnabled && i >= windowX){
                 hadWindow = true;
-                windowActuallyEnabled = true;
                 yPos = internalWindowCounter;
                 xPos = i - windowX;
                 if (memory.getWindowTileMapArea() == 1){ // We are rendering window instead of BG at this pixel
@@ -76,7 +74,7 @@ public class PPU extends JPanel {
                 }
             }
             else {
-                yPos = memory.getSCY() + memory.getLY();
+                yPos = (memory.getSCY() + memory.getLY()) % 256;
                 if (memory.getBGTileMapArea() == 1){
                     displayDataLocation = 0x9C00;
                 }
@@ -86,23 +84,22 @@ public class PPU extends JPanel {
             }
             int verticalTileIndex = yPos / 8;
             int horizontalTileIndex = xPos / 8;
-            int dataPos;
-            if (windowActuallyEnabled){
-                dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
-            }
-            else {
-                dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
-            }
-            int tileIdentifier;
-            if (signed){
-                tileIdentifier = (byte) memory.getMemory(dataPos);
-            }
-            else {
-                tileIdentifier = memory.getMemory(dataPos);
+            int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32;
+
+            short tileIdentifier;
+            if (signed) {
+                tileIdentifier = (short) ((byte) memory.memoryArray[dataPos]);
+            } else {
+                tileIdentifier = (short) memory.memoryArray[dataPos];
             }
 
-            int tileMemLocation = tileDataLocation + tileIdentifier * 16; // Location of the start of the tile in memory
-        
+            int tileMemLocation = tileDataLocation;
+            if (signed) {
+                tileMemLocation += (tileIdentifier + 128) * 16; // Each tile is 16 bytes
+            } else {
+                tileMemLocation += tileIdentifier * 16;
+            }
+
             int byteInTile = (yPos % 8) * 2; // Each 2 bytes corresponds to a row in the tile
             int byte1 = memory.getMemory(tileMemLocation + byteInTile);
             int byte2 = memory.getMemory(tileMemLocation + byteInTile + 1);
@@ -113,15 +110,15 @@ public class PPU extends JPanel {
             int bit2 = Util.getIthBit(byte2, 7-xIndex);
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
-            // if (i == 0){
-            //     System.out.println("Color ID: " + colorID);
-            //     System.out.println("XPos: " + xPos);
-            //     System.out.println("dataPos: " + dataPos);
-            //     System.out.println("xIndex: " + xIndex);
-            //     System.out.println("byteInTile: " + byteInTile);
-            //     System.out.println("Signed: " + signed);
-
-            // }
+            if (i == 0){
+                // System.out.println("Color ID: " + colorID);
+                // System.out.println("XPos: " + xPos);
+                // System.out.println("dataPos: " + dataPos);
+                // System.out.println("xIndex: " + xIndex);
+                // System.out.println("byteInTile: " + byteInTile);
+                // System.out.println("Signed: " + signed);
+                // System.out.println("BG tile map area: " + memory.getBGTileMapArea());
+            }
         }
         if (hadWindow){
             internalWindowCounter++;
@@ -322,7 +319,6 @@ public class PPU extends JPanel {
                 return;
             }
 
-            System.out.println("Window counter:" + internalWindowCounter);
             LY++;
             memory.setLY(LY);
             remainingCycles = 456;

@@ -110,7 +110,7 @@ public class Main extends JFrame implements KeyListener {
                 ppu.updateGraphics(cycles);
                 cpu.doInterrupts();
             }
-            if (!initLoad){
+            if (!initLoad && pressesToTrigger < 3){
                 ppu.repaint();
                 tilemap.repaint();
             }
