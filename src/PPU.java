@@ -291,7 +291,7 @@ public class PPU extends JPanel {
             remainingCycles = 456;
 
             if (LY == 144) {
-                memory.requestInterrupt(1);
+                memory.requestInterrupt(0);
                 return;
             }
             if (LY > 153) {
