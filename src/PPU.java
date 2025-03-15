@@ -84,11 +84,8 @@ public class PPU extends JPanel {
         int verticalTileIndex = yPos / 8;
 
         for (int i = 0; i<160; i++){
-            int xPos; // Get x position on the 256x256 display we are currently drawing on
-            if (!windowEnabled){
-                xPos = i + memory.getSCX();
-            }
-            else {
+            int xPos = i + memory.getSCX(); // Get x position on the 256x256 display we are currently drawing on
+            if (windowEnabled && i >= (memory.getWX() - 7)){
                 xPos = i - (memory.getWX() - 7);
             }
             int horizontalTileIndex = xPos / 8;
