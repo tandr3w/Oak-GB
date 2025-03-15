@@ -69,6 +69,30 @@ public class Memory {
         memoryArray[IE_address] = 0x00;
     }
 
+    public void setMemory(int address, int data){ // TODO: dont use this for unit tests
+        if (address < 0x8000){
+            return;
+        }
+        if (address >= 0xFEA0 && address < 0xFEFF){
+            return;
+        }
+        if (address >= 0xE000 && address < 0xFE00){
+            memoryArray[address] = data;
+            setMemory(address-0x2000, data);
+        }
+        else if (address == 0xFF44) // Reset LY if attempted write to it
+        {
+           memoryArray[address] = 0 ;
+        }
+        else {
+            memoryArray[address] = data;
+        }
+    }
+
+    public int getMemory(int address){
+        return memoryArray[address];
+    }
+
     // LCDC commands
     private int getBitFromLCDC(int bitNum) {
         return ((memoryArray[LCDC_address]) >> bitNum) & 1;

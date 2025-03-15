@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 
 public class CPU {
     Registers registers;
-    int[] memory;
+    Memory memory;
     Opcodes opcodes;
     boolean stopMode;
     boolean halted;
@@ -15,7 +15,7 @@ public class CPU {
 
     public CPU(Opcodes opcodes, Memory memory){
         // TODO: use a function to set memory so we can restrict access to protect parts
-        this.memory = memory.memoryArray; // 65536 bytes
+        this.memory = memory;
         registers = new Registers(this);
         this.opcodes = opcodes;
         stopMode = false; // TODO: actually use these
@@ -30,7 +30,7 @@ public class CPU {
         if (instruction.num_bytes > 1){
             instruction.next_bytes = new int[instruction.num_bytes - 1];
             for (int i=0; i<instruction.num_bytes-1; i++){
-                instruction.next_bytes[i] = memory[(registers.pc + i + 1) & 0xFFFF]; // &0xFFFF to account for overflow
+                instruction.next_bytes[i] = memory.getMemory((registers.pc + i + 1) & 0xFFFF); // &0xFFFF to account for overflow
             }
         }
     }
@@ -333,12 +333,12 @@ public class CPU {
                 // get the value that needs to be loaded first
                 int valToLoad;
                 if (instruction.operand == Operand.a16){
-                    valToLoad = memory[((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF)];
+                    valToLoad = memory.getMemory(((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF));
                     num_cycles += 4;
                 }
                 
                 else if (instruction.operand == Operand.a8) {
-                    valToLoad = memory[instruction.next_bytes[0] + 0xFF00];
+                    valToLoad = memory.getMemory(instruction.next_bytes[0] + 0xFF00);
                     num_cycles += 4;
                 }
                 
@@ -354,14 +354,14 @@ public class CPU {
                 if (instruction.operandToSet == Operand.a16) {
                     // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
                     int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
-                    memory[address] = valToLoad;
+                    memory.setMemory(address, valToLoad);
                     num_cycles += 4;
                     break;
                 }
 
                 if (instruction.operandToSet == Operand.a8) {
                     int address = instruction.next_bytes[0] + 0xFF00;
-                    memory[address] = valToLoad;
+                    memory.setMemory(address, valToLoad);
                     num_cycles += 4;
                     break;
                 }
@@ -396,8 +396,8 @@ public class CPU {
                 if (instruction.operandToSet == Operand.a16) {
                     // LITTLE ENDIAN
                     int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
-                    memory[address] = (twoByteVal & 0xFF);
-                    memory[(address+1) & 0xFFFF] = (twoByteVal & 0xFF00) >> 8; 
+                    memory.setMemory(address, (twoByteVal & 0xFF));
+                    memory.setMemory((address+1) & 0xFFFF, (twoByteVal & 0xFF00) >> 8);
                     num_cycles += 8;
                     break;
                 }
@@ -410,7 +410,7 @@ public class CPU {
             // 8-bit
             case Operation.LDI:
                 if (instruction.operand == Operand.MemHL) {
-                    int val = memory[registers.get_hl()];
+                    int val = memory.getMemory(registers.get_hl());
                     inc16(Operand.HL);
 
                     // operandToSet is always A
@@ -420,7 +420,7 @@ public class CPU {
                 }
                 if (instruction.operandToSet == Operand.MemHL) {
                     // instruction.operand should always be A
-                    memory[registers.get_hl()] = registers.readValFromEnum(instruction.operand);
+                    memory.setMemory(registers.get_hl(), registers.readValFromEnum(instruction.operand));
                     inc16(Operand.HL);
                     num_cycles += 4;
                     break;
@@ -429,7 +429,7 @@ public class CPU {
                 
             case Operation.LDD:
                 if (instruction.operand == Operand.MemHL) {
-                    int val = memory[registers.get_hl()];
+                    int val = memory.getMemory(registers.get_hl());
                     num_cycles += 4;
                     dec16(Operand.HL);
 
@@ -439,7 +439,7 @@ public class CPU {
                 }
                 if (instruction.operandToSet == Operand.MemHL) {
                     // instruction.operand should always be A
-                    memory[registers.get_hl()] = registers.readValFromEnum(instruction.operand);
+                    memory.setMemory(registers.get_hl(), registers.readValFromEnum(instruction.operand));
                     num_cycles += 4;
                     dec16(Operand.HL);
 
@@ -449,24 +449,24 @@ public class CPU {
             case Operation.LDH:
                 if (instruction.operand == Operand.A && instruction.operandToSet == Operand.C) {
                     int address = registers.c + 0xFF00;
-                    memory[address] = registers.a;
+                    memory.setMemory(address, registers.a);
                     num_cycles += 4;
                     break;
                 }
                 if (instruction.operand == Operand.C && instruction.operandToSet == Operand.A) {
-                    int val = memory[registers.c + 0xFF00];
+                    int val = memory.getMemory(registers.c + 0xFF00);
                     registers.a = val;
                     num_cycles += 4;
                     break;
                 }
                 if (instruction.operand == Operand.A && instruction.operandToSet == Operand.a8) { 
                     int address = instruction.next_bytes[0] + 0xFF00;
-                    memory[address] = registers.a;
+                    memory.setMemory(address, registers.a);
                     num_cycles += 4;
                     break;
                 }
                 if (instruction.operand == Operand.a8 && instruction.operandToSet == Operand.A) {
-                    int val = memory[instruction.next_bytes[0] + 0xFF00];
+                    int val = memory.getMemory(instruction.next_bytes[0] + 0xFF00);
                     num_cycles += 4;
                     registers.a = val;
                     break;
@@ -747,17 +747,17 @@ public class CPU {
     public void add16ToStack(int val){
         registers.sp--;
         registers.sp &= 0xFFFF;
-        memory[registers.sp] = (val & 0xFF00) >> 8;
+        memory.setMemory(registers.sp, (val & 0xFF00) >> 8);
         registers.sp--;
         registers.sp &= 0xFFFF;
-        memory[registers.sp] = val & 0xFF;
+        memory.setMemory(registers.sp, val & 0xFF);
     }
 
     public int pop16FromStack(){
-        int val = memory[registers.sp];
+        int val = memory.getMemory(registers.sp);
         registers.sp++;
         registers.sp &= 0xFFFF;
-        val |= memory[registers.sp] << 8;
+        val |= memory.getMemory(registers.sp) << 8;
         registers.sp++;
         registers.sp &= 0xFFFF;
         return val;
@@ -1067,8 +1067,8 @@ public class CPU {
     }
 
     public void doInterrupts(){
-        int interruptRequest = memory[0xFF0F];
-        int enabled = memory[0xFFFF];
+        int interruptRequest = memory.getMemory(0xFF0F);
+        int enabled = memory.getMemory(0xFFFF);
 
         if ((interruptRequest & enabled) != 0){
             halted = false;
@@ -1084,7 +1084,7 @@ public class CPU {
             for (int i=0; i<5; i++){
                 if (Util.getIthBit(interruptRequest, i) == 1 && Util.getIthBit(enabled, i) == 1){
                     interrupts = false;
-                    memory[0xFF0F] = Util.setBit(interruptRequest, i, false);
+                    memory.setMemory(0xFF0F, Util.setBit(interruptRequest, i, false));
                     switch (i){
                         case 0:
                             add16ToStack(registers.pc);

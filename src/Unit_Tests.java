@@ -94,7 +94,7 @@ public class Unit_Tests {
                 JSONArray ramElement = ram.getJSONArray(j);
                 int x = ramElement.getInt(0);
                 int y = ramElement.getInt(1);
-                cpu.memory[x] = y;
+                cpu.memory.setMemory(x, y);
             }
 
             cpu.registers.pc = initial.getInt("pc");
@@ -118,8 +118,8 @@ public class Unit_Tests {
                 JSONArray ramElement = endRam.getJSONArray(j);
                 int x = ramElement.getInt(0);
                 int y = ramElement.getInt(1);
-                if (cpu.memory[x] != y){
-                    System.out.println("Case " + testCase.getString("name") + " At position: " + Integer.toString(x) + " Expected: " + Integer.toString(y) + " Found: " + Integer.toString(cpu.memory[x]));
+                if (cpu.memory.getMemory(x) != y){
+                    System.out.println("Case " + testCase.getString("name") + " At position: " + Integer.toString(x) + " Expected: " + Integer.toString(y) + " Found: " + Integer.toString(cpu.memory.getMemory(x)));
                     return 1;
                 }
             }
