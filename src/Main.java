@@ -22,7 +22,7 @@ public class Main extends JFrame implements KeyListener {
     // private int MAXCYCLES = 69905;
 
     private int MAXCYCLES = 456;
-    private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 20000f)); // Skip first 120 frames
+    private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
 
     public Main() {
         addKeyListener(this);
@@ -84,12 +84,12 @@ public class Main extends JFrame implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e){
-        System.out.println("KEY PRESSED");
+        // System.out.println("KEY PRESSED");
         pressesToTrigger += 1;
     }
 
     public void keyReleased(KeyEvent e){
-        System.out.println("KEY Released");
+        // System.out.println("KEY Released");
     }
 
     public void keyTyped(KeyEvent e){
@@ -98,6 +98,8 @@ public class Main extends JFrame implements KeyListener {
 
     private void runFrame() {
         if (pressesToTrigger > 0){
+            System.out.println("Line: " + memory.getLY());
+            System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
             int cyclesThisFrame = 0;
             while (cyclesThisFrame < MAXCYCLES) {
                 int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
@@ -111,7 +113,7 @@ public class Main extends JFrame implements KeyListener {
                 tilemap.repaint();
             }
             pressesToTrigger -= 1;
-            System.out.println(pressesToTrigger);
+            System.out.println("Presses: " + pressesToTrigger);
         }
         else {
             initLoad = false;

@@ -3,6 +3,10 @@ public class Util {
         String hex = Integer.toHexString(val);
         return hex;
     }
+    public static String bitString(int val){
+        String bi = Integer.toBinaryString(val);
+        return bi;
+    }
     public static String hexByte(int val){
         String hex = Integer.toHexString(val);
         if (hex.length() == 1){
