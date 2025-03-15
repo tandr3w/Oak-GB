@@ -160,7 +160,7 @@ public class CPU {
 
     public int execute(Instruction instruction) {
         if (halted){
-            return 0;
+            return 4;
         }
         int num_cycles = 4 * instruction.num_bytes;
         additionalCycles = 0;
@@ -719,6 +719,7 @@ public class CPU {
                 break;
 
             case Operation.HALT:
+                // System.out.println("putting in halt");
                 halted = true;
                 break;
 
