@@ -309,6 +309,10 @@ public class PPU extends JPanel {
                 drawScanline();
             }
 
+            LY++;
+            memory.setLY(LY);
+            remainingCycles = 456;
+            
             if (LY == 144) {
                 memory.requestInterrupt(0);
                 return;
@@ -318,10 +322,7 @@ public class PPU extends JPanel {
                 internalWindowCounter = 0;
                 return;
             }
-
-            LY++;
-            memory.setLY(LY);
-            remainingCycles = 456;
+            
             return;
         }
     }
