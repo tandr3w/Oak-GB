@@ -44,7 +44,7 @@ public class PPU extends JPanel {
             tileDataLocation = 0x8000;
         }
         else {
-            tileDataLocation = 0x8800;
+            tileDataLocation = 0x9000;
             signed = true; // Signed bytes are used as identifiers
         }
 
@@ -93,23 +93,16 @@ public class PPU extends JPanel {
             else {
                 dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
             }
-            short tileIdentifier;
+            int tileIdentifier;
             if (signed){
-                tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
+                tileIdentifier = (byte) memory.getMemory(dataPos);
             }
             else {
-                tileIdentifier = (short) memory.getMemory(dataPos);
+                tileIdentifier = memory.getMemory(dataPos);
             }
 
-            int tileMemLocation = tileDataLocation; // Location of the start of the tile in memory
-            
-            if (signed){
-                tileMemLocation += (tileIdentifier + 128) * 16; // Multiply by 16 because tiles are 16 bytes each
-            }
-            else {
-                tileMemLocation += tileIdentifier * 16;
-            }
-
+            int tileMemLocation = tileDataLocation + tileIdentifier * 16; // Location of the start of the tile in memory
+        
             int byteInTile = (yPos % 8) * 2; // Each 2 bytes corresponds to a row in the tile
             int byte1 = memory.getMemory(tileMemLocation + byteInTile);
             int byte2 = memory.getMemory(tileMemLocation + byteInTile + 1);
