@@ -65,7 +65,7 @@ public class Main extends JFrame {
             cyclesThisFrame += cycles;
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
-            // cpu.doInterrupts();
+            cpu.doInterrupts();
         }
         ppu.repaint();
     }
