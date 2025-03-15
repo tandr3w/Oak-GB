@@ -82,7 +82,7 @@ public class Memory {
         }
         else if (address == 0xFF44) // Reset LY if attempted write to it
         {
-           memoryArray[address] = 0 ;
+           memoryArray[address] = 0;
         }
         else {
             memoryArray[address] = data;

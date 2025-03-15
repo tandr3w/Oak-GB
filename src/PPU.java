@@ -92,10 +92,10 @@ public class PPU extends JPanel {
             int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
             short tileIdentifier;
             if (signed){
-                tileIdentifier = (short) ((byte) memory.memoryArray[dataPos]);
+                tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
             }
             else {
-                tileIdentifier = (short) memory.memoryArray[dataPos];
+                tileIdentifier = (short) memory.getMemory(dataPos);
             }
 
             int tileMemLocation = tileDataLocation; // Location of the start of the tile in memory
@@ -108,8 +108,8 @@ public class PPU extends JPanel {
             }
 
             int byteInTile = (yPos % 8) * 2; // Each 2 bytes corresponds to a row in the tile
-            int byte1 = memory.memoryArray[tileMemLocation + byteInTile];
-            int byte2 = memory.memoryArray[tileMemLocation + byteInTile + 1];
+            int byte1 = memory.getMemory(tileMemLocation + byteInTile);
+            int byte2 = memory.getMemory(tileMemLocation + byteInTile + 1);
             int xIndex = xPos % 8;
             // we need the xIndex'th byte from the left of both of the bytes
             // 7-xPos converts bit number from the left to bit number from the right
@@ -127,14 +127,14 @@ public class PPU extends JPanel {
             
             int indexStart = spriteNum * 4; // Sprites are 4 bytes each
             // Get sprite attributes
-            int yPos = memory.memoryArray[SPRITEADDRESS + indexStart]-16;
-            int xPos = memory.memoryArray[SPRITEADDRESS + indexStart + 1]-8;
-            int spriteLocation = memory.memoryArray[SPRITEADDRESS + indexStart + 2]; // Location in memory where the sprite starts
+            int yPos = memory.getMemory(SPRITEADDRESS + indexStart)-16;
+            int xPos = memory.getMemory(SPRITEADDRESS + indexStart + 1)-8;
+            int spriteLocation = memory.getMemory(SPRITEADDRESS + indexStart + 2); // Location in memory where the sprite starts
             // Bit 7: priority (0 = rendered on top, 1 = rendered below unless window/bg is white)
             // Bit 6, 5: y and x flip (mirrored)
             // Bit 4: palette number, 0 = from 0xFF48, 1 = from 0xFF49
             // // Bit 0-3: unused
-            int attributes = memory.memoryArray[SPRITEADDRESS + indexStart + 3];
+            int attributes = memory.getMemory(SPRITEADDRESS + indexStart + 3);
             boolean bgPriority = Util.getIthBit(attributes, 7) == 1;
             boolean yFlip = Util.getIthBit(attributes, 6) == 1;
             boolean xFlip = Util.getIthBit(attributes, 5) == 1;
@@ -155,8 +155,8 @@ public class PPU extends JPanel {
                 }
                 spriteRow *= 2; // Since each row is 2 bytes
                 int dataAddress = 0x8000 + 16*spriteLocation + spriteRow;
-                int byte1 = memory.memoryArray[dataAddress];
-                int byte2 = memory.memoryArray[dataAddress + 1];
+                int byte1 = memory.getMemory(dataAddress);
+                int byte2 = memory.getMemory(dataAddress + 1);
 
                 for (int spriteCol=0; spriteCol<8; spriteCol++){
                     int whichBit = spriteCol;
