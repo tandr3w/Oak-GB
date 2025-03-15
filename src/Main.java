@@ -31,7 +31,7 @@ public class Main extends JFrame implements KeyListener {
         memory = new Memory();
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
-        tilemap = new Tilemap(memory, ppu);
+        // tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
             4096,
@@ -54,8 +54,8 @@ public class Main extends JFrame implements KeyListener {
         // tests.runPrefixed();
         
         // https://github.com/mattcurrie/dmg-acid2
-        memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        // memory.loadROM("ROMs/snake.gb");
+        // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+        memory.loadROM("ROMs/snake.gb");
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -70,14 +70,14 @@ public class Main extends JFrame implements KeyListener {
 
         // Create and display the tile map window
 
-        tilemap = new Tilemap(memory, ppu);
-        tilemapFrame = new JFrame("Tile Map");
-        tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        tilemapFrame.add(tilemap);
-        tilemapFrame.setSize(512, 256);
-        tilemapFrame.setLocation(69, 69);
-        tilemapFrame.setResizable(false);
-        tilemapFrame.setVisible(true);
+        // tilemap = new Tilemap(memory, ppu);
+        // tilemapFrame = new JFrame("Tile Map");
+        // tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // tilemapFrame.add(tilemap);
+        // tilemapFrame.setSize(512, 256);
+        // tilemapFrame.setLocation(69, 69);
+        // tilemapFrame.setResizable(false);
+        // tilemapFrame.setVisible(true);
         int delay = 16; // 1000 / 60 --> 16.6667
         if (DEBUG){
             delay = 1;
@@ -101,9 +101,8 @@ public class Main extends JFrame implements KeyListener {
 
     private void runFrame() {
         if (pressesToTrigger > 0 || !DEBUG){
-            if (DEBUG){
-               System.out.println("Line: " + memory.getLY());
-            }
+            System.out.println("Line: " + memory.getLY());
+            
             // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
             // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
 
@@ -117,7 +116,7 @@ public class Main extends JFrame implements KeyListener {
             }
             if (!DEBUG || (!initLoad && pressesToTrigger < 3)){
                 ppu.repaint();
-                tilemap.repaint();
+                // tilemap.repaint();
             }
             if (DEBUG){
                 pressesToTrigger -= 1;
