@@ -17,9 +17,10 @@ public class Memory {
     int OBP_address;
 
     // Timer control addresses
-    int TIMO_address;
+    int TIMA_address;
     int TMA_address;
     int TMC_address;
+    int DIV_address;
 
     int[] memoryArray;
     public Memory() {
@@ -36,9 +37,10 @@ public class Memory {
         BGP_address = 0xFF47; // Color palette
         OBP_address = 0xFF48; // OBP1 is 0xFF49; OBP is typically left uninitialized
 
-        TIMO_address = 0xFF05; // Also called TIMA
+        TIMA_address = 0xFF05; // Also called TIMA
         TMA_address = 0xFF06;
         TMC_address = 0xFF07; // Also called TAC
+        DIV_address = 0xFF04; // Divider register
 
         // Default values
         memoryArray[LCDC_address] = 0x91;
@@ -51,9 +53,10 @@ public class Memory {
         memoryArray[LYC_address] = 0x00;
         memoryArray[BGP_address] = 0xFC; // 0b1111100 - initially maps to black, black, black, white
 
-        memoryArray[TIMO_address] = 0x00;
+        memoryArray[TIMA_address] = 0x00;
         memoryArray[TMA_address] = 0x00;
         memoryArray[TMC_address] = 0xF8;
+        memoryArray[DIV_address] = 0xAB; // 171
     }
 
     // LCDC commands
@@ -181,6 +184,32 @@ public class Memory {
     public boolean isClockEnabled() {
         return Util.getIthBit(memoryArray[TMC_address], 2) == 1;
     }
+
+    public int getTMC() {
+        return memoryArray[TMC_address];
+    }
+
+    public int getTMA() {
+        return memoryArray[TMA_address];
+    }
+
+    public int getTIMA() {
+        return memoryArray[TIMA_address];
+    }
+
+    public int getDIV() {
+        return memoryArray[DIV_address];
+    }
+
+    public void setDIV(int val) {
+        memoryArray[DIV_address] = val; 
+    }
+
+    public void setTIMA(int val) {
+        memoryArray[TIMA_address] = val;
+    }
+
+    
 
     public void loadROM(String ROMName) {
         try {

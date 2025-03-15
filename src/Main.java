@@ -5,9 +5,12 @@ public class Main extends JFrame {
     private Memory memory;
     private CPU cpu;
     private PPU ppu;
-    private Timer gameLoop;
 
+    private Timer gameLoop;
     private int[] TMAFrequencies;
+    private final int CLOCKSPEED;
+    private int timerCounter;
+    private int dividerCounter;
 
     public Main() {
         opcodes = new Opcodes();
@@ -21,6 +24,14 @@ public class Main extends JFrame {
             65536,
             16384,
         };
+        CLOCKSPEED = 4194304;
+        updateTimerCounter(); // Initializes the value for timerCounter
+
+        // Divider register is similar to timer
+        // counts from 0 - 255
+        // an interrupt is NOT called upon overflow (unlike the timer)
+        // cannot be paused
+        dividerCounter = 0;
 
         // Unit_Tests tests = new Unit_Tests(cpu, opcodes);
         // tests.run();
@@ -42,31 +53,56 @@ public class Main extends JFrame {
         setVisible(true);
 
         int delay = 16; // 1000 / 60 --> 16.6667
-        // FIXME: CHANGE DELAY LATER
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
     }
 
     private void runFrame() {
         int MAXCYCLES = 69905;
-        int t_cyclesThisFrame = 0;
-        while (t_cyclesThisFrame < MAXCYCLES) {
+        int cyclesThisFrame = 0;
+        while (cyclesThisFrame < MAXCYCLES) {
             int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
-            t_cyclesThisFrame += cycles;
-            
-            // TODO: Add Timer update function
+            cyclesThisFrame += cycles;
+            updateTimer(cycles);
             ppu.updateGraphics(cycles);
-            // cpu.doInterrupts();
+            cpu.doInterrupts();
         }
         ppu.repaint();
     }
 
+
+    // TODO: Add changes to CPU so that the DIV register resets everytime it is written to / when STOP is called
+    public void doDividerRegisters(int cycles) {
+        dividerCounter += cycles;
+        // At a freq of 16384, the divider register increments once every 256 cycles
+        if (dividerCounter >= 255) {
+            dividerCounter = 0;
+            memory.setDIV((memory.getDIV() + 1) & 0xFF);
+        }
+    }
+
+    public void updateTimerCounter() {
+        int freqID = memory.getTMC() & 0b11;
+        timerCounter = CLOCKSPEED / TMAFrequencies[freqID];
+    }
+
     // TODO: implement timer update function
-    public void updateTimers(int cycles) {
-        // doDividerRegisters(cycles);
+    public void updateTimer(int cycles) {
+        doDividerRegisters(cycles);
 
         if (memory.isClockEnabled()) {
-            
+            timerCounter -= cycles;
+            if (timerCounter <= 0) {
+                updateTimerCounter();
+
+                // when TIMA overflows, an interrupt is requested, and its value is updated to TMA
+                if (memory.getTIMA() == 255) {
+                    memory.setTIMA(memory.getTMA());
+                    memory.requestInterrupt(2);
+                }
+                return;
+            }
+            memory.setTIMA(memory.getTIMA()+1);
         }
     }
 
