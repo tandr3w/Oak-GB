@@ -101,7 +101,9 @@ public class Main extends JFrame implements KeyListener {
 
     private void runFrame() {
         if (pressesToTrigger > 0 || !DEBUG){
-            System.out.println("Line: " + memory.getLY());
+            if (DEBUG){
+               System.out.println("Line: " + memory.getLY());
+            }
             // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
             // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
 
@@ -117,8 +119,11 @@ public class Main extends JFrame implements KeyListener {
                 ppu.repaint();
                 tilemap.repaint();
             }
-            pressesToTrigger -= 1;
-            System.out.println("Presses: " + pressesToTrigger);
+            if (DEBUG){
+                pressesToTrigger -= 1;
+                System.out.println("Presses: " + pressesToTrigger);
+            }
+
         }
         else {
             initLoad = false;
