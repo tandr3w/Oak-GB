@@ -159,6 +159,9 @@ public class CPU {
     }
 
     public int execute(Instruction instruction) {
+        if (halted){
+            return 0;
+        }
         int num_cycles = 4 * instruction.num_bytes;
         additionalCycles = 0;
         // Load correct number of bytes
@@ -1063,11 +1066,17 @@ public class CPU {
     }
 
     public void doInterrupts(){
+        int interruptRequest = memory[0xFF0F];
+        int enabled = memory[0xFFFF];
+
+        if ((interruptRequest & enabled) != 0){
+            halted = false;
+        }
+
         if (!interrupts){
             return;
         }
-        int interruptRequest = memory[0xFF0F];
-        int enabled = memory[0xFFFF];
+
         // System.out.println("Enabled: " + enabled);
         // System.out.println("Flags: " + memory[0xFF0F]);
         if (interruptRequest > 0){

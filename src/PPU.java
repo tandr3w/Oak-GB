@@ -90,12 +90,12 @@ public class PPU extends JPanel {
             }
             int horizontalTileIndex = xPos / 8;
             int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32; // Get index of the tile identifier in memory
-            int tileIdentifier;
+            short tileIdentifier;
             if (signed){
-                tileIdentifier = (int) ((byte) memory.memoryArray[dataPos]);
+                tileIdentifier = (short) ((byte) memory.memoryArray[dataPos]);
             }
             else {
-                tileIdentifier = memory.memoryArray[dataPos];
+                tileIdentifier = (short) memory.memoryArray[dataPos];
             }
 
             int tileMemLocation = tileDataLocation; // Location of the start of the tile in memory
