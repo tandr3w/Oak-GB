@@ -18,7 +18,11 @@ public class Main extends JFrame implements KeyListener {
     private int timerCounter;
     private int dividerCounter;
 
-    private int pressesToTrigger = 0;
+    private boolean initLoad = true;
+    private int pressesToTrigger = 240; // Skip first 120 frames
+    // private int MAXCYCLES = 69905;
+
+    private int MAXCYCLES = 2500;
 
     public Main() {
         addKeyListener(this);
@@ -49,8 +53,8 @@ public class Main extends JFrame implements KeyListener {
         // tests.runPrefixed();
         
         // https://github.com/mattcurrie/dmg-acid2
-        // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/snake.gb");
+        memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+        // memory.loadROM("ROMs/snake.gb");
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -86,7 +90,6 @@ public class Main extends JFrame implements KeyListener {
 
     public void keyReleased(KeyEvent e){
         System.out.println("KEY Released");
-
     }
 
     public void keyTyped(KeyEvent e){
@@ -95,7 +98,6 @@ public class Main extends JFrame implements KeyListener {
 
     private void runFrame() {
         if (pressesToTrigger > 0){
-            int MAXCYCLES = 69905;
             int cyclesThisFrame = 0;
             while (cyclesThisFrame < MAXCYCLES) {
                 int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
@@ -103,10 +105,16 @@ public class Main extends JFrame implements KeyListener {
                 updateTimer(cycles);
                 ppu.updateGraphics(cycles);
                 cpu.doInterrupts();
+            }
+            if (!initLoad){
+                ppu.repaint();
                 tilemap.repaint();
             }
-            ppu.repaint();
             pressesToTrigger -= 1;
+            System.out.println(pressesToTrigger);
+        }
+        else {
+            initLoad = false;
         }
 
     }
