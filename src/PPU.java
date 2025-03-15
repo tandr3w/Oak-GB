@@ -11,10 +11,9 @@ public class PPU extends JPanel {
     // the GB stores colours as 2 bit numbers that we have to translate in to RGB colours
     int[][] colourPaletteTranslator;
     int[][][] screenData;
+    int prevLY = -1;
 
-    int bruh = 0;
     int remainingCycles; // Number from 0 - 456; represents T-cycles
-
 
     public PPU(Memory memory) {
 
@@ -220,6 +219,7 @@ public class PPU extends JPanel {
             status &= 0b11111100;
             status = Util.setBit(status, 0, true);
             memory.setLCDStatus(status);
+            prevLY = memory.getLY();
             return;
         }
 
@@ -260,8 +260,8 @@ public class PPU extends JPanel {
         if ((mode != prevMode) && reqInt) {
             memory.requestInterrupt(1);
         }
-
-        if (LY == memory.getLYC()) {
+        
+        if (LY == memory.getLYC() && (LY != prevLY)) {
             status = Util.setBit(status, 2, true);
             if (Util.getIthBit(status, 6) == 1) {
                 memory.requestInterrupt(1);
@@ -272,6 +272,7 @@ public class PPU extends JPanel {
         }
 
         memory.setLCDStatus(status);
+        prevLY = memory.getLY();
     }
 
     public void updateGraphics(int cycles) {
