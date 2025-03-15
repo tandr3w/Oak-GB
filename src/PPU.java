@@ -126,7 +126,7 @@ public class PPU extends JPanel {
     public void drawScanlineSprite(){
         int SPRITEADDRESS = 0xFE00;
 
-        for (int spriteNum = 39; spriteNum <= 0; spriteNum--){
+        for (int spriteNum = 0; spriteNum < 40; spriteNum++){
             
             int indexStart = spriteNum * 4; // Sprites are 4 bytes each
             // Get sprite attributes
