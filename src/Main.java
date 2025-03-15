@@ -56,7 +56,7 @@ public class Main extends JFrame {
             
             // TODO: Add Timer update function
             ppu.updateGraphics(cycles);
-            // cpu.doInterrupts();
+            cpu.doInterrupts();
         }
         ppu.repaint();
     }

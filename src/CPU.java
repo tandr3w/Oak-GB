@@ -729,7 +729,7 @@ public class CPU {
     }
 
     public void disableInterrupts(){
-        disableInterruptsNext = false;
+        disableInterruptsNext = true;
     }
     public void enableInterrupts(){
         enableInterruptsNext = true;
