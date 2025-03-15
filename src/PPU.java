@@ -286,9 +286,6 @@ public class PPU extends JPanel {
         int LY = memory.getLY();
         
         if (remainingCycles <= 0) {
-            LY++;
-            memory.setLY(LY);
-            remainingCycles = 456;
 
             if (LY < 144) {
                 drawScanline();
@@ -302,6 +299,10 @@ public class PPU extends JPanel {
                 memory.setLY(0);
                 return;
             }
+
+            LY++;
+            memory.setLY(LY);
+            remainingCycles = 456;
             return;
         }
     }
