@@ -12,6 +12,7 @@ public class PPU extends JPanel {
     int[][] colourPaletteTranslator;
     int[][][] screenData;
 
+    int bruh = 0;
     int remainingCycles; // Number from 0 - 456; represents T-cycles
 
 

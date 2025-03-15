@@ -1075,18 +1075,21 @@ public class CPU {
                 if (Util.getIthBit(interruptRequest, i) == 1 && Util.getIthBit(enabled, i) == 1){
                     interrupts = false;
                     memory[0xFF0F] = Util.setBit(interruptRequest, i, false);
-                    add16ToStack(registers.pc);
                     switch (i){
                         case 0:
+                            add16ToStack(registers.pc);
                             registers.pc = 0x40; // V-Blank
                             break;
                         case 1:
+                            add16ToStack(registers.pc);
                             registers.pc = 0x48; // LCD
                             break;
                         case 2:
+                            add16ToStack(registers.pc);
                             registers.pc = 0x50; // Timer
                             break;
                         case 4:
+                            add16ToStack(registers.pc);
                             registers.pc = 0x60; // Joypad
                             break;
                     }
