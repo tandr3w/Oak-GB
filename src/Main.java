@@ -77,7 +77,7 @@ public class Main extends JFrame {
         // At a freq of 16384, the divider register increments once every 256 cycles
         if (dividerCounter >= 255) {
             dividerCounter = 0;
-            memory.setDIV((memory.getDIV() + 1) & 0xFF);
+            memory.setDIV((memory.getDIV() + 1) & 0xFF); // handle overflow
         }
     }
 
@@ -95,14 +95,14 @@ public class Main extends JFrame {
             if (timerCounter <= 0) {
                 updateTimerCounter();
 
-                // when TIMA overflows, an interrupt is requested, and its value is updated to TMA
+                // when TIMA overflows, an interrupt is requested, and TIMA is set to TMA
                 if (memory.getTIMA() == 255) {
                     memory.setTIMA(memory.getTMA());
                     memory.requestInterrupt(2);
                 }
                 return;
             }
-            memory.setTIMA(memory.getTIMA()+1);
+            memory.setTIMA((memory.getTIMA() + 1) & 0xFF);
         }
     }
 

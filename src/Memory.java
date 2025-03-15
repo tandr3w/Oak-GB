@@ -202,7 +202,7 @@ public class Memory {
     }
 
     public void setDIV(int val) {
-        memoryArray[DIV_address] = val; 
+        memoryArray[DIV_address] = val;
     }
 
     public void setTIMA(int val) {

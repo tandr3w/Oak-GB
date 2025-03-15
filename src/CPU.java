@@ -1083,6 +1083,7 @@ public class CPU {
                             break;
                         case 2:
                             registers.pc = 0x50; // Timer
+                            System.out.println(2);
                             break;
                         case 4:
                             registers.pc = 0x60; // Joypad
