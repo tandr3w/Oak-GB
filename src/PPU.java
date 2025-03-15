@@ -283,15 +283,15 @@ public class PPU extends JPanel {
         int LY = memory.getLY();
         
         if (remainingCycles <= 0) {
-
-            if (LY < 144) {
-                drawScanline();
-            }
             
             LY++;
             memory.setLY(LY);
             remainingCycles = 456;
 
+            if (LY < 144) {
+                drawScanline();
+            }
+            
             if (LY == 144) {
                 memory.requestInterrupt(0);
                 return;
