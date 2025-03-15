@@ -160,7 +160,7 @@ public class CPU {
 
     public int execute(Instruction instruction) {
         if (halted){
-            return 4;
+            return 1;
         }
         int num_cycles = 4 * instruction.num_bytes;
         additionalCycles = 0;
