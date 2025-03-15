@@ -19,10 +19,10 @@ public class Main extends JFrame implements KeyListener {
     private int dividerCounter;
 
     private boolean initLoad = true;
-    private int pressesToTrigger = 240; // Skip first 120 frames
     // private int MAXCYCLES = 69905;
 
-    private int MAXCYCLES = 2500;
+    private int MAXCYCLES = 456;
+    private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 20000f)); // Skip first 120 frames
 
     public Main() {
         addKeyListener(this);
@@ -77,8 +77,8 @@ public class Main extends JFrame implements KeyListener {
         tilemapFrame.setLocation(69, 69);
         tilemapFrame.setResizable(false);
         tilemapFrame.setVisible(true);
-
-        int delay = 16; // 1000 / 60 --> 16.6667
+        int delay = 1;
+        // int delay = 16; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
     }
