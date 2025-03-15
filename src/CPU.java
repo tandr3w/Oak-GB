@@ -1084,7 +1084,7 @@ public class CPU {
                         case 2:
                             registers.pc = 0x50; // Timer
                             break;
-                        case 3:
+                        case 4:
                             registers.pc = 0x60; // Joypad
                             break;
                     }
