@@ -1,6 +1,8 @@
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Main extends JFrame {
+public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
     private Memory memory;
     private CPU cpu;
@@ -16,7 +18,10 @@ public class Main extends JFrame {
     private int timerCounter;
     private int dividerCounter;
 
+    private int pressesToTrigger = 0;
+
     public Main() {
+        addKeyListener(this);
         opcodes = new Opcodes();
         memory = new Memory();
         cpu = new CPU(opcodes, memory);
@@ -44,8 +49,8 @@ public class Main extends JFrame {
         // tests.runPrefixed();
         
         // https://github.com/mattcurrie/dmg-acid2
-        memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        // memory.loadROM("ROMs/snake.gb");
+        // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+        memory.loadROM("ROMs/snake.gb");
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -53,6 +58,7 @@ public class Main extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(ppu);
+        ppu.addKeyListener(this);
         pack();
         ppu.requestFocus();
         setVisible(true);
@@ -73,18 +79,36 @@ public class Main extends JFrame {
         gameLoop.start();
     }
 
+    public void keyPressed(KeyEvent e){
+        System.out.println("KEY PRESSED");
+        pressesToTrigger += 1;
+    }
+
+    public void keyReleased(KeyEvent e){
+        System.out.println("KEY Released");
+
+    }
+
+    public void keyTyped(KeyEvent e){
+
+    }
+
     private void runFrame() {
-        int MAXCYCLES = 69905;
-        int cyclesThisFrame = 0;
-        while (cyclesThisFrame < MAXCYCLES) {
-            int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
-            cyclesThisFrame += cycles;
-            updateTimer(cycles);
-            ppu.updateGraphics(cycles);
-            cpu.doInterrupts();
-            tilemap.repaint();
+        if (pressesToTrigger > 0){
+            int MAXCYCLES = 69905;
+            int cyclesThisFrame = 0;
+            while (cyclesThisFrame < MAXCYCLES) {
+                int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
+                cyclesThisFrame += cycles;
+                updateTimer(cycles);
+                ppu.updateGraphics(cycles);
+                cpu.doInterrupts();
+                tilemap.repaint();
+            }
+            ppu.repaint();
+            pressesToTrigger -= 1;
         }
-        ppu.repaint();
+
     }
 
 
