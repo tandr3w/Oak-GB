@@ -174,6 +174,9 @@ public class PPU extends JPanel {
                 }
                 spriteRow *= 2; // Since each row is 2 bytes
                 int dataAddress = 0x8000 + 16*spriteLocation + spriteRow;
+                if (ySize == 16){
+                    dataAddress = 0x8000 + 16*Util.setBit(spriteLocation, 0, false) + spriteRow;
+                }
                 int byte1 = memory.getMemory(dataAddress);
                 int byte2 = memory.getMemory(dataAddress + 1);
 
