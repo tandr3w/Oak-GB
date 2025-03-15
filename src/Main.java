@@ -19,9 +19,9 @@ public class Main extends JFrame implements KeyListener {
     private int dividerCounter;
 
     private boolean initLoad = true;
-    // private int MAXCYCLES = 69905;
+    private int MAXCYCLES = 69905;
 
-    private int MAXCYCLES = 456;
+    // private int MAXCYCLES = 456;
     private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
 
     public Main() {

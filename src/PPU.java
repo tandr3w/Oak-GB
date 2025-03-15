@@ -138,6 +138,7 @@ public class PPU extends JPanel {
 
     public void drawScanlineSprite(){
         int SPRITEADDRESS = 0xFE00;
+        int[] alreadyDrawn = new int[160];
 
         for (int spriteNum = 0; spriteNum < 40; spriteNum++){
             
@@ -150,6 +151,8 @@ public class PPU extends JPanel {
             // Bit 6, 5: y and x flip (mirrored)
             // Bit 4: palette number, 0 = from 0xFF48, 1 = from 0xFF49
             // // Bit 0-3: unused
+
+
             int attributes = memory.getMemory(SPRITEADDRESS + indexStart + 3);
             boolean bgPriority = Util.getIthBit(attributes, 7) == 1;
             boolean yFlip = Util.getIthBit(attributes, 6) == 1;
@@ -194,7 +197,10 @@ public class PPU extends JPanel {
                     if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
                         continue; // Don't render if the background takes priority AND if the background is not white
                     }
-                    screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
+                    if (alreadyDrawn[xPos+spriteCol]!=1) {
+                        screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
+                    }
+                    alreadyDrawn[xPos+spriteCol] = 1;
                 }
             }
         }
