@@ -248,6 +248,7 @@ public class PPU extends JPanel {
                 mode = 0;
                 status = Util.setBit(status, 1, false);
                 status = Util.setBit(status, 0, false);
+                reqInt = Util.getIthBit(status, 3) == 1;
             }
         }
 
@@ -294,7 +295,7 @@ public class PPU extends JPanel {
             if (LY < 144) {
                 drawScanline();
             }
-            
+
             if (LY == 144) {
                 memory.requestInterrupt(0);
                 return;
