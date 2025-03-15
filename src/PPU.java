@@ -219,7 +219,6 @@ public class PPU extends JPanel {
             status &= 0b11111100;
             status = Util.setBit(status, 0, true);
             memory.setLCDStatus(status);
-            prevLY = memory.getLY();
             return;
         }
 
@@ -272,11 +271,11 @@ public class PPU extends JPanel {
         }
 
         memory.setLCDStatus(status);
-        prevLY = memory.getLY();
     }
 
     public void updateGraphics(int cycles) {
         updateLCDStatus();
+        prevLY = memory.getLY();
         if (memory.getLCDEnable() == 0) {
             return;
         }
