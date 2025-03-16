@@ -29,7 +29,6 @@ public class Joypad {
 
     public Joypad(Memory memory) {
         this.memory = memory;
-        memory.joypadState = 0b11111111;
     }
 
     public void updateJoypadPressed(KeyEvent e) {
