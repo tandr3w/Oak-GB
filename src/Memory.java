@@ -4,30 +4,32 @@ import java.io.IOException;
 
 public class Memory {
     // Hardware register addresses
-    int LCDC_address;
-    int STAT_address;
-    int SCY_address;
-    int SCX_address;
-    int WY_address;
-    int WX_address;
-    int LY_address;
-    int LYC_address;
+    final int LCDC_address;
+    final int STAT_address;
+    final int SCY_address;
+    final int SCX_address;
+    final int WY_address;
+    final int WX_address;
+    final int LY_address;
+    final int LYC_address;
 
-    int BGP_address;
-    int OBP_address;
+    final int BGP_address;
+    final int OBP_address;
 
     // Timer control addresses
-    int TIMA_address;
-    int TMA_address;
-    int TMC_address;
-    int DIV_address;
+    final int TIMA_address;
+    final int TMA_address;
+    final int TMC_address;
+    final int DIV_address;
 
-    int IF_address;
-    int IE_address;
+    final int IF_address;
+    final int IE_address;
 
-    int JOYP_address;
+    final int JOYP_address;
+    public int joypadState;
 
-    int[] memoryArray;
+    public int[] memoryArray;
+    
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
         LCDC_address = 0xFF40; // Settings for display
@@ -51,6 +53,7 @@ public class Memory {
         IE_address = 0xFFFF;
 
         JOYP_address = 0xFF00; // joypad
+        joypadState = 0b11111111;
 
 
         // Default values
@@ -95,7 +98,25 @@ public class Memory {
         }
     }
 
+    public int getJoypadState() {
+        int state = memoryArray[JOYP_address]; // access memory array directly to avoid recursion errors
+        state ^= 0xFF;
+        if (Util.getIthBit(state, 4) == 0) {
+            int buttons = (joypadState >> 4);
+            buttons |= 0xF0;
+            state &= buttons;
+        } else if (Util.getIthBit(state, 5) == 0) {
+            int d_pad = (joypadState & 0x0F);
+            state &= d_pad;
+        }
+        return state;
+    }
+
     public int getMemory(int address){
+        if (address == JOYP_address) {
+            return getJoypadState();
+        }
+
         return memoryArray[address];
     }
 
@@ -250,7 +271,7 @@ public class Memory {
     }
 
     public int getJOYP() {
-        return memoryArray[JOYP_address];
+        return getMemory(JOYP_address);
     }
 
     public void setJOYP(int val) {
@@ -278,5 +299,5 @@ public class Memory {
     public void requestInterrupt(int id){
         memoryArray[0xFF0F] = Util.setBit(memoryArray[0xFF0F], id, true);
     }
-    
+
 }

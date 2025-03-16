@@ -3,7 +3,6 @@ import java.awt.event.KeyEvent;
 public class Joypad {
     Memory memory;
     int keys;
-    int joypadState;
 
     public int getNumFromKey(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -30,7 +29,7 @@ public class Joypad {
 
     public Joypad(Memory memory) {
         this.memory = memory;
-        joypadState = 0b11111111;
+        memory.joypadState = 0b11111111;
     }
 
     public void updateJoypadPressed(KeyEvent e) {
@@ -41,13 +40,13 @@ public class Joypad {
         }
         
         boolean previouslyPressed;
-        if (Util.getIthBit(joypadState, keyNum) == 0) {
+        if (Util.getIthBit(memory.joypadState, keyNum) == 0) {
             previouslyPressed = true;
         } else {
             previouslyPressed = false;
         }
         
-        joypadState = Util.setBit(joypadState, keyNum, false);
+        memory.joypadState = Util.setBit(memory.joypadState, keyNum, false);
 
         if (previouslyPressed) {
             return;
@@ -70,21 +69,6 @@ public class Joypad {
         if (keyNum == -1) {
             return;
         }
-        joypadState = Util.setBit(joypadState, keyNum, true);
-    }
-
-    // TODO: call get joypad state everytime the cpu writes to FF00 (JOYP register)
-    public int getJoypadState() {
-        int state = memory.getJOYP();
-        state ^= 0xFF;
-        if (Util.getIthBit(state, 4) == 0) {
-            int buttons = (joypadState >> 4);
-            buttons |= 0xF0;
-            state &= buttons;
-        } else if (Util.getIthBit(state, 5) == 0) {
-            int d_pad = (joypadState & 0x0F);
-            state &= d_pad;
-        }
-        return state;
+        memory.joypadState = Util.setBit(memory.joypadState, keyNum, true);
     }
 }

@@ -54,9 +54,8 @@ public class Main extends JFrame implements KeyListener {
         // tests.runPrefixed();
         
         // https://github.com/mattcurrie/dmg-acid2
-        memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        // memory.loadROM("ROMs/snake.gb");
-        // memory.loadROM("ROMs/DanLaser.gb");
+        // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+        memory.loadROM("ROMs/snake.gb");
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
