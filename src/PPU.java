@@ -9,6 +9,8 @@ public class PPU extends JPanel {
     // Queue spriteFIFO;
     // the GB stores colours as 2 bit numbers that we have to translate in to RGB colours
     int[][] colourPaletteTranslator;
+    int[][] greenColourPalette;
+    boolean green = false; // chooses which palette to use
     int[][][] screenData;
     int prevLY = -1;
     int prevLYC = -1;
@@ -28,11 +30,18 @@ public class PPU extends JPanel {
             {85, 85, 85}, // 0b10
             {0, 0, 0} // 0b11
         };
-
+        greenColourPalette = new int[][] {
+            {156, 190, 12},
+            {110, 135, 10},
+            {44, 98, 52},
+            {12, 54, 12},
+        };
+        if (green) {
+            colourPaletteTranslator = greenColourPalette;
+        }
         screenData = new int[144][160][3];
         setPreferredSize(new Dimension(160, 144));
     }
-
 
     public void drawScanlineBG(){
         // Draws tiles for one scanline
@@ -126,6 +135,7 @@ public class PPU extends JPanel {
     }
 
     public void drawScanlineSprite(){
+        
         int SPRITEADDRESS = 0xFE00;
         int[] minxPosAtPos = new int[160];
         for (int i=0; i<160; i++){
@@ -186,6 +196,7 @@ public class PPU extends JPanel {
                     else {
                         colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address);
                     }
+
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
@@ -194,8 +205,10 @@ public class PPU extends JPanel {
                     }
                     if (xPos < minxPosAtPos[xPos+spriteCol]) {
                         screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
+                        minxPosAtPos[xPos+spriteCol] = xPos; // the array should only be updated if the new xpos is lower
+
                     }
-                    minxPosAtPos[xPos+spriteCol] = xPos;
+                    // minxPosAtPos[xPos+spriteCol] = xPos;
                 }
             }
         }
