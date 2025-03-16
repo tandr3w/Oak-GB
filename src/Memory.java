@@ -93,8 +93,19 @@ public class Memory {
         {
             memoryArray[address] = 0;
         }
+        else if (address == 0xFF46){
+            DMATransfer(data);
+        }
         else {
             memoryArray[address] = data;
+        }
+    }
+
+    public void DMATransfer(int data){
+        int address = data << 8 ; // source address is data * 100
+        for (int i = 0 ; i < 0xA0; i++)
+        {
+          setMemory(0xFE00+i, getMemory(address+i));
         }
     }
 

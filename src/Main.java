@@ -31,7 +31,7 @@ public class Main extends JFrame implements KeyListener {
         joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
-        // tilemap = new Tilemap(memory, ppu);
+        tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
             4096,
@@ -56,7 +56,7 @@ public class Main extends JFrame implements KeyListener {
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
         // memory.loadROM("ROMs/snake.gb");
-        memory.loadROM("ROMs/tetris.gb");
+        memory.loadROM("ROMs/adjustris.gb");
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -71,14 +71,14 @@ public class Main extends JFrame implements KeyListener {
         ppu.requestFocus();
         setVisible(true);
 
-        // tilemap = new Tilemap(memory, ppu);
-        // tilemapFrame = new JFrame("Tile Map");
-        // tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        // tilemapFrame.add(tilemap);
-        // tilemapFrame.setSize(512, 256);
-        // tilemapFrame.setLocation(69, 69);
-        // tilemapFrame.setResizable(false);
-        // tilemapFrame.setVisible(true);
+        tilemap = new Tilemap(memory, ppu);
+        tilemapFrame = new JFrame("Tile Map");
+        tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        tilemapFrame.add(tilemap);
+        tilemapFrame.setSize(512, 256);
+        tilemapFrame.setLocation(69, 69);
+        tilemapFrame.setResizable(false);
+        tilemapFrame.setVisible(true);
         int delay = 16; // 1000 / 60 --> 16.6667
         if (DEBUG){
             delay = 1;

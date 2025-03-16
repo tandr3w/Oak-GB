@@ -181,7 +181,6 @@ public class PPU extends JPanel {
                 }
                 int byte1 = memory.getMemory(dataAddress);
                 int byte2 = memory.getMemory(dataAddress + 1);
-
                 for (int spriteCol=0; spriteCol<8; spriteCol++){
                     int whichBit = spriteCol;
                     if (!xFlip){
@@ -200,13 +199,15 @@ public class PPU extends JPanel {
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
+                    if (xPos + spriteCol >= 160){
+                        continue;
+                    }
                     if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
                         continue; // Don't render if the background takes priority AND if the background is not white
                     }
                     if (xPos < minxPosAtPos[xPos+spriteCol]) {
                         screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
                         minxPosAtPos[xPos+spriteCol] = xPos; // the array should only be updated if the new xpos is lower
-
                     }
                     // minxPosAtPos[xPos+spriteCol] = xPos;
                 }
