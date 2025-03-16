@@ -25,6 +25,8 @@ public class Memory {
     int IF_address;
     int IE_address;
 
+    int JOYP_address;
+
     int[] memoryArray;
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
@@ -48,6 +50,8 @@ public class Memory {
         IF_address = 0xFF0F;
         IE_address = 0xFFFF;
 
+        JOYP_address = 0xFF00; // joypad
+
 
         // Default values
         memoryArray[LCDC_address] = 0x91;
@@ -67,6 +71,8 @@ public class Memory {
 
         memoryArray[IF_address] = 0xE1;
         memoryArray[IE_address] = 0x00;
+
+        memoryArray[JOYP_address] = 0xCF;
     }
 
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
@@ -82,7 +88,7 @@ public class Memory {
         }
         else if (address == 0xFF44) // Reset LY if attempted write to it
         {
-           memoryArray[address] = 0;
+            memoryArray[address] = 0;
         }
         else {
             memoryArray[address] = data;
@@ -243,7 +249,14 @@ public class Memory {
         memoryArray[TIMA_address] = val;
     }
 
-    
+    public int getJOYP() {
+        return memoryArray[JOYP_address];
+    }
+
+    public void setJOYP(int val) {
+        memoryArray[JOYP_address] = val;
+    }
+
 
     public void loadROM(String ROMName) {
         try {

@@ -7,10 +7,10 @@ public class Main extends JFrame implements KeyListener {
     private Memory memory;
     private CPU cpu;
     private PPU ppu;
+    private Joypad joypad;
 
     private Tilemap tilemap;
     private JFrame tilemapFrame;
-
 
     private Timer gameLoop;
     private int[] TMAFrequencies;
@@ -21,7 +21,6 @@ public class Main extends JFrame implements KeyListener {
     private boolean initLoad = true;
     private int MAXCYCLES = 69905;
     private boolean DEBUG = false;
-
     // private int MAXCYCLES = 456;
     private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
 
@@ -29,6 +28,7 @@ public class Main extends JFrame implements KeyListener {
         addKeyListener(this);
         opcodes = new Opcodes();
         memory = new Memory();
+        joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
         // tilemap = new Tilemap(memory, ppu);
@@ -54,8 +54,9 @@ public class Main extends JFrame implements KeyListener {
         // tests.runPrefixed();
         
         // https://github.com/mattcurrie/dmg-acid2
-        // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/snake.gb");
+        memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+        // memory.loadROM("ROMs/snake.gb");
+        // memory.loadROM("ROMs/DanLaser.gb");
 
         setTitle("Gameboy Emulator");
         setSize(160, 144);
@@ -67,8 +68,6 @@ public class Main extends JFrame implements KeyListener {
         pack();
         ppu.requestFocus();
         setVisible(true);
-
-        // Create and display the tile map window
 
         // tilemap = new Tilemap(memory, ppu);
         // tilemapFrame = new JFrame("Tile Map");
@@ -87,12 +86,14 @@ public class Main extends JFrame implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e){
-        // System.out.println("KEY PRESSED");
+        joypad.updateJoypadPressed(e);
+
         pressesToTrigger += 1;
     }
 
     public void keyReleased(KeyEvent e){
         // System.out.println("KEY Released");
+        joypad.updateJoypadReleased(e);
     }
 
     public void keyTyped(KeyEvent e){
@@ -100,8 +101,9 @@ public class Main extends JFrame implements KeyListener {
     }
 
     private void runFrame() {
-        if (pressesToTrigger > 0 || !DEBUG){
-            System.out.println("Line: " + memory.getLY());
+        // System.out.println(memory.getJOYP());
+        if (true){
+            
             
             // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
             // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
@@ -113,21 +115,10 @@ public class Main extends JFrame implements KeyListener {
                 updateTimer(cycles);
                 ppu.updateGraphics(cycles);
                 cpu.doInterrupts();
+                // System.out.println("Line: " + memory.getLY());
             }
-            if (!DEBUG || (!initLoad && pressesToTrigger < 3)){
-                ppu.repaint();
-                // tilemap.repaint();
-            }
-            if (DEBUG){
-                pressesToTrigger -= 1;
-                System.out.println("Presses: " + pressesToTrigger);
-            }
-
+            ppu.repaint();
         }
-        else {
-            initLoad = false;
-        }
-
     }
 
 
