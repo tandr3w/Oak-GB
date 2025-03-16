@@ -199,7 +199,7 @@ public class PPU extends JPanel {
                     if (colorID == 0){
                         continue; // Don't render white pixels
                     }
-                    if (xPos + spriteCol >= 0 || xPos + spriteCol >= 160){
+                    if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
                         continue;
                     }
                     if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
