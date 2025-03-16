@@ -55,10 +55,12 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        // memory.loadROM("ROMs/snake.gb");
-        memory.loadROM("ROMs/tetris.gb");
+        memory.loadROM("ROMs/snake.gb");
+        // memory.loadROM("ROMs/tetris.gb");
 
         setTitle("Gameboy Emulator");
+        ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
+        setIconImage(gameboyIcon.getImage());
         setSize(160, 144);
         setLocationRelativeTo(null);
         setResizable(false);
