@@ -114,7 +114,9 @@ public class Memory {
 
     public int getMemory(int address){
         if (address == JOYP_address) {
-            return getJoypadState();
+            int JOYP = getJoypadState();
+            // System.out.println(JOYP);
+            return JOYP;
         }
 
         return memoryArray[address];
