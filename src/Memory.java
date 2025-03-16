@@ -102,8 +102,8 @@ public class Memory {
     }
 
     public void DMATransfer(int data){
-        int address = data << 8 ; // source address is data * 100
-        for (int i = 0 ; i < 0xA0; i++)
+        int address = data << 8;
+        for (int i = 0; i < 0xA0; i++)
         {
           setMemory(0xFE00+i, getMemory(address+i));
         }
