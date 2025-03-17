@@ -99,7 +99,7 @@ public class Memory {
         }
         if (address >= 0xA000 && address <= 0xBFFF){
             if (ramEnabled){
-                memoryArray[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
+                ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
             }
         }
         if (address >= 0xFEA0 && address < 0xFEFF){
