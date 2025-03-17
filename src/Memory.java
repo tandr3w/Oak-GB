@@ -95,25 +95,36 @@ public class Memory {
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
         if (address < 0x8000){
             // Handle ROM banking
+            System.out.println("YO");
             handleROMBanking(address, data);
         }
-        if (address >= 0xA000 && address <= 0xBFFF){
+        else if (address >= 0xA000 && address <= 0xBFFF){
+            System.out.println("YO");
+
             if (ramEnabled){
                 ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
             }
         }
-        if (address >= 0xFEA0 && address < 0xFEFF){
+        else if (address >= 0xFEA0 && address < 0xFEFF){
+            System.out.println("YO");
+
             return;
         }
-        if (address >= 0xE000 && address < 0xFE00){
+        else if (address >= 0xE000 && address < 0xFE00){
+            System.out.println("YO");
+
             memoryArray[address] = data;
             setMemory(address-0x2000, data);
         }
         else if (address == LY_address) // Reset LY if attempted write to it
         {
+            System.out.println("YO");
+
             memoryArray[address] = 0;
         }
         else if (address == 0xFF46){
+            System.out.println("YO");
+
             DMATransfer(data);
         }
         else {
