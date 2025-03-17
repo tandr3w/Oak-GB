@@ -195,5 +195,17 @@ public class Registers {
         }
     }
 
-    
+    public void printRegisters(){
+        System.out.print("A: " + Util.hexString(a) + ", ");
+        System.out.print("B: " + Util.hexString(b) + ", ");
+        System.out.print("C: " + Util.hexString(c) + ", ");
+        System.out.print("D: " + Util.hexString(d) + ", ");
+        System.out.print("E: " + Util.hexString(e) + ", ");
+        System.out.print("F: " + Util.hexString(f) + ", ");
+        System.out.print("H: " + Util.hexString(h) + ", ");
+        System.out.print("L: " + Util.hexString(l) + ", ");
+        System.out.print("SP: " + Util.hexString(sp) + ", ");
+        System.out.println("PC: " + Util.hexString(pc));
+
+    }
 }

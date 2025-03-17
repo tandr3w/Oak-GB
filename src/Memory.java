@@ -129,6 +129,11 @@ public class Memory {
         // if (address != LY_address && address != LCDC_address && address != STAT_address && address != 0xFF04){
         //     System.out.println(Util.hexString(address));
         // }
+        if (address == 0xFF0F){
+            memoryArray[0xFF0F] &= 0xE0;
+            memoryArray[0xFF0F] |= data & 0b11111;
+            return;
+        }
         if (address < 0x8000){
             // Handle ROM banking
             handleROMBanking(address, data);
@@ -587,6 +592,8 @@ public class Memory {
     }
 
     public void requestInterrupt(int id){
+        // System.out.println("REQUESTING INTERRUPT");
+        // System.out.println("IF IS CURRENTLY: " + getMemory(0xFF0F));
         setMemory(0xFF0F, Util.setBit(getMemory(0xFF0F), id, true));
     }
 

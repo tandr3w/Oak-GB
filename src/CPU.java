@@ -461,6 +461,7 @@ public class CPU {
                 }
                 if (instruction.operand == Operand.A && instruction.operandToSet == Operand.a8) { 
                     int address = instruction.next_bytes[0] + 0xFF00;
+                    // System.out.println("LDH RESULT: " + Util.hexString(address));
                     memory.setMemory(address, registers.a);
                     num_cycles += 4;
                     break;

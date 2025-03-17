@@ -20,7 +20,10 @@ public class Main extends JFrame implements KeyListener {
     private final int CLOCKSPEED;
     private int timerCounter;
     private int dividerCounter;
+    private int toPrint = 0;
+    private int totalExecutes = 0;
 
+    public int bruh = 0;
     // private boolean initLoad = true;
     private int MAXCYCLES = 69905;
     // private boolean DEBUG = false;
@@ -58,15 +61,11 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/2048diff.gb");
+        memory.loadROM("ROMs/2048.gb");
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
-<<<<<<< HEAD
         // memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
-=======
-        memory.loadROM("ROMs/tetris.gb");
->>>>>>> fc98d995775539b08584724cb0ee95c77bcf2571
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -95,6 +94,8 @@ public class Main extends JFrame implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e){
+        memory.setMemory(0xFFFF, 1);
+
         joypad.updateJoypadPressed(e);
         // pressesToTrigger += 1;
     }
@@ -114,9 +115,52 @@ public class Main extends JFrame implements KeyListener {
         int cyclesThisFrame = 0;
         while (cyclesThisFrame < MAXCYCLES) {
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
+            // if (cpu.registers.pc == 0x313){
+            //     toPrint = 30;
+            // }
+            // Text is displayed on 68928
+            // if (cpu.registers.pc == 0x300 && bruh == 0){
+            //     System.out.println("Executes done: " + totalExecutes);
+            //     opcodes.printInstruction(instruction);
+            //     cpu.registers.printRegisters();  
+            //     System.out.println("FF0F: " + memory.getMemory(0xFF0F) + " FFFF: " + memory.getMemory(0xFFFF));
+            //     toPrint=10;
+            //     bruh = 1;
+            // }
+            // if (totalExecutes == 16){
+            //     opcodes.printInstruction(instruction);
+            //     cpu.registers.printRegisters();
+            //     System.out.println("FF0F: " + Util.hexString(memory.getMemory(0xFF0F)) + " FFFF: " + Util.hexString(memory.getMemory(0xFFFF)));
+            //     toPrint=10;
+            // }
+
+            // if (totalExecutes == 68928){
+            //     opcodes.printInstruction(instruction);
+            //     cpu.registers.printRegisters();
+            //     toPrint=10;
+            // }
+
+            // if (toPrint > 0){
+            //     toPrint--;
+            //     opcodes.printInstruction(instruction);
+            //     cpu.registers.printRegisters();
+            //     System.out.println("FF0F: " + memory.getMemory(0xFF0F) + " FFFF: " + memory.getMemory(0xFFFF));
+            //     System.out.println("---");
+            // }
             int cycles = cpu.execute(instruction);
+            // if (totalExecutes == 16){
+            //     opcodes.printInstruction(instruction);
+            //     cpu.registers.printRegisters();
+            //     System.out.println("FF0F: " + Util.hexString(memory.getMemory(0xFF0F)) + " FFFF: " + Util.hexString(memory.getMemory(0xFFFF)));
+            //     toPrint=10;
+            // }
+            totalExecutes += 1;
+
             // System.out.println(cpu.registers.pc);
 
+            // if (instruction.operation == Operation.LD && instruction.operandToSet == Operand.n16){
+            //     opcodes.printInstruction(instruction);
+            // }
             // opcodes.printInstruction(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
             cyclesThisFrame += cycles;
             updateTimer(cycles);
@@ -125,10 +169,10 @@ public class Main extends JFrame implements KeyListener {
             // System.out.println("Line: " + memory.getLY());
         }
         ppu.repaint();
-        // tilemap.repaint();
+        tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
-        int newDelay = 15 - ((int) frameDuration/1000000);
+        int newDelay = 0;
         if (newDelay > 0){
             gameLoop.setDelay(newDelay);
         }

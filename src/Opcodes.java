@@ -573,7 +573,7 @@ public class Opcodes {
 
         if (instruction.next_bytes != null){
             for (int i=0; i<instruction.next_bytes.length; i++){
-                System.out.print(" " + instruction.next_bytes[i]);
+                System.out.print(" " + Util.hexString(instruction.next_bytes[i]));
             }
         }
 
