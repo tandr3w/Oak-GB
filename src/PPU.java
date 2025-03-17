@@ -73,8 +73,8 @@ public class PPU extends JPanel {
             int xPos = (i + memory.getSCX()) % 256; // Get x position on the 256x256 display we are currently drawing on
             if (windowEnabled && i >= windowX){
                 hadWindow = true;
-                yPos = internalWindowCounter;
-                xPos = i - windowX;
+                yPos = internalWindowCounter % 256;
+                xPos = (i - windowX) % 256;
                 if (memory.getWindowTileMapArea() == 1){ // We are rendering window instead of BG at this pixel
                     displayDataLocation = 0x9C00;
                 }

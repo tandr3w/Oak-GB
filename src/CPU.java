@@ -1101,7 +1101,6 @@ public class CPU {
                         case 4:
                             add16ToStack(registers.pc);
                             registers.pc = 0x60; // Joypad
-                            System.out.println("TEST");
                             break;
                     }
                 }

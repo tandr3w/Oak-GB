@@ -560,5 +560,17 @@ public class Opcodes {
         return opcodesArray[readByte];
     }
     
+    public void printInstruction(Instruction instruction){
+        if (instruction.operandToSet != null){
+            System.out.println(instruction.operation.name() + " " + instruction.operandToSet.name() + " " + instruction.operand.name());
+        }
+        else if (instruction.operand != null){
+            System.out.println(instruction.operation.name() + " " + instruction.operand.name());
+        }
+        else {
+            System.out.println(instruction.operation.name());
+
+        }
+    }
 
 }

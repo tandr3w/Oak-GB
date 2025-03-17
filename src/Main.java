@@ -110,6 +110,8 @@ public class Main extends JFrame implements KeyListener {
         int cyclesThisFrame = 0;
         while (cyclesThisFrame < MAXCYCLES) {
             int cycles = cpu.execute(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
+            // System.out.println(cpu.registers.pc);
+            // opcodes.printInstruction(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
             cyclesThisFrame += cycles;
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
