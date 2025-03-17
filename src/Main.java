@@ -62,7 +62,11 @@ public class Main extends JFrame implements KeyListener {
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
+<<<<<<< HEAD
         // memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
+=======
+        memory.loadROM("ROMs/tetris.gb");
+>>>>>>> fc98d995775539b08584724cb0ee95c77bcf2571
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -174,6 +178,10 @@ public class Main extends JFrame implements KeyListener {
             }
             memory.setTIMA((memory.getTIMA() + 1) & 0xFF);
         }
+    }
+
+    public void updateMBC3() {
+
     }
 
     public static void main(String[] args) {

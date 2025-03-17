@@ -290,9 +290,11 @@ public class PPU extends JPanel {
         }
 
         if ((mode != prevMode) && reqInt) {
+            System.out.println(memory.getLCDEnable());
             memory.requestInterrupt(1);
         }
         
+        // check if LY can compare to LYC when LY == 0
         if (LY == memory.getLYC() && (LY != prevLY || memory.getLYC() != prevLYC)) {
             status = Util.setBit(status, 2, true);
             if (Util.getIthBit(status, 6) == 1) {
