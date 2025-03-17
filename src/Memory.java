@@ -90,7 +90,8 @@ public class Memory {
 
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
         if (address < 0x8000){
-            return;
+            // Handle ROM banking
+            handleROMBanking(address, data);
         }
         if (address >= 0xFEA0 && address < 0xFEFF){
             return;
@@ -127,6 +128,24 @@ public class Memory {
         }
 
         return memoryArray[address];
+    }
+
+    public void handleROMBanking(int address, int data){
+        if (address < 0x2000){ // Enable RAM bank writing
+
+        }
+        else if (address < 0x4000){ // ROM bank change
+
+        }
+        else if (address < 0x6000){ // RAM or ROM bank change based on mode
+
+        }
+        else if (address < 0x8000){ // Change RAM/ROM bank mode
+            
+        }
+        else {
+            System.out.println("ERR: Invalid address for ROM banking call");
+        }
     }
 
     public void DMATransfer(int data){
