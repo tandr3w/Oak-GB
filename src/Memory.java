@@ -100,7 +100,6 @@ public class Memory {
             handleROMBanking(address, data);
         }
         else if (address >= 0xA000 && address <= 0xBFFF){
-
             if (ramEnabled){
                 ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
             }
@@ -386,7 +385,7 @@ public class Memory {
             byte[] contents = new byte[(int) size];
             in.read(contents);
             System.out.println("File size: " + Util.hexString((int) size));
-            for (int i=0; i<0x4000; i++){
+            for (int i=0; i<0x8000; i++){
                 memoryArray[i] = (contents[i] & 0xFF);
             }
             for (int i=0; i<size; i++){

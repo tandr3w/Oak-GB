@@ -12,8 +12,8 @@ public class Main extends JFrame implements KeyListener {
     private PPU ppu;
     private Joypad joypad;
 
-    // private Tilemap tilemap;
-    // private JFrame tilemapFrame;
+    private Tilemap tilemap;
+    private JFrame tilemapFrame;
 
     private Timer gameLoop;
     private int[] TMAFrequencies;
@@ -22,7 +22,7 @@ public class Main extends JFrame implements KeyListener {
     private int dividerCounter;
 
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905;
+    private int MAXCYCLES = 69905*10;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -34,7 +34,7 @@ public class Main extends JFrame implements KeyListener {
         joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
-        // tilemap = new Tilemap(memory, ppu);
+        tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
             4096,
@@ -60,8 +60,9 @@ public class Main extends JFrame implements KeyListener {
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
         // memory.loadROM("ROMs/snake.gb");
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
-        memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_bank1.gb"); // Failed
-        // memory.loadROM("ROMs/2048.gb");
+        // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
+        // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
+        memory.loadROM("ROMs/2048.gb");
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -76,14 +77,14 @@ public class Main extends JFrame implements KeyListener {
         ppu.requestFocus();
         setVisible(true);
 
-        // tilemap = new Tilemap(memory, ppu);
-        // tilemapFrame = new JFrame("Tile Map");
-        // tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        // tilemapFrame.add(tilemap);
-        // tilemapFrame.setSize(512, 256);
-        // tilemapFrame.setLocation(69, 69);
-        // tilemapFrame.setResizable(false);
-        // tilemapFrame.setVisible(true);
+        tilemap = new Tilemap(memory, ppu);
+        tilemapFrame = new JFrame("Tile Map");
+        tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        tilemapFrame.add(tilemap);
+        tilemapFrame.setSize(512, 256);
+        tilemapFrame.setLocation(69, 69);
+        tilemapFrame.setResizable(false);
+        tilemapFrame.setVisible(true);
         int delay = 16; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
@@ -116,6 +117,7 @@ public class Main extends JFrame implements KeyListener {
             // System.out.println("Line: " + memory.getLY());
         }
         ppu.repaint();
+        tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
         int newDelay = 15 - ((int) frameDuration/1000000);

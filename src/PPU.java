@@ -154,7 +154,6 @@ public class PPU extends JPanel {
             // Bit 4: palette number, 0 = from 0xFF48, 1 = from 0xFF49
             // // Bit 0-3: unused
 
-
             int attributes = memory.getMemory(SPRITEADDRESS + indexStart + 3);
             boolean bgPriority = Util.getIthBit(attributes, 7) == 1;
             boolean yFlip = Util.getIthBit(attributes, 6) == 1;
