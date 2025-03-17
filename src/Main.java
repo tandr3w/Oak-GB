@@ -106,7 +106,7 @@ public class Main extends JFrame implements KeyListener {
         // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
         int cyclesThisFrame = 0;
         while (cyclesThisFrame < MAXCYCLES) {
-            int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
+            int cycles = cpu.execute(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
             cyclesThisFrame += cycles;
             updateTimer(cycles);
             ppu.updateGraphics(cycles);

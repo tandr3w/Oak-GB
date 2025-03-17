@@ -97,9 +97,9 @@ public class PPU extends JPanel {
 
             short tileIdentifier;
             if (signed) {
-                tileIdentifier = (short) ((byte) memory.memoryArray[dataPos]);
+                tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
             } else {
-                tileIdentifier = (short) memory.memoryArray[dataPos];
+                tileIdentifier = (short) memory.getMemory(dataPos);
             }
 
             int tileMemLocation = tileDataLocation;

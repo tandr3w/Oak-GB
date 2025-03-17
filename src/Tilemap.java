@@ -40,9 +40,9 @@ public class Tilemap extends JPanel {
                 int dataPos = displayDataLocation + tileX + tileY * 32;
                 short tileIdentifier;
                 if (signed) {
-                    tileIdentifier = (short) ((byte) memory.memoryArray[dataPos]);
+                    tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
                 } else {
-                    tileIdentifier = (short) memory.memoryArray[dataPos];
+                    tileIdentifier = (short) memory.getMemory(dataPos);
                 }
 
                 int tileMemLocation = tileDataLocation;

@@ -144,7 +144,7 @@ public class Memory {
 
     // LCDC commands
     private int getBitFromLCDC(int bitNum) {
-        return ((memoryArray[LCDC_address]) >> bitNum) & 1;
+        return ((getMemory(LCDC_address)) >> bitNum) & 1;
     }
     public int getLCDEnable() {
         return getBitFromLCDC(7);
@@ -172,7 +172,7 @@ public class Memory {
     }
     private void setBitInLCDC(int bitNum, boolean val) {
         int mask = 1 << bitNum;
-        memoryArray[LCDC_address] = mask | memoryArray[LCDC_address];
+        setMemory(LCDC_address, mask | memoryArray[LCDC_address]);
     }
     public void setLCDEnable(boolean val) {
         setBitInLCDC(7, val);
@@ -200,55 +200,55 @@ public class Memory {
     }
 
     public int getSCX(){
-        return memoryArray[SCX_address];
+        return getMemory(SCX_address);
     }
     public int getSCY(){
-        return memoryArray[SCY_address];
+        return getMemory(SCY_address);
     }
     // LY and LYC
     public int getLY() {
-        return memoryArray[LY_address];
+        return getMemory(LY_address);
     }
     public int getLYC() {
-        return memoryArray[LYC_address];
+        return getMemory(LYC_address);
     }
 
     public void setLY(int val) {
-        memoryArray[LY_address] = val;
+        memoryArray[LY_address] = val; // must access array directly
     }
     
     public void setLYC(int val) {
-        memoryArray[LYC_address] = val;
+        setMemory(LYC_address, val);
     }
 
     public int getWY() {
-        return memoryArray[WY_address];
+        return getMemory(WY_address);
     }
 
     public int getWX() {
-        return memoryArray[WX_address];
+        return getMemory(WX_address);
     }
 
     public void setWY(int val) {
-        memoryArray[WY_address] = val;
+        setMemory(WY_address, val);
     }
 
     public void setWX(int val) {
-        memoryArray[WX_address] = val;
+        setMemory(WX_address, val);
     }
 
     public int getPaletteColor(int id, int address){
         if (id == 0b00){
-            return memoryArray[address] & 0b11;
+            return getMemory(address) & 0b11;
         }
         else if (id == 0b01){
-            return (memoryArray[address] & 0b1100) >> 2;
+            return (getMemory(address) & 0b1100) >> 2;
         }
         else if (id == 0b10){
-            return (memoryArray[address] & 0b110000) >> 4;
+            return (getMemory(address) & 0b110000) >> 4;
         }
         else if (id == 0b11){
-            return (memoryArray[address] & 0b11000000) >> 6;
+            return (getMemory(address) & 0b11000000) >> 6;
         }
         else {
             System.out.println("Err: attempted access of invalid palette color ID");
@@ -257,39 +257,39 @@ public class Memory {
     }
 
     public int getLCDStatus() {
-        return memoryArray[STAT_address];
+        return getMemory(STAT_address);
     }
 
     public void setLCDStatus(int val) {
-        memoryArray[STAT_address] = val;
+        setMemory(STAT_address, val);
     }
 
     public boolean isClockEnabled() {
-        return Util.getIthBit(memoryArray[TMC_address], 2) == 1;
+        return Util.getIthBit(getMemory(TMC_address), 2) == 1;
     }
 
     public int getTMC() {
-        return memoryArray[TMC_address];
+        return getMemory(TMC_address);
     }
 
     public int getTMA() {
-        return memoryArray[TMA_address];
+        return getMemory(TMA_address);
     }
 
     public int getTIMA() {
-        return memoryArray[TIMA_address];
+        return getMemory(TIMA_address);
     }
 
     public int getDIV() {
-        return memoryArray[DIV_address];
+        return getMemory(DIV_address);
     }
 
     public void setDIV(int val) {
-        memoryArray[DIV_address] = val;
+        setMemory(DIV_address, val);
     }
 
     public void setTIMA(int val) {
-        memoryArray[TIMA_address] = val;
+        setMemory(TIMA_address, val);
     }
 
     public int getJOYP() {
@@ -297,7 +297,7 @@ public class Memory {
     }
 
     public void setJOYP(int val) {
-        memoryArray[JOYP_address] = val;
+        setMemory(JOYP_address, val);
     }
 
 
@@ -338,7 +338,7 @@ public class Memory {
     }
 
     public void requestInterrupt(int id){
-        memoryArray[0xFF0F] = Util.setBit(memoryArray[0xFF0F], id, true);
+        setMemory(0xFF0F, Util.setBit(getMemory(0xFF0F), id, true));
     }
 
 }
