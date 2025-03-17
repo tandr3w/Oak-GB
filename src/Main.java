@@ -58,11 +58,11 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        // memory.loadROM("ROMs/snake.gb");
+        memory.loadROM("ROMs/2048diff.gb");
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
-        memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
+        // memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -109,8 +109,10 @@ public class Main extends JFrame implements KeyListener {
         // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
         int cyclesThisFrame = 0;
         while (cyclesThisFrame < MAXCYCLES) {
-            int cycles = cpu.execute(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
+            Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
+            int cycles = cpu.execute(instruction);
             // System.out.println(cpu.registers.pc);
+
             // opcodes.printInstruction(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
             cyclesThisFrame += cycles;
             updateTimer(cycles);
@@ -119,7 +121,7 @@ public class Main extends JFrame implements KeyListener {
             // System.out.println("Line: " + memory.getLY());
         }
         ppu.repaint();
-        tilemap.repaint();
+        // tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
         int newDelay = 15 - ((int) frameDuration/1000000);

@@ -241,6 +241,7 @@ public class PPU extends JPanel {
     }
 
     public void updateLCDStatus() {
+        // Todo chekc that lyc=ly is checked after ly is set to 0
         int status = memory.getLCDStatus();
 
         // if LCD is not enabled

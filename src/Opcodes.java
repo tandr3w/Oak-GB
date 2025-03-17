@@ -562,15 +562,22 @@ public class Opcodes {
     
     public void printInstruction(Instruction instruction){
         if (instruction.operandToSet != null){
-            System.out.println(instruction.operation.name() + " " + instruction.operandToSet.name() + " " + instruction.operand.name());
+            System.out.print(instruction.operation.name() + " " + instruction.operandToSet.name() + " " + instruction.operand.name());
         }
         else if (instruction.operand != null){
-            System.out.println(instruction.operation.name() + " " + instruction.operand.name());
+            System.out.print(instruction.operation.name() + " " + instruction.operand.name());
         }
         else {
-            System.out.println(instruction.operation.name());
-
+            System.out.print(instruction.operation.name());
         }
+
+        if (instruction.next_bytes != null){
+            for (int i=0; i<instruction.next_bytes.length; i++){
+                System.out.print(" " + instruction.next_bytes[i]);
+            }
+        }
+
+        System.out.print("\n");
     }
 
 }
