@@ -29,9 +29,19 @@ public class Memory {
     public int joypadState;
 
     public int[] memoryArray;
-    
+    public boolean isMBC1;
+    public boolean isMBC2;
+    public int currentROMBank;
+    public int currentRAMBank;
+    public int[] ramBanks;
+
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
+        isMBC1 = false;
+        isMBC2 = false;
+        ramBanks = new int[0x8000]; // todo check this size
+        currentROMBank = 1;
+        currentRAMBank = 0;
         LCDC_address = 0xFF40; // Settings for display
         STAT_address = 0xFF41;
         SCY_address = 0xFF42; // y position of the background to start drawing from (scroll)
@@ -100,6 +110,15 @@ public class Memory {
             memoryArray[address] = data;
         }
     }
+    public int getMemory(int address){
+        if (address == JOYP_address) {
+            int JOYP = getJoypadState();
+            // System.out.println(JOYP);
+            return JOYP;
+        }
+
+        return memoryArray[address];
+    }
 
     public void DMATransfer(int data){
         int address = data << 8;
@@ -121,16 +140,6 @@ public class Memory {
             state &= d_pad;
         }
         return state;
-    }
-
-    public int getMemory(int address){
-        if (address == JOYP_address) {
-            int JOYP = getJoypadState();
-            // System.out.println(JOYP);
-            return JOYP;
-        }
-
-        return memoryArray[address];
     }
 
     // LCDC commands
@@ -299,9 +308,28 @@ public class Memory {
             long size = ROMFile.length();
             byte[] contents = new byte[(int) size];
             in.read(contents);
-            for (int i=0; i<size; i++){
+            System.out.println("File size: " + Util.hexString((int) size));
+            for (int i=0; i<0x8000; i++){
                 memoryArray[i] = (contents[i] & 0xFF);
             }
+            switch (memoryArray[0x147]){
+                case 1:
+                    isMBC1 = true;
+                    break;
+                case 2:
+                    isMBC1 = true;
+                    break;
+                case 3:
+                    isMBC1 = true;
+                    break;
+                case 5:
+                    isMBC2 = true;
+                    break;
+                case 6:
+                    isMBC2 = true;
+                    break;
+            }
+            System.out.println("Loading " + ROMName + " with mode " + memoryArray[0x147]);
             in.close();
         } catch (IOException e) {
             System.out.println("error");
