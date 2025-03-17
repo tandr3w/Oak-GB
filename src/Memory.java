@@ -39,7 +39,7 @@ public class Memory {
         memoryArray = new int[0xFFFF + 1];
         isMBC1 = false;
         isMBC2 = false;
-        ramBanks = new int[0x8000]; // todo check this size
+        ramBanks = new int[0x100000]; // todo check this size
         currentROMBank = 1;
         currentRAMBank = 0;
         LCDC_address = 0xFF40; // Settings for display
@@ -115,6 +115,15 @@ public class Memory {
             int JOYP = getJoypadState();
             // System.out.println(JOYP);
             return JOYP;
+        }
+        // Read from ROM bank
+        if (address >= 0x4000 && address <= 0x7FFF){
+            return memoryArray[address - 0x4000 + 0x4000*currentROMBank];
+        }
+
+        // Read from RAM bank
+        if (address >= 0xA000 && address <= 0xBFFF){
+            return ramBanks[address - 0xA000 + (currentRAMBank*0x2000)];
         }
 
         return memoryArray[address];
