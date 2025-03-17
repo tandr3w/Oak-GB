@@ -34,6 +34,8 @@ public class Memory {
     public int currentROMBank;
     public int currentRAMBank;
     public int[] ramBanks;
+    public boolean ramEnabled;
+    public boolean romBankingMode;
 
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
@@ -42,6 +44,8 @@ public class Memory {
         ramBanks = new int[0x100000]; // todo check this size
         currentROMBank = 1;
         currentRAMBank = 0;
+        ramEnabled = false;
+        romBankingMode = false;
         LCDC_address = 0xFF40; // Settings for display
         STAT_address = 0xFF41;
         SCY_address = 0xFF42; // y position of the background to start drawing from (scroll)
@@ -93,6 +97,11 @@ public class Memory {
             // Handle ROM banking
             handleROMBanking(address, data);
         }
+        if (address >= 0xA000 && address <= 0xBFFF){
+            if (ramEnabled){
+                memoryArray[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
+            }
+        }
         if (address >= 0xFEA0 && address < 0xFEFF){
             return;
         }
@@ -132,16 +141,53 @@ public class Memory {
 
     public void handleROMBanking(int address, int data){
         if (address < 0x2000){ // Enable RAM bank writing
-
+            if (isMBC1){
+                if ((data & 0xF) == 0xA){
+                    ramEnabled = true;
+                }
+                if ((data & 0xF) == 0){
+                    ramEnabled = false;
+                }
+            }
         }
         else if (address < 0x4000){ // ROM bank change
-
+            if (isMBC1){
+                // Change lower 5 bits of rom bank
+                int lower5 = data & 0b11111;
+                currentROMBank &= 0b11100000;
+                currentROMBank |= lower5;
+                if (currentROMBank == 0){
+                    currentROMBank = 1; // ROM bank cannot be 0
+                }
+            }
+            else if (isMBC2){
+                currentROMBank = data & 0xF;
+                if (currentROMBank == 0){
+                    currentROMBank = 1; // ROM bank cannot be 0
+                }
+            }
         }
         else if (address < 0x6000){ // RAM or ROM bank change based on mode
-
+            if (isMBC1){
+                if (romBankingMode){
+                    currentROMBank &= 0b11111; // Unset first 3 bits
+                    currentROMBank |= (data & 0b11100000); 
+                    if (currentROMBank == 0){
+                        currentROMBank = 1; // ROM bank cannot be 0
+                    }
+                }
+                else {
+                    currentRAMBank = data & 0b11;
+                }
+            }
         }
         else if (address < 0x8000){ // Change RAM/ROM bank mode
-            
+            if (isMBC1){
+                romBankingMode = (data & 1) == 0;
+                if (romBankingMode){
+                    currentROMBank = 0;
+                }
+            }
         }
         else {
             System.out.println("ERR: Invalid address for ROM banking call");
