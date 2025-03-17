@@ -29,6 +29,7 @@ public class Memory {
     public int joypadState;
 
     public int[] memoryArray;
+    public int[] cartridge;
     public boolean isMBC1;
     public boolean isMBC2;
     public int currentROMBank;
@@ -41,6 +42,7 @@ public class Memory {
         memoryArray = new int[0xFFFF + 1];
         isMBC1 = false;
         isMBC2 = false;
+        cartridge = new int[0x100000];
         ramBanks = new int[0x100000]; // todo check this size
         currentROMBank = 1;
         currentRAMBank = 0;
@@ -129,7 +131,7 @@ public class Memory {
         }
         // Read from ROM bank
         if (address >= 0x4000 && address <= 0x7FFF){
-            return memoryArray[address - 0x4000 + 0x4000*currentROMBank];
+            return cartridge[address - 0x4000 + 0x4000*currentROMBank];
         }
 
         // Read from RAM bank
@@ -384,8 +386,11 @@ public class Memory {
             byte[] contents = new byte[(int) size];
             in.read(contents);
             System.out.println("File size: " + Util.hexString((int) size));
-            for (int i=0; i<0x8000; i++){
+            for (int i=0; i<0x4000; i++){
                 memoryArray[i] = (contents[i] & 0xFF);
+            }
+            for (int i=0; i<size; i++){
+                cartridge[i] = (contents[i] & 0xFF);
             }
             switch (memoryArray[0x147]){
                 case 1:
