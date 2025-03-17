@@ -95,6 +95,9 @@ public class Memory {
     }
 
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
+        // if (address != LY_address && address != LCDC_address && address != STAT_address && address != 0xFF04){
+        //     System.out.println(Util.hexString(address));
+        // }
         if (address < 0x8000){
             // Handle ROM banking
             handleROMBanking(address, data);

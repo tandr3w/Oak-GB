@@ -22,7 +22,7 @@ public class Main extends JFrame implements KeyListener {
     private int dividerCounter;
 
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905*10;
+    private int MAXCYCLES = 69905;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -62,7 +62,7 @@ public class Main extends JFrame implements KeyListener {
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
-        memory.loadROM("ROMs/2048.gb");
+        memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -110,6 +110,8 @@ public class Main extends JFrame implements KeyListener {
         int cyclesThisFrame = 0;
         while (cyclesThisFrame < MAXCYCLES) {
             int cycles = cpu.execute(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
+            // System.out.println(cpu.registers.pc);
+            // opcodes.printInstruction(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
             cyclesThisFrame += cycles;
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
