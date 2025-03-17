@@ -59,7 +59,7 @@ public class Main extends JFrame implements KeyListener {
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
         // memory.loadROM("ROMs/snake.gb");
-        memory.loadROM("ROMs/dmg-acid2.gb");
+        memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_bank1.gb");
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -123,6 +123,13 @@ public class Main extends JFrame implements KeyListener {
         else {
             gameLoop.setDelay(0);
         }
+        // if (cpu.registers.b == 3 && cpu.registers.c == 5 && cpu.registers.d == 8 && cpu.registers.e == 13 && cpu.registers.h == 21 && cpu.registers.l == 34){
+        //     System.out.println("TEST PASSED");
+        // }
+        // else if (cpu.registers.b == 0x42 && cpu.registers.c == 0x42 && cpu.registers.d == 0x42 && cpu.registers.e == 0x42 && cpu.registers.h == 0x42 && cpu.registers.l == 0x42){
+        //     System.out.println("TEST FAILED");
+        // }
+        
     }
 
 
