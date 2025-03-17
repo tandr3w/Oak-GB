@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.function.LongToIntFunction;
+
+
 
 public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
@@ -18,11 +21,11 @@ public class Main extends JFrame implements KeyListener {
     private int timerCounter;
     private int dividerCounter;
 
-    private boolean initLoad = true;
+    // private boolean initLoad = true;
     private int MAXCYCLES = 69905;
-    private boolean DEBUG = false;
+    // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
-    private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
+    // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
 
     public Main() {
         addKeyListener(this);
@@ -79,15 +82,14 @@ public class Main extends JFrame implements KeyListener {
         // tilemapFrame.setLocation(69, 69);
         // tilemapFrame.setResizable(false);
         // tilemapFrame.setVisible(true);
-        int delay = 0; // 1000 / 60 --> 16.6667
+        int delay = 16; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
     }
 
     public void keyPressed(KeyEvent e){
         joypad.updateJoypadPressed(e);
-
-        pressesToTrigger += 1;
+        // pressesToTrigger += 1;
     }
 
     public void keyReleased(KeyEvent e){
@@ -96,27 +98,30 @@ public class Main extends JFrame implements KeyListener {
     }
 
     public void keyTyped(KeyEvent e){
-
     }
 
     private void runFrame() {
-        // System.out.println(memory.getJOYP());
-        if (true){
-            
-            
-            // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
-            // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
-
-            int cyclesThisFrame = 0;
-            while (cyclesThisFrame < MAXCYCLES) {
-                int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
-                cyclesThisFrame += cycles;
-                updateTimer(cycles);
-                ppu.updateGraphics(cycles);
-                cpu.doInterrupts();
-                // System.out.println("Line: " + memory.getLY());
-            }
-            ppu.repaint();
+        long startTime = System.nanoTime();
+        // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
+        // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
+        int cyclesThisFrame = 0;
+        while (cyclesThisFrame < MAXCYCLES) {
+            int cycles = cpu.execute(opcodes.byteToInstruction(memory.memoryArray[cpu.registers.pc]));
+            cyclesThisFrame += cycles;
+            updateTimer(cycles);
+            ppu.updateGraphics(cycles);
+            cpu.doInterrupts();
+            // System.out.println("Line: " + memory.getLY());
+        }
+        ppu.repaint();
+        long endTime = System.nanoTime();
+        long frameDuration = endTime - startTime;
+        int newDelay = 15 - ((int) frameDuration/1000000);
+        if (newDelay > 0){
+            gameLoop.setDelay(newDelay);
+        }
+        else {
+            gameLoop.setDelay(0);
         }
     }
 
@@ -170,17 +175,4 @@ public class Main extends JFrame implements KeyListener {
     //         }
     //     });
     // }
-
-
-    /*
-    
-    move this somewhere later
-    TMAFrequencies = new int[] {
-        4096,
-        262144,
-        65536,
-        16384,
-    };
-
-    */
 }

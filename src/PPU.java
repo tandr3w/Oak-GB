@@ -10,7 +10,7 @@ public class PPU extends JPanel {
     // the GB stores colours as 2 bit numbers that we have to translate in to RGB colours
     int[][] colourPaletteTranslator;
     int[][] greenColourPalette;
-    boolean green = false; // chooses which palette to use
+    boolean green = true; // chooses which palette to use
     int[][][] screenData;
     int prevLY = -1;
     int prevLYC = -1;
