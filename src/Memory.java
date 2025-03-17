@@ -32,21 +32,50 @@ public class Memory {
     public int[] cartridge;
     public boolean isMBC1;
     public boolean isMBC2;
+    public boolean isMBC3;
     public int currentROMBank;
     public int currentRAMBank;
     public int[] ramBanks;
     public boolean ramEnabled;
+    public boolean rtcEnabled;
     public boolean romBankingMode;
+    public boolean rtcMappingMode; // MBC3
+    
+    enum RTCRegister  {
+        S,
+        M,
+        H,
+        DL,
+        DH,
+    }
+
+    public int S;
+    public int M;
+    public int H;
+    public int DL;
+    public int DH;
+
+    public int latchedS;
+    public int latchedM;
+    public int latchedH;
+    public int latchedDL;
+    public int latchedDH;
+    public boolean lastWrittenValueIsZero;
+
+    public RTCRegister selectedRTCRegister; 
 
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
         isMBC1 = false;
+        lastWrittenValueIsZero = false;
         isMBC2 = false;
         cartridge = new int[0x100000];
         ramBanks = new int[0x100000]; // todo check this size
         currentROMBank = 1;
         currentRAMBank = 0;
         ramEnabled = false;
+        rtcEnabled = false;
+        rtcMappingMode = false;
         romBankingMode = false;
         LCDC_address = 0xFF40; // Settings for display
         STAT_address = 0xFF41;
@@ -94,14 +123,49 @@ public class Memory {
         memoryArray[JOYP_address] = 0xCF;
     }
 
+
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
+        // restricted memory
         if (address < 0x8000){
             // Handle ROM banking
             handleROMBanking(address, data);
         }
+
         else if (address >= 0xA000 && address <= 0xBFFF){
-            if (ramEnabled){
-                ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
+            if (isMBC1 || isMBC2) {
+                if (ramEnabled){
+                    ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
+                }
+            }
+
+            if (isMBC3) {
+                // either ram bank or register
+                if (!rtcMappingMode){
+                    if (ramEnabled){
+                        ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
+                    }
+                }
+                else {
+                    if (rtcEnabled){
+                        switch (selectedRTCRegister){
+                            case RTCRegister.S:
+                                S = data;
+                                break;
+                            case RTCRegister.M:
+                                M = data;
+                                break;
+                            case RTCRegister.H:
+                                H = data;
+                                break;
+                            case RTCRegister.DL:
+                                DL = data;
+                                break;
+                            case RTCRegister.DH:
+                                DH = data;
+                                break;
+                        }
+                    }
+                }
             }
         }
         else if (address >= 0xFEA0 && address < 0xFEFF){
@@ -111,6 +175,8 @@ public class Memory {
             memoryArray[address] = data;
             setMemory(address-0x2000, data);
         }
+
+
         else if (address == LY_address) // Reset LY if attempted write to it
         {
             memoryArray[address] = 0;
@@ -135,7 +201,35 @@ public class Memory {
 
         // Read from RAM bank
         if (address >= 0xA000 && address <= 0xBFFF){
-            return ramBanks[address - 0xA000 + (currentRAMBank*0x2000)];
+            if (!rtcMappingMode){
+                if (ramEnabled){
+                    return ramBanks[address - 0xA000 + (currentRAMBank*0x2000)];
+                }
+                else {
+                    return 0xFF;
+                }
+            }
+            else {
+                if (rtcEnabled){
+                    // Return value from register
+                    switch (selectedRTCRegister){
+                        case RTCRegister.S:
+                            return latchedS;
+                        case RTCRegister.M:
+                            return latchedM;
+                        case RTCRegister.H:
+                            return latchedH;
+                        case RTCRegister.DL:
+                            return latchedDL;
+                        case RTCRegister.DH:
+                            return latchedDH;
+                    }
+                }
+                else {
+                    return 0xFF;
+                }
+
+            }
         }
 
         return memoryArray[address];
@@ -149,6 +243,16 @@ public class Memory {
                 }
                 if ((data & 0xF) == 0){
                     ramEnabled = false;
+                }
+            }
+            if (isMBC3){
+                if ((data & 0xF) == 0xA){
+                    ramEnabled = true;
+                    rtcEnabled = true;
+                }
+                if ((data & 0xF) == 0){
+                    ramEnabled = false;
+                    rtcEnabled = false;
                 }
             }
         }
@@ -168,6 +272,12 @@ public class Memory {
                     currentROMBank = 1; // ROM bank cannot be 0
                 }
             }
+            else if (isMBC3){
+                currentROMBank = data & 0xF;
+                if (currentROMBank == 0){
+                    currentROMBank = 1; // ROM bank cannot be 0
+                }
+            }
         }
         else if (address < 0x6000){ // RAM or ROM bank change based on mode
             if (isMBC1){
@@ -182,12 +292,54 @@ public class Memory {
                     currentRAMBank = data & 0b11;
                 }
             }
+            else if (isMBC3) {
+                if (data <= 7){
+                    currentRAMBank = data;
+                    rtcMappingMode = false;
+                }
+                else {
+                    rtcMappingMode = true;
+                    switch (data){
+                        case 0x08:
+                            selectedRTCRegister = RTCRegister.S;
+                            break;
+                        case 0x09:
+                            selectedRTCRegister = RTCRegister.M;
+                            break;
+                        case 0x0A:
+                            selectedRTCRegister = RTCRegister.H;
+                            break;
+                        case 0x0B:
+                            selectedRTCRegister = RTCRegister.DL;
+                            break;
+                        case 0x0C:
+                            selectedRTCRegister = RTCRegister.DH;
+                            break;
+                    }
+                    // RTC stuff
+                }
+            }
         }
         else if (address < 0x8000){ // Change RAM/ROM bank mode
             if (isMBC1){
                 romBankingMode = (data & 1) == 0;
                 if (romBankingMode){
                     currentROMBank = 0;
+                }
+            }
+            else if (isMBC3){
+                if (lastWrittenValueIsZero && data == 1){
+                    latchedS = S;
+                    latchedM = M;
+                    latchedH = H;
+                    latchedDL = DL;
+                    latchedDH = DH;
+                }
+                if (data == 0){
+                    lastWrittenValueIsZero = true;
+                }
+                else {
+                    lastWrittenValueIsZero = false;
                 }
             }
         }
@@ -200,7 +352,7 @@ public class Memory {
         int address = data << 8;
         for (int i = 0; i < 0xA0; i++)
         {
-          setMemory(0xFE00+i, getMemory(address+i));
+            setMemory(0xFE00+i, getMemory(address+i));
         }
     }
 
@@ -407,6 +559,21 @@ public class Memory {
                 case 6:
                     isMBC2 = true;
                     break;
+                case 0x0F:
+                    isMBC3 = true;
+                    break;
+                case 0x10:
+                    isMBC3 = true;
+                    break;   
+                case 0x11:
+                    isMBC3 = true;
+                    break;     
+                case 0x12:
+                    isMBC3 = true;
+                    break;       
+                case 0x13:
+                    isMBC3 = true;
+                    break;                         
             }
             System.out.println("Loading " + ROMName + " with mode " + memoryArray[0x147]);
             in.close();

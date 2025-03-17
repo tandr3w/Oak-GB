@@ -22,7 +22,7 @@ public class Main extends JFrame implements KeyListener {
     private int dividerCounter;
 
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905*10;
+    private int MAXCYCLES = 69905;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -62,7 +62,7 @@ public class Main extends JFrame implements KeyListener {
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
-        memory.loadROM("ROMs/2048.gb");
+        memory.loadROM("ROMs/tetris.gb");
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
@@ -117,7 +117,7 @@ public class Main extends JFrame implements KeyListener {
             // System.out.println("Line: " + memory.getLY());
         }
         ppu.repaint();
-        tilemap.repaint();
+        // tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
         int newDelay = 15 - ((int) frameDuration/1000000);
@@ -170,6 +170,10 @@ public class Main extends JFrame implements KeyListener {
             }
             memory.setTIMA((memory.getTIMA() + 1) & 0xFF);
         }
+    }
+
+    public void updateMBC3() {
+
     }
 
     public static void main(String[] args) {
