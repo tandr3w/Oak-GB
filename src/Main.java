@@ -25,7 +25,7 @@ public class Main extends JFrame implements KeyListener {
 
     public int bruh = 0;
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905;
+    private int MAXCYCLES = 69905*2;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -61,8 +61,8 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/adjustris.gb");
-        // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
+        memory.loadROM("ROMs/Zelda.gb");
+        // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
         // memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");

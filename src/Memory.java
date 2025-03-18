@@ -69,8 +69,8 @@ public class Memory {
         isMBC1 = false;
         lastWrittenValueIsZero = false;
         isMBC2 = false;
-        cartridge = new int[0x100000];
-        ramBanks = new int[0x100000]; // todo check this size
+        cartridge = new int[0x200000];
+        ramBanks = new int[0x200000]; // todo check this size
         currentROMBank = 1;
         currentRAMBank = 0;
         ramEnabled = false;
