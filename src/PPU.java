@@ -2,6 +2,8 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
 public class PPU extends JPanel {
     Memory memory;
     int[] spriteBuffer;
@@ -18,9 +20,14 @@ public class PPU extends JPanel {
 
     int remainingCycles; // Number from 0 - 456; represents T-cycles
     int upscalingFactor = 3;
-    
-    public PPU(Memory memory) {
+    BufferedImage bi;
+    ImageIcon icon;
 
+
+    public PPU(Memory memory) {
+        bi = new BufferedImage(160, 144, BufferedImage.TYPE_INT_RGB);
+        icon = new ImageIcon(bi);
+        add(new JLabel(icon));
         this.memory = memory;
         remainingCycles = 456;
         // backgroundFIFO = new Queue(16);
@@ -234,12 +241,14 @@ public class PPU extends JPanel {
     }
 
     public void renderScreen(Graphics g) {
+
         for (int y = 0; y < 144; y++) {
             for (int x = 0; x < 160; x++) {
                 int[] rgb = screenData[y][x];
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
-                g.setColor(pixelColor);
-                g.fillRect(x * upscalingFactor, y * upscalingFactor, upscalingFactor, upscalingFactor);
+                bi.setRGB(x, y, pixelColor.getRGB());
+                // g.setColor(pixelColor);
+                // g.fillRect(x * upscalingFactor, y * upscalingFactor, upscalingFactor, upscalingFactor);
             }
         }
     }
