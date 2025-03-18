@@ -28,6 +28,7 @@ public class PPU extends JPanel {
         bi = new BufferedImage(160*upscalingFactor, 144*upscalingFactor, BufferedImage.TYPE_INT_RGB);
         icon = new ImageIcon(bi);
         add(new JLabel(icon));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         this.memory = memory;
         remainingCycles = 456;
         // backgroundFIFO = new Queue(16);
