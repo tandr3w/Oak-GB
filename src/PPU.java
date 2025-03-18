@@ -17,7 +17,8 @@ public class PPU extends JPanel {
     int internalWindowCounter = 0;
 
     int remainingCycles; // Number from 0 - 456; represents T-cycles
-
+    int upscalingFactor = 3;
+    
     public PPU(Memory memory) {
 
         this.memory = memory;
@@ -40,7 +41,7 @@ public class PPU extends JPanel {
             colourPaletteTranslator = greenColourPalette;
         }
         screenData = new int[144][160][3];
-        setPreferredSize(new Dimension(160, 144));
+        setPreferredSize(new Dimension(160*upscalingFactor, 144*upscalingFactor));
     }
 
     public void drawScanlineBG(){
@@ -235,10 +236,11 @@ public class PPU extends JPanel {
                 int[] rgb = screenData[y][x];
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
                 g.setColor(pixelColor);
-                g.fillRect(x, y, 1, 1);
+                g.fillRect(x * upscalingFactor, y * upscalingFactor, upscalingFactor, upscalingFactor);
             }
         }
     }
+    
 
     public void updateLCDStatus() {
         // Todo chekc that lyc=ly is checked after ly is set to 0
@@ -290,7 +292,6 @@ public class PPU extends JPanel {
         }
 
         if ((mode != prevMode) && reqInt) {
-            System.out.println(memory.getLCDEnable());
             memory.requestInterrupt(1);
         }
         

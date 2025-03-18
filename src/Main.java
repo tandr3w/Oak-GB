@@ -61,7 +61,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/Zelda.gb");
+        memory.loadROM("ROMs/tetris.gb");
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
@@ -70,7 +70,6 @@ public class Main extends JFrame implements KeyListener {
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
         setIconImage(gameboyIcon.getImage());
-        setSize(160, 144);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,14 +79,14 @@ public class Main extends JFrame implements KeyListener {
         ppu.requestFocus();
         setVisible(true);
 
-        tilemap = new Tilemap(memory, ppu);
-        tilemapFrame = new JFrame("Tile Map");
-        tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        tilemapFrame.add(tilemap);
-        tilemapFrame.setSize(512, 256);
-        tilemapFrame.setLocation(69, 69);
-        tilemapFrame.setResizable(false);
-        tilemapFrame.setVisible(true);
+        // tilemap = new Tilemap(memory, ppu);
+        // tilemapFrame = new JFrame("Tile Map");
+        // tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // tilemapFrame.add(tilemap);
+        // tilemapFrame.setSize(512, 256);
+        // tilemapFrame.setLocation(69, 69);
+        // tilemapFrame.setResizable(false);
+        // tilemapFrame.setVisible(true);
         int delay = 16; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
