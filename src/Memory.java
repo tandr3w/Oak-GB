@@ -40,6 +40,7 @@ public class Memory {
     public boolean rtcEnabled;
     public boolean romBankingMode;
     public boolean rtcMappingMode; // MBC3
+    public int ramSize;
     
     enum RTCRegister  {
         S,
@@ -121,6 +122,7 @@ public class Memory {
         memoryArray[IE_address] = 0x00;
 
         memoryArray[JOYP_address] = 0xCF;
+        ramSize = 0;
     }
 
 
@@ -256,12 +258,19 @@ public class Memory {
             }
             if (isMBC3){
                 if ((data & 0xF) == 0xA){
-                    ramEnabled = true;
+                    if (ramSize > 0){
+                        ramEnabled = true;
+                    }
                     rtcEnabled = true;
                 }
-                if ((data & 0xF) == 0){
-                    ramEnabled = false;
+                else if ((data & 0xF) == 0){
+                    if (ramSize > 0){
+                        ramEnabled = false;
+                    }
                     rtcEnabled = false;
+                }
+                else {
+                    System.out.println("Invalid rom banking handle for address < 0x2000");
                 }
             }
         }
@@ -282,7 +291,7 @@ public class Memory {
                 }
             }
             else if (isMBC3){
-                currentROMBank = data & 0xF;
+                currentROMBank = data & 0x7F;
                 if (currentROMBank == 0){
                     currentROMBank = 1; // ROM bank cannot be 0
                 }
@@ -302,28 +311,31 @@ public class Memory {
                 }
             }
             else if (isMBC3) {
-                if (data <= 7){
+                if (data <= 3){
                     currentRAMBank = data;
                     rtcMappingMode = false;
                 }
-                else {
-                    rtcMappingMode = true;
-                    switch (data){
-                        case 0x08:
-                            selectedRTCRegister = RTCRegister.S;
-                            break;
-                        case 0x09:
-                            selectedRTCRegister = RTCRegister.M;
-                            break;
-                        case 0x0A:
-                            selectedRTCRegister = RTCRegister.H;
-                            break;
-                        case 0x0B:
-                            selectedRTCRegister = RTCRegister.DL;
-                            break;
-                        case 0x0C:
-                            selectedRTCRegister = RTCRegister.DH;
-                            break;
+                else if ((data >= 8) && (data <= 0x0C)){
+                    if (rtcEnabled){
+                        rtcMappingMode = true;
+                        switch (data){
+                            case 0x08:
+                                selectedRTCRegister = RTCRegister.S;
+                                break;
+                            case 0x09:
+                                selectedRTCRegister = RTCRegister.M;
+                                break;
+                            case 0x0A:
+                                selectedRTCRegister = RTCRegister.H;
+                                break;
+                            case 0x0B:
+                                selectedRTCRegister = RTCRegister.DL;
+                                break;
+                            case 0x0C:
+                                selectedRTCRegister = RTCRegister.DH;
+                                break;
+                        }
+                        currentRAMBank = -1;
                     }
                     // RTC stuff
                 }
@@ -585,6 +597,7 @@ public class Memory {
                     break;                         
             }
             System.out.println("Loading " + ROMName + " with mode " + memoryArray[0x147]);
+            ramSize = memoryArray[0x149];
             in.close();
         } catch (IOException e) {
             System.out.println("error");
