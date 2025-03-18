@@ -209,6 +209,7 @@ public class Memory {
 
         // Read from RAM bank
         if (address >= 0xA000 && address <= 0xBFFF){
+            // TODO: Check if MBC3
             if (!rtcMappingMode){
                 if (ramEnabled){
                     return ramBanks[address - 0xA000 + (currentRAMBank*0x2000)];
