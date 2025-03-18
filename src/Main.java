@@ -61,7 +61,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/PokemonReal.gb");
+        memory.loadROM("ROMs/tetris.gb");
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
@@ -71,6 +71,7 @@ public class Main extends JFrame implements KeyListener {
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
         setIconImage(gameboyIcon.getImage());
         setLocationRelativeTo(null);
+        setLocation(400,150);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(ppu);
