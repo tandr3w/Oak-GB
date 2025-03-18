@@ -61,7 +61,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/2048.gb");
+        memory.loadROM("ROMs/wario.gb");
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
@@ -94,8 +94,6 @@ public class Main extends JFrame implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e){
-        memory.setMemory(0xFFFF, 1);
-
         joypad.updateJoypadPressed(e);
         // pressesToTrigger += 1;
     }
@@ -169,7 +167,7 @@ public class Main extends JFrame implements KeyListener {
             // System.out.println("Line: " + memory.getLY());
         }
         ppu.repaint();
-        tilemap.repaint();
+        // tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
         int newDelay = 0;

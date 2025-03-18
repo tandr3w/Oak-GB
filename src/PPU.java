@@ -250,7 +250,7 @@ public class PPU extends JPanel {
             internalWindowCounter = 0;
             remainingCycles = 456;
             status &= 0b11111100;
-            status = Util.setBit(status, 0, true);
+            // status = Util.setBit(status, 0, true); // TODO: FIGURE THIS PART OUT
             memory.setLCDStatus(status);
             return;
         }
