@@ -554,7 +554,7 @@ public class Opcodes {
 
     public Instruction byteToInstruction(int readByte) {
         if (opcodesArray[readByte] == null){
-            // System.out.println("Opcode " + Util.hexByte(readByte) + " is not implemented yet.");
+            System.out.println("Invalid opcode " + Util.hexByte(readByte) + " called");
             return null;
         }
         return opcodesArray[readByte];

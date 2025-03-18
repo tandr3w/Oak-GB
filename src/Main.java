@@ -12,8 +12,8 @@ public class Main extends JFrame implements KeyListener {
     private PPU ppu;
     private Joypad joypad;
 
-    private Tilemap tilemap;
-    private JFrame tilemapFrame;
+    // private Tilemap tilemap;
+    // private JFrame tilemapFrame;
 
     private Timer gameLoop;
     private int[] TMAFrequencies;
@@ -25,7 +25,7 @@ public class Main extends JFrame implements KeyListener {
 
     public int bruh = 0;
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905;
+    private int MAXCYCLES = 69905*2;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -37,7 +37,7 @@ public class Main extends JFrame implements KeyListener {
         joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
-        tilemap = new Tilemap(memory, ppu);
+        // tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
             4096,
@@ -61,7 +61,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/PokemonReal.gb");
+        memory.loadROM("ROMs/Zelda.gb");
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
@@ -105,6 +105,10 @@ public class Main extends JFrame implements KeyListener {
     public void keyTyped(KeyEvent e){
     }
 
+    public void printInfo(){
+        System.out.println("IME: " + cpu.interrupts + " FF40: " + Util.hexString(memory.getMemory(0xFF40)) + " FF41: " + Util.hexString(memory.getMemory(0xFF41)) + " FF0F: " + Util.hexString(memory.getMemory(0xFF0F)) + " FFFF: " + Util.hexString(memory.getMemory(0xFFFF)));
+    }
+
     private void runFrame() {
         long startTime = System.nanoTime();
         // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
@@ -112,6 +116,16 @@ public class Main extends JFrame implements KeyListener {
         int cyclesThisFrame = 0;
         while (cyclesThisFrame < MAXCYCLES) {
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
+
+            // if (bruh < 5 && cpu.registers.pc == 0x40){
+            //     System.out.println(totalExecutes);
+            //     cpu.registers.printRegisters();
+            //     printInfo();
+            //     bruh += 1;
+            // }
+            // if (bruh > 5){
+            //     while (true){}
+            // }
             // if (cpu.registers.pc == 0x313){
             //     toPrint = 30;
             // }

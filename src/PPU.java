@@ -189,14 +189,17 @@ public class PPU extends JPanel {
                     int bit1 = Util.getIthBit(byte1, whichBit);
                     int bit2 = Util.getIthBit(byte2, whichBit);
                     int colorID;
+                    int paletteID;
                     if (palette){
+                        paletteID = (bit2 << 1) | bit1;
                         colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address+1); // accesses OBP instead of BGP
                     }
                     else {
+                        paletteID = (bit2 << 1) | bit1;
                         colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address);
                     }
 
-                    if (colorID == 0){
+                    if (paletteID == 0){
                         continue; // Don't render white pixels
                     }
                     if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
