@@ -61,7 +61,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/wario.gb");
+        memory.loadROM("ROMs/adjustris.gb");
         // memory.loadROM("ROMs/mooneye-test-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
@@ -170,7 +170,7 @@ public class Main extends JFrame implements KeyListener {
         // tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
-        int newDelay = 0;
+        int newDelay = 15 - ((int) frameDuration/1000000);
         if (newDelay > 0){
             gameLoop.setDelay(newDelay);
         }
