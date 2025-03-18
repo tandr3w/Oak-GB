@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.function.LongToIntFunction;
+import java.awt.event.WindowAdapter;
+
 
 
 
@@ -47,7 +49,11 @@ public class Main extends JFrame implements KeyListener {
         };
         CLOCKSPEED = 4194304;
         updateTimerCounter(); // Initializes the value for timerCounter
-
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                // call terminate
+            }
+        });
         // Divider register is similar to timer
         // counts from 0 - 255
         // an interrupt is NOT called upon overflow (unlike the timer)
@@ -61,7 +67,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/tetris.gb");
+        memory.loadROM("ROMs/PokemonReal.gb");
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
@@ -95,6 +101,12 @@ public class Main extends JFrame implements KeyListener {
 
     public void keyPressed(KeyEvent e){
         joypad.updateJoypadPressed(e);
+        if (e.getKeyCode() == KeyEvent.VK_EQUALS){
+            MAXCYCLES += 69905/2;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_MINUS){
+            MAXCYCLES -= 69905/2;
+        }
         // pressesToTrigger += 1;
     }
 
@@ -108,6 +120,10 @@ public class Main extends JFrame implements KeyListener {
 
     public void printInfo(){
         System.out.println("IME: " + cpu.interrupts + " FF40: " + Util.hexString(memory.getMemory(0xFF40)) + " FF41: " + Util.hexString(memory.getMemory(0xFF41)) + " FF0F: " + Util.hexString(memory.getMemory(0xFF0F)) + " FFFF: " + Util.hexString(memory.getMemory(0xFFFF)));
+    }
+
+    private void closeFunction(){
+
     }
 
     private void runFrame() {
