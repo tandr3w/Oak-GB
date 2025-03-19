@@ -272,7 +272,6 @@ public class Memory {
                     }
                 }
                 else {
-                    System.out.println("Invalid rom banking handle for address < 0x2000");
                 }
             }
             if (isMBC3){
@@ -289,7 +288,6 @@ public class Memory {
                     rtcEnabled = false;
                 }
                 else {
-                    System.out.println("Invalid rom banking handle for address < 0x2000");
                 }
             }
         }
@@ -655,7 +653,7 @@ public class Memory {
 
     public void saveOnClose() {
         // TODO: check support saving for other MBCs and remove early return
-        if (!isMBC3) {
+        if (!isMBC3 && !isMBC1) {
             return;
         }
         String ROMName = extractRomName(ROMPath);
