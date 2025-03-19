@@ -1,11 +1,5 @@
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.function.LongToIntFunction;
-import java.awt.event.WindowAdapter;
-
-
-
+import java.awt.event.*;
 
 public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
@@ -51,9 +45,10 @@ public class Main extends JFrame implements KeyListener {
         updateTimerCounter(); // Initializes the value for timerCounter
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                // call terminate
+                memory.saveOnClose();
             }
         });
+
         // Divider register is similar to timer
         // counts from 0 - 255
         // an interrupt is NOT called upon overflow (unlike the timer)
@@ -120,10 +115,6 @@ public class Main extends JFrame implements KeyListener {
 
     public void printInfo(){
         System.out.println("IME: " + cpu.interrupts + " FF40: " + Util.hexString(memory.getMemory(0xFF40)) + " FF41: " + Util.hexString(memory.getMemory(0xFF41)) + " FF0F: " + Util.hexString(memory.getMemory(0xFF0F)) + " FFFF: " + Util.hexString(memory.getMemory(0xFFFF)));
-    }
-
-    private void closeFunction(){
-
     }
 
     private void runFrame() {

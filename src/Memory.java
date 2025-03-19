@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class Memory {
     // Hardware register addresses
@@ -63,7 +65,9 @@ public class Memory {
     public int latchedDH;
     public boolean lastWrittenValueIsZero;
 
-    public RTCRegister selectedRTCRegister; 
+    public RTCRegister selectedRTCRegister;
+
+    public String ROMPath;
 
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
@@ -72,6 +76,7 @@ public class Memory {
         isMBC2 = false;
         cartridge = new int[0x200000];
         ramBanks = new int[0x200000]; // todo check this size
+        loadSave();
         currentROMBank = 1;
         currentRAMBank = 0;
         ramEnabled = false;
@@ -549,10 +554,10 @@ public class Memory {
         setMemory(JOYP_address, val);
     }
 
-
-    public void loadROM(String ROMName) {
+    public void loadROM(String ROMPath) {
+        this.ROMPath = ROMPath;
         try {
-            File ROMFile = new File(ROMName);
+            File ROMFile = new File(ROMPath);
             FileInputStream in = new FileInputStream(ROMFile);
             long size = ROMFile.length();
             byte[] contents = new byte[(int) size];
@@ -594,9 +599,9 @@ public class Memory {
                     break;       
                 case 0x13:
                     isMBC3 = true;
-                    break;                         
+                    break;
             }
-            System.out.println("Loading " + ROMName + " with mode " + memoryArray[0x147]);
+            System.out.println("Loading " + ROMPath + " with mode " + memoryArray[0x147]);
             ramSize = memoryArray[0x149];
             in.close();
         } catch (IOException e) {
@@ -609,6 +614,125 @@ public class Memory {
         // System.out.println("REQUESTING INTERRUPT");
         // System.out.println("IF IS CURRENTLY: " + getMemory(0xFF0F));
         setMemory(0xFF0F, Util.setBit(getMemory(0xFF0F), id, true));
+    }
+
+    public String extractRomName(String ROMPath) {
+        String ROMName = Paths.get(ROMPath).getFileName().toString();
+        // String ROMName = ROMPath;
+        ROMName = ROMName.substring(0, ROMName.length() - 3); // Remove .gb
+        return ROMName;
+    }
+
+    public int getBatteryRamSize() {
+        int batteryRAMSize;
+        switch(ramSize) {
+            case 1: batteryRAMSize = 2 * 1024; break;
+            case 2: batteryRAMSize = 8 * 1024; break; // Commmon for mbc2
+            case 3: batteryRAMSize = 32 * 1024; break;
+            case 4: batteryRAMSize = 128 * 1024; break;
+            case 5: batteryRAMSize = 64 * 1024; break;
+            default: batteryRAMSize = 0; break;
+        }
+        return batteryRAMSize;
+    }
+
+    public void saveOnClose() {
+        // TODO: check support saving for other MBCs and remove early return
+        if (!isMBC3) {
+            return;
+        }
+        String ROMName = extractRomName(ROMPath);
+        String folderName = "Saves";
+
+        File folderDir = new File(folderName);
+        if (!folderDir.exists()) {
+            folderDir.mkdirs();
+        }
+
+        String savePath = folderName + "/" + ROMName + ".sav";
+        // System.out.println(savePath);
+        File saveFile = new File(savePath);
+        System.out.println(saveFile);
+        if (!saveFile.exists()) {
+            try {
+                if (saveFile.createNewFile()) {
+                    System.out.println("Created new save file: " + savePath);
+                } else {
+                    System.out.println("Failed to create new save file: " + savePath);
+                }
+            } catch (IOException e) {
+                System.out.println("Error creating save file: " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+        }
+        
+        try {
+            FileOutputStream out = new FileOutputStream(savePath);
+            int batteryRAMSize = getBatteryRamSize();
+
+
+            byte[] saveData = new byte[batteryRAMSize];
+
+            for (int i = 0; i < batteryRAMSize; i++) {
+                saveData[i] = (byte) (ramBanks[i] & 0xFF);
+            }
+            out.write(saveData);
+            
+            out.write((byte) S);
+            out.write((byte) M);
+            out.write((byte) H);
+            out.write((byte) DL);
+            out.write((byte) DH);
+
+            out.close();
+        }
+        catch (IOException e) {
+            System.out.println("Error occured while saving: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void loadSave() {
+        if (!isMBC3) {
+            return;
+        }
+        String ROMName = extractRomName(ROMPath);
+        String folderName = "Saves";
+        String savePath = folderName + "/" + ROMName + ".sav";
+        File saveFile = new File(savePath);
+        
+        if (!saveFile.exists()) {
+            System.out.println("No save file for " + ROMName);
+            return;
+        }
+        
+        try (FileInputStream in = new FileInputStream(saveFile)) {
+
+            int batteryRAMSize = getBatteryRamSize();
+            byte[] saveData = new byte[batteryRAMSize];
+            int bytesRead = in.read(saveData);
+            if (bytesRead < batteryRAMSize) {
+                System.out.println("WARNING: Data read from save file was incomplete!");
+            }
+            for (int i = 0; i < batteryRAMSize; i++) {
+                ramBanks[i] = saveData[i] & 0xFF;
+            }
+
+            if (in.available() >= 5) {
+                S = in.read();
+                M = in.read();
+                H = in.read();
+                DL = in.read();
+                DH = in.read();
+            } else {
+                System.out.println("WARNING: RTC registers not read!");
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Error occured while loading save: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }
