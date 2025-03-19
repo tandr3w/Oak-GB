@@ -749,6 +749,10 @@ public class Memory {
                 ramBanks[i] = saveData[i] & 0xFF;
             }
 
+            if (isMBC3) {
+                return;
+            }
+
             if (in.available() >= 5) {
                 S = in.read();
                 M = in.read();
