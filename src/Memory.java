@@ -652,12 +652,9 @@ public class Memory {
 
     public void saveOnClose() {
         // TODO: check support saving for other MBCs and remove early return
-<<<<<<< HEAD
         if (!isMBC3 && !isMBC1 && ramSize > 0) {
             return;
         }
-=======
->>>>>>> 5223b4f5d3545cf7bda0038ccf6764500d45193a
         String ROMName = extractRomName(ROMPath);
         String folderName = "Saves";
 
