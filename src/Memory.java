@@ -653,7 +653,7 @@ public class Memory {
 
     public void saveOnClose() {
         // TODO: check support saving for other MBCs and remove early return
-        if (!isMBC3 && !isMBC1) {
+        if (!isMBC3 && !isMBC1 && ramSize > 0) {
             return;
         }
         String ROMName = extractRomName(ROMPath);
