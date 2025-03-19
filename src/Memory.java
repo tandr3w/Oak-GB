@@ -616,6 +616,15 @@ public class Memory {
                     break;
             }
             System.out.println("Loading " + ROMPath + " with mode " + memoryArray[0x147]);
+            if (isMBC1) {
+                System.out.println("Using MBC1!");;
+            }
+            else if (isMBC2) {
+                System.out.println("Using MBC2!");
+            }
+            else if (isMBC3) {
+                System.out.println("Using MBC3");
+            }
             ramSize = memoryArray[0x149];
             in.close();
         } catch (IOException e) {
