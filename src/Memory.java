@@ -751,7 +751,7 @@ public class Memory {
             }
             
         } catch (IOException e) {
-            System.out.println("Error occured while loading save: " + e.getMessage());
+            System.out.println("Error occured while ading save: " + e.getMessage());
             e.printStackTrace();
         }
     }
