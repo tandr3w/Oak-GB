@@ -76,7 +76,6 @@ public class Memory {
         isMBC2 = false;
         cartridge = new int[0x200000];
         ramBanks = new int[0x200000]; // todo check this size
-        loadSave();
         currentROMBank = 1;
         currentRAMBank = 0;
         ramEnabled = false;
@@ -620,6 +619,7 @@ public class Memory {
             }
             System.out.println("Loading " + ROMPath + " with mode " + memoryArray[0x147]);
             ramSize = memoryArray[0x149];
+            loadSave();
             in.close();
         } catch (IOException e) {
             System.out.println("error");
