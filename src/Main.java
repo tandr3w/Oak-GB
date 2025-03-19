@@ -104,9 +104,17 @@ public class Main extends JFrame implements KeyListener {
         joypad.updateJoypadPressed(e);
         if (e.getKeyCode() == KeyEvent.VK_EQUALS){
             MAXCYCLES += 69905/2;
+            System.out.println("current speed: " + MAXCYCLES);
         }
         if (e.getKeyCode() == KeyEvent.VK_MINUS){
-            MAXCYCLES -= 69905/2;
+            if (MAXCYCLES - 69905/2 > 1) { // compare with 1 because of integer rounding
+                MAXCYCLES -= 69905/2;
+            }
+            System.out.println("current speed: " + MAXCYCLES);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH){ // RESET
+            MAXCYCLES = 69905;
+            System.out.println("current speed: " + MAXCYCLES);
         }
         // pressesToTrigger += 1;
     }
