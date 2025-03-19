@@ -141,10 +141,10 @@ public class Memory {
             memoryArray[0xFF0F] |= data & 0b11111;
             return;
         }
-        // if (address == 0xFF04){
-        //     setDIV(0); // handle overflow
-        //     return;
-        // }
+        if (address == 0xFF04){
+            setDIV(0); // handle overflow
+            return;
+        }
         if (address < 0x8000){
             // Handle ROM banking
             handleROMBanking(address, data);
@@ -556,7 +556,7 @@ public class Memory {
     }
 
     public void setDIV(int val) {
-        setMemory(DIV_address, val);
+        memoryArray[DIV_address] = val;
     }
 
     public void setTIMA(int val) {
