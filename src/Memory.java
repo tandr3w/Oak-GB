@@ -247,13 +247,24 @@ public class Memory {
     }
 
     public void handleROMBanking(int address, int data){
+        address &= 0xFFFF;
+        if (isMBC1){
+            data = (byte) (data & 0xFF);
+        }
         if (address < 0x2000){ // Enable RAM bank writing
             if (isMBC1){
                 if ((data & 0xF) == 0xA){
-                    ramEnabled = true;
+                    if (ramSize > 0){
+                        ramEnabled = true;
+                    }
                 }
-                if ((data & 0xF) == 0){
-                    ramEnabled = false;
+                else if ((data & 0xF) == 0){
+                    if (ramSize > 0){
+                        ramEnabled = false;
+                    }
+                }
+                else {
+                    System.out.println("Invalid rom banking handle for address < 0x2000");
                 }
             }
             if (isMBC3){
@@ -278,10 +289,10 @@ public class Memory {
             if (isMBC1){
                 // Change lower 5 bits of rom bank
                 int lower5 = data & 0b11111;
-                currentROMBank &= 0b11100000;
+                currentROMBank &= 0b1100000;
                 currentROMBank |= lower5;
-                if (currentROMBank == 0){
-                    currentROMBank = 1; // ROM bank cannot be 0
+                if (currentROMBank == 0 || currentROMBank == 0x20 || currentROMBank == 0x40 || currentROMBank == 0x60){
+                    currentROMBank += 1; // ROM bank cannot be 0
                 }
             }
             else if (isMBC2){
@@ -301,9 +312,9 @@ public class Memory {
             if (isMBC1){
                 if (romBankingMode){
                     currentROMBank &= 0b11111; // Unset first 3 bits
-                    currentROMBank |= (data & 0b11100000); 
-                    if (currentROMBank == 0){
-                        currentROMBank = 1; // ROM bank cannot be 0
+                    currentROMBank |= (data & 0b1100000); 
+                    if (currentROMBank == 0 || currentROMBank == 0x20 || currentROMBank == 0x40 || currentROMBank == 0x60){
+                        currentROMBank += 1; // ROM bank cannot be 0
                     }
                 }
                 else {
@@ -343,10 +354,12 @@ public class Memory {
         }
         else if (address < 0x8000){ // Change RAM/ROM bank mode
             if (isMBC1){
-                romBankingMode = (data & 1) == 0;
-                if (romBankingMode){
-                    currentROMBank = 0;
+                if (ramSize >= 3){
+                    romBankingMode = (data & 1) == 0;
                 }
+                // if (romBankingMode){
+                //     currentROMBank = 0;
+                // }
             }
             else if (isMBC3){
                 if (lastWrittenValueIsZero && data == 1){
