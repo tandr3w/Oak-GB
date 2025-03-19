@@ -1,5 +1,15 @@
 import javax.swing.*;
+<<<<<<< HEAD
 import java.awt.event.*;
+=======
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.function.LongToIntFunction;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;;
+
+
+>>>>>>> 77b604f46e1117462968659483c84eb580e861cd
 
 public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
@@ -62,7 +72,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/PokemonReal.gb");
+        memory.loadROM("ROMs/wario.gb");
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
