@@ -1,7 +1,4 @@
 import javax.swing.*;
-<<<<<<< HEAD
-import java.awt.event.*;
-=======
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.function.LongToIntFunction;
@@ -9,7 +6,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;;
 
 
->>>>>>> 77b604f46e1117462968659483c84eb580e861cd
 
 public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
