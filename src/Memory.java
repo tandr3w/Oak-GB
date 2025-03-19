@@ -749,7 +749,7 @@ public class Memory {
                 ramBanks[i] = saveData[i] & 0xFF;
             }
 
-            if (isMBC3) {
+            if (!isMBC3) {
                 return;
             }
 
