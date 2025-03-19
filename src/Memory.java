@@ -619,7 +619,6 @@ public class Memory {
             }
             System.out.println("Loading " + ROMPath + " with mode " + memoryArray[0x147]);
             ramSize = memoryArray[0x149];
-            loadSave();
             in.close();
         } catch (IOException e) {
             System.out.println("error");
@@ -655,9 +654,6 @@ public class Memory {
 
     public void saveOnClose() {
         // TODO: check support saving for other MBCs and remove early return
-        if (!isMBC3) {
-            return;
-        }
         String ROMName = extractRomName(ROMPath);
         String folderName = "Saves";
 
@@ -687,7 +683,11 @@ public class Memory {
         try {
             FileOutputStream out = new FileOutputStream(savePath);
             int batteryRAMSize = getBatteryRamSize();
-
+            if (batteryRAMSize == 0) {
+                System.out.println("Could not save because the batteryRAMSize is 0");
+                out.close();
+                return;
+            }
 
             byte[] saveData = new byte[batteryRAMSize];
 
@@ -696,6 +696,11 @@ public class Memory {
             }
             out.write(saveData);
             
+            if (!isMBC3) {
+                out.close();
+                return;
+            }
+
             out.write((byte) S);
             out.write((byte) M);
             out.write((byte) H);
@@ -711,9 +716,7 @@ public class Memory {
     }
 
     public void loadSave() {
-        if (!isMBC3) {
-            return;
-        }
+        
         String ROMName = extractRomName(ROMPath);
         String folderName = "Saves";
         String savePath = folderName + "/" + ROMName + ".sav";
@@ -734,6 +737,10 @@ public class Memory {
             }
             for (int i = 0; i < batteryRAMSize; i++) {
                 ramBanks[i] = saveData[i] & 0xFF;
+            }
+
+            if (!isMBC3) {
+                return;
             }
 
             if (in.available() >= 5) {
