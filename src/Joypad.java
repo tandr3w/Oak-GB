@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 public class Joypad {
     Memory memory;
     int keys;
+    
 
     public int getNumFromKey(KeyEvent e) {
         switch (e.getKeyCode()) {

@@ -68,7 +68,11 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
+<<<<<<< HEAD
         memory.loadROM("ROMs/PokemonReal.gb");
+=======
+        memory.loadROM("ROMs/PokemonBlue.gb");
+>>>>>>> 404818ab4edd83007b24b85d55bf2de062385b8a
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
