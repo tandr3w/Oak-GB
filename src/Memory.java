@@ -35,6 +35,7 @@ public class Memory {
     public boolean isMBC1;
     public boolean isMBC2;
     public boolean isMBC3;
+    public boolean isMBC5;
     public int currentROMBank;
     public int currentRAMBank;
     public int[] ramBanks;
@@ -150,7 +151,7 @@ public class Memory {
         }
 
         else if (address >= 0xA000 && address <= 0xBFFF){
-            if (isMBC1 || isMBC2) {
+            if (isMBC1 || isMBC2 || isMBC5) {
                 if (ramEnabled){
                     ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
                 }
@@ -260,7 +261,7 @@ public class Memory {
             data = (byte) (data & 0xFF);
         }
         if (address < 0x2000){ // Enable RAM bank writing
-            if (isMBC1){
+            if (isMBC1 || isMBC5){
                 if ((data & 0xF) == 0xA){
                     if (ramSize > 0){
                         ramEnabled = true;
@@ -313,6 +314,14 @@ public class Memory {
                     currentROMBank = 1; // ROM bank cannot be 0
                 }
             }
+            else if (isMBC5){
+                if (address < 0x3000){
+                    currentROMBank = data & 0xFF;
+                }
+                else {
+                    currentROMBank |= ((data & 1) << 8);
+                }
+            }
         }
         else if (address < 0x6000){ // RAM or ROM bank change based on mode
             if (isMBC1){
@@ -356,6 +365,9 @@ public class Memory {
                     }
                     // RTC stuff
                 }
+            }
+            else if (isMBC5){
+                currentRAMBank = data;
             }
         }
         else if (address < 0x8000){ // Change RAM/ROM bank mode
@@ -614,6 +626,24 @@ public class Memory {
                 case 0x13:
                     isMBC3 = true;
                     break;
+                case 0x19:
+                    isMBC5 = true;
+                    break;
+                case 0x1A:
+                    isMBC5 = true;
+                    break;
+                case 0x1B:
+                    isMBC5 = true;
+                    break;
+                case 0x1C:
+                    isMBC5 = true;
+                    break;
+                case 0x1D:
+                    isMBC5 = true;
+                    break;
+                case 0x1E:
+                    isMBC5 = true;
+                    break;
             }
             System.out.println("Loading " + ROMPath + " with mode " + memoryArray[0x147]);
             if (isMBC1) {
@@ -661,7 +691,7 @@ public class Memory {
 
     public void saveOnClose() {
         // TODO: check support saving for other MBCs and remove early return
-        if (!isMBC3 && !isMBC1 && ramSize == 0) {
+        if (!isMBC3 && !isMBC1 && !isMBC5 && ramSize == 0) {
             return;
         }
         String ROMName = extractRomName(ROMPath);
