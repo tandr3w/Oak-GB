@@ -258,10 +258,6 @@ public class Main extends JFrame implements KeyListener {
         }
     }
 
-    public void updateMBC3() {
-
-    }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::new);
     }
