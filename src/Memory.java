@@ -671,8 +671,11 @@ public class Memory {
 
     public String extractRomName(String ROMPath) {
         String ROMName = Paths.get(ROMPath).getFileName().toString();
-        // String ROMName = ROMPath;
-        ROMName = ROMName.substring(0, ROMName.length() - 3); // Remove .gb
+        if (ROMName.toLowerCase().endsWith(".gb") || ROMName.toLowerCase().endsWith(".gbc")) {
+            ROMName = ROMName.substring(0, ROMName.lastIndexOf('.'));
+        } else {
+            System.out.println("Invalid ROM Path: Extension was not .gb or .gbc!");
+        }
         return ROMName;
     }
 
