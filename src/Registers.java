@@ -143,6 +143,7 @@ public class Registers {
         e = (val & 0xFF); // Set e to the second byte of val
     }
     public int get_hl(){
+        
         return (h << 8) | l;
     }
     public void set_hl(int val){
