@@ -30,6 +30,34 @@ public class Memory {
     final int JOYP_address;
     public int joypadState;
 
+    final int NR52_address;
+    final int NR51_address;
+    final int NR50_address;
+
+    final int NR10_address;
+    final int NR11_address;
+    final int NR12_address;
+    final int NR13_address;
+    final int NR14_address;
+
+    final int NR21_address;
+    final int NR22_address;
+    final int NR23_address;
+    final int NR24_address;
+
+    final int NR30_address;
+    final int NR31_address;
+    final int NR32_address;
+    final int NR33_address;
+    final int NR34_address;
+
+    // WAVE PATTERN RAM IN FF30-FF3F
+
+    final int NR41_address;
+    final int NR42_address;
+    final int NR43_address;
+    final int NR44_address;
+
     public int[] memoryArray;
     public int[] cartridge;
     public boolean isMBC1;
@@ -106,6 +134,36 @@ public class Memory {
         JOYP_address = 0xFF00; // joypad
         joypadState = 0b11111111;
 
+        // GLOBAL AUDIO REGISTERS
+        NR52_address = 0xFF26; // Audio Master Control
+        NR51_address = 0xFF25;
+        NR50_address = 0xFF24;
+
+        // CHANNEL 1
+        NR10_address = 0xFF10; // Sweep
+        NR11_address = 0xFF11; // Length Timer & Duty Cycle
+        NR12_address = 0xFF12; // Volume & Envelope
+        NR13_address = 0xFF13; // Period Low (write only)
+        NR14_address = 0xFF14; // High / Control
+
+        // CHANNEL 2
+        NR21_address = 0xFF16; // Length Timer & Duty Cycle
+        NR22_address = 0xFF17; // Volume & Envelope
+        NR23_address = 0xFF18; // Period Low (write only)
+        NR24_address = 0xFF19; // High / Control
+
+        // CHANNEL 3
+        NR30_address = 0xFF1A;
+        NR31_address = 0xFF1B;
+        NR32_address = 0xFF1C;
+        NR33_address = 0xFF1D;
+        NR34_address = 0xFF1E;
+
+        // CHANNEL 4
+        NR41_address = 0xFF20;
+        NR42_address = 0xFF21;
+        NR43_address = 0xFF22;
+        NR44_address = 0xFF23;
 
         // Default values
         memoryArray[LCDC_address] = 0x91;
@@ -127,6 +185,33 @@ public class Memory {
         memoryArray[IE_address] = 0x00;
 
         memoryArray[JOYP_address] = 0xCF;
+
+        memoryArray[NR50_address] = 0x77;
+        memoryArray[NR51_address] = 0xF3;
+        memoryArray[NR51_address] = 0xF1;
+
+        memoryArray[NR10_address] = 0x80;
+        memoryArray[NR11_address] = 0xBF;
+        memoryArray[NR12_address] = 0xF3;
+        memoryArray[NR13_address] = 0xFF;
+        memoryArray[NR14_address] = 0xBF;
+
+        memoryArray[NR21_address] = 0x3F;
+        memoryArray[NR22_address] = 0x00;
+        memoryArray[NR23_address] = 0xFF;
+        memoryArray[NR24_address] = 0xBF;
+
+        memoryArray[NR30_address] = 0x7F;
+        memoryArray[NR31_address] = 0xFF;
+        memoryArray[NR32_address] = 0x9F;
+        memoryArray[NR33_address] = 0xFF;
+        memoryArray[NR34_address] = 0xBF;
+
+        memoryArray[NR41_address] = 0xFF;
+        memoryArray[NR42_address] = 0x00;
+        memoryArray[NR43_address] = 0x00;
+        memoryArray[NR44_address] = 0xBF;
+
         ramSize = 0;
     }
 
@@ -327,7 +412,7 @@ public class Memory {
             if (isMBC1){
                 if (romBankingMode){
                     currentROMBank &= 0b11111; // Unset first 3 bits
-                    currentROMBank |= (data & 0b1100000); 
+                    currentROMBank |= (data & 0b1100000);
                     if (currentROMBank == 0 || currentROMBank == 0x20 || currentROMBank == 0x40 || currentROMBank == 0x60){
                         currentROMBank += 1; // ROM bank cannot be 0
                     }
