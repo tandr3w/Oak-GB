@@ -28,6 +28,8 @@ public class Main extends JFrame implements KeyListener {
     public int bruh = 0;
     // private boolean initLoad = true;
     private int MAXCYCLES = 69905;
+    private long CYCLESPERSECOND = MAXCYCLES * 60;
+    private long cyclesThisSecond = 0;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -219,7 +221,11 @@ public class Main extends JFrame implements KeyListener {
         // else if (cpu.registers.b == 0x42 && cpu.registers.c == 0x42 && cpu.registers.d == 0x42 && cpu.registers.e == 0x42 && cpu.registers.h == 0x42 && cpu.registers.l == 0x42){
         //     System.out.println("TEST FAILED");
         // }
-        
+        cyclesThisSecond += MAXCYCLES;
+        if (cyclesThisSecond >= CYCLESPERSECOND) {
+            cyclesThisSecond = 0;
+            memory.updateRTC(1);
+        }
     }
 
 

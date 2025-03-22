@@ -834,12 +834,8 @@ public class Memory {
         }
     }
 
-    public void updateRTCOffline(long prevTime) {
-        long currentTime = System.currentTimeMillis(); // Maxes out after 21 days
-        long elapsedSeconds = (currentTime - prevTime) / 1000;
-
+    public void updateRTC(long elapsedSeconds) {
         if (elapsedSeconds <= 0) { // Can happen if system time is changed
-            System.out.println("No time has passed!");
             return;
         }
 
@@ -854,21 +850,23 @@ public class Memory {
         }
         if (H >= 24) {
             DL += H/24;
-            H %= 35;
+            H %= 24;
         }
-        if (DL >= 511) {
-            DL %= 512;
-            DH = Util.setBit(DH, 6, true); // Day overflow flag
+        if (DL >= 256) { // DH bit 0 is 9th bit of day counter
+            DL = 0;
+            boolean bit0 = Util.getIthBit(DH, 0) == 1;
+            DH = Util.setBit(DH, 0, !bit0);
+        }
+        if ((Util.getIthBit(DH, 0) << 8 | DL) >= 512) {
+            DL = 0;
+            DH = Util.setBit(DH, 0, false);
+            DH = Util.setBit(DH, 6, true);  // Set day overflow flag
         }
     }
 
-    // updates RTC such that changes in emulator speed affect RTC
-    public void updateRTC(int cycles) {
-
-    }
-
-    // updates RTC based on time - not affected by lag or changes in emulator speed
-    public void updateRTCAccurate(int milliseconds) {
-        
+    public void updateRTCOffline(long prevTime) {
+        long currentTime = System.currentTimeMillis();
+        long elapsedSeconds = (currentTime - prevTime) / 1000;
+        updateRTC(elapsedSeconds);
     }
 }
