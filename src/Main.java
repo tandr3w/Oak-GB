@@ -212,7 +212,6 @@ public class Main extends JFrame implements KeyListener {
         }
         else {
             gameLoop.setDelay(0);
-            System.out.println(((int) frameDuration/1000000));
         }
         // if (cpu.registers.b == 3 && cpu.registers.c == 5 && cpu.registers.d == 8 && cpu.registers.e == 13 && cpu.registers.h == 21 && cpu.registers.l == 34){
         //     System.out.println("TEST PASSED");

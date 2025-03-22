@@ -749,6 +749,25 @@ public class Memory {
             out.write((byte) H);
             out.write((byte) DL);
             out.write((byte) DH);
+            
+            long savedTime = System.currentTimeMillis();
+            byte byte0 = Util.getByteFromLong(savedTime, 0);
+            byte byte1 = Util.getByteFromLong(savedTime, 1);
+            byte byte2 = Util.getByteFromLong(savedTime, 2);
+            byte byte3 = Util.getByteFromLong(savedTime, 3);
+            byte byte4 = Util.getByteFromLong(savedTime, 4);
+            byte byte5 = Util.getByteFromLong(savedTime, 5);
+            byte byte6 = Util.getByteFromLong(savedTime, 6);
+            byte byte7 = Util.getByteFromLong(savedTime, 7);
+
+            out.write(byte0);
+            out.write(byte1);
+            out.write(byte2);
+            out.write(byte3);
+            out.write(byte4);
+            out.write(byte5);
+            out.write(byte6);
+            out.write(byte7);
 
             out.close();
         }
@@ -786,14 +805,27 @@ public class Memory {
                 return;
             }
 
-            if (in.available() >= 5) {
+            if (in.available() >= 13) {
                 S = in.read();
                 M = in.read();
                 H = in.read();
                 DL = in.read();
                 DH = in.read();
+                System.out.println(S);
+                byte byte0 = (byte) in.read();
+                byte byte1 = (byte) in.read();
+                byte byte2 = (byte) in.read();
+                byte byte3 = (byte) in.read();
+                byte byte4 = (byte) in.read();
+                byte byte5 = (byte) in.read();
+                byte byte6 = (byte) in.read();
+                byte byte7 = (byte) in.read();
+                long prevTime = Util.getLongFromBytes(byte0, byte1, byte2, byte3, byte4, byte5, byte6, byte7);
+                updateRTCOffline(prevTime);
+
+
             } else {
-                System.out.println("WARNING: RTC registers not read!");
+                System.out.println("WARNING: RTC registers not read! / TIME NOT UPDATED PROPERLY");
             }
             
         } catch (IOException e) {
@@ -802,4 +834,41 @@ public class Memory {
         }
     }
 
+    public void updateRTCOffline(long prevTime) {
+        long currentTime = System.currentTimeMillis(); // Maxes out after 21 days
+        long elapsedSeconds = (currentTime - prevTime) / 1000;
+
+        if (elapsedSeconds <= 0) { // Can happen if system time is changed
+            System.out.println("No time has passed!");
+            return;
+        }
+
+        S += elapsedSeconds;
+        if (S >= 60) {
+            M += S/60;
+            S %= 60;
+        }
+        if (M >= 60) {
+            H += M/60;
+            M %= 60;
+        }
+        if (H >= 24) {
+            DL += H/24;
+            H %= 35;
+        }
+        if (DL >= 511) {
+            DL %= 512;
+            DH = Util.setBit(DH, 6, true); // Day overflow flag
+        }
+    }
+
+    // updates RTC such that changes in emulator speed affect RTC
+    public void updateRTC(int cycles) {
+
+    }
+
+    // updates RTC based on time - not affected by lag or changes in emulator speed
+    public void updateRTCAccurate(int milliseconds) {
+        
+    }
 }
