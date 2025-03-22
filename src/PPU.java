@@ -40,10 +40,14 @@ public class PPU extends JPanel {
             {0, 0, 0} // 0b11
         };
         greenColourPalette = new int[][] {
-            {156, 190, 12},
-            {110, 135, 10},
-            {44, 98, 52},
-            {12, 54, 12},
+            // {156, 190, 12},
+            // {110, 135, 10},
+            // {44, 98, 52},
+            // {12, 54, 12},
+            {181, 175, 66},
+            {145, 155, 58},
+            {93, 120, 46},
+            {58, 81, 34},
         };
         if (green) {
             colourPaletteTranslator = greenColourPalette;
