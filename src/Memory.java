@@ -220,6 +220,10 @@ public class Memory {
         return (getMemory(NR23_address) << 8) | (getMemory(NR24_address));
     }
 
+    public int getNR21(){
+        return getMemory(NR21_address);
+    }
+
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
         // restricted memory
         // if (address != LY_address && address != LCDC_address && address != STAT_address && address != 0xFF04){

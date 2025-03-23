@@ -10,8 +10,10 @@ public class APU {
     public Thread writer;
     public int frequency;
     public int amplitude;
+    public Memory memory;
 
     public APU(Memory memory) {
+        this.memory = memory;
         sequencePointer = 0;
         frequency = 44100;
         frequencyTimer = (2048 - frequency) * 4;
@@ -57,13 +59,14 @@ public class APU {
         writer.start();
     }
     public void tick(){
+        frequency = memory.getFrequencyC2();
         frequencyTimer -= 1;
         if (frequencyTimer <= 0){
             frequencyTimer = (2048 - frequency) * 4;
             sequencePointer += 1;
             sequencePointer %= 7;
         }
-        amplitude = Util.getIthBit(dutyCycles[0], sequencePointer);
+        amplitude = Util.getIthBit(dutyCycles[memory.getNR21()], sequencePointer);
     }
 }
 
