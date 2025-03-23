@@ -2,7 +2,6 @@ import javax.sound.sampled.*;
 
 public class APU {
     public int[] dutyCycles = {0b00000001, 0b00000011, 0b00001111, 0b11111100};
-    public int sequencePointer;
     public int frequencyTimer;
     public Thread writer;
     public int frequency;
@@ -18,7 +17,6 @@ public class APU {
 
     public APU(Memory memory) {
         this.memory = memory;
-        sequencePointer = 0;
         frequency = 441;
         frequencyTimer = (2048 - frequency) * 4;
         amplitude = 0;
@@ -64,14 +62,8 @@ public class APU {
     }
 
     public void tick() {
-        frequencyTimer -= 1;
         frequency = memory.getFrequencyC2();
         period = memory.getPeriodC2();
-        if (frequencyTimer <= 0) {
-            samplesPerWavelength = SAMPLE_RATE / frequency;
-            frequencyTimer = (2048 - period) * 4;
-            sequencePointer = (sequencePointer + 1) % 8;
-        }
-        amplitude = (dutyCycles[memory.getNR21() >> 6] >> sequencePointer) & 1;
+        samplesPerWavelength = SAMPLE_RATE / frequency;
     }
 }
