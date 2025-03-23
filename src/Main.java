@@ -13,6 +13,7 @@ public class Main extends JFrame implements KeyListener {
     private CPU cpu;
     private PPU ppu;
     private Joypad joypad;
+    private APU apu;
 
     // private Tilemap tilemap;
     // private JFrame tilemapFrame;
@@ -41,6 +42,7 @@ public class Main extends JFrame implements KeyListener {
         joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
+        apu = new APU(memory);
         // tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
@@ -71,6 +73,7 @@ public class Main extends JFrame implements KeyListener {
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
         memory.loadROM("ROMs/tetris.gb");
+        
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
