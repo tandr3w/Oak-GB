@@ -36,13 +36,14 @@ public class Main extends JFrame implements KeyListener {
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
 
     public Main() {
+        CLOCKSPEED = 4194304;
         addKeyListener(this);
         opcodes = new Opcodes();
         memory = new Memory();
         joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
-        apu = new APU(memory);
+        apu = new APU(memory, CLOCKSPEED);
         // tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
@@ -51,7 +52,6 @@ public class Main extends JFrame implements KeyListener {
             65536,
             16384,
         };
-        CLOCKSPEED = 4194304;
         updateTimerCounter(); // Initializes the value for timerCounter
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -207,7 +207,7 @@ public class Main extends JFrame implements KeyListener {
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
-            apu.tick();
+            apu.tick(cycles);
             // System.out.println("Line: " + memory.getLY());
         }
         ppu.repaint();
