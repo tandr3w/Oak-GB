@@ -48,7 +48,7 @@ public class APU {
                     buf[0] = (byte) (a & 0xFF); //write 8bits ________WWWWWWWW out of 16
                     buf[1] = (byte) (a >> 8); //write 8bits WWWWWWWW________ out of 16
                     sdl.write(buf, 0, 2);
-                }   
+                }
             }
         }
 
@@ -56,15 +56,15 @@ public class APU {
         writer.start();
     }
     public void tick(){
-        frequency = memory.getFrequencyC2();
         frequencyTimer -= 1;
+        frequency = memory.getFrequencyC2();
         if (frequencyTimer <= 0){
             frequencyTimer = (2048 - frequency) * 4;
             sequencePointer += 1;
-            sequencePointer &= 7;
+            sequencePointer &= 8;
         }
-        amplitude = Util.getIthBit(dutyCycles[(memory.getNR21() >> 6) & 3], sequencePointer);
-        System.out.println(frequency);
+        amplitude = Util.getIthBit(dutyCycles[memory.getNR21() >> 6], sequencePointer);
+        // System.out.println(frequency);
     }
 }
 
