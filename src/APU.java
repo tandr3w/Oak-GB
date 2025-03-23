@@ -2,11 +2,8 @@ import javax.sound.sampled.*;
 
 public class APU {
     public int[] dutyCycles = {0b00000001, 0b00000011, 0b00001111, 0b11111100};
-    public int frequencyTimer;
     public Thread writer;
     public int frequency;
-    public int period;
-    public int amplitude;
     public Memory memory;
     private static final int SAMPLE_RATE = 44100;
     private static final int BUFFER_SIZE = 1024;
@@ -18,8 +15,6 @@ public class APU {
     public APU(Memory memory) {
         this.memory = memory;
         frequency = 441;
-        frequencyTimer = (2048 - frequency) * 4;
-        amplitude = 0;
         try {
             initAudio();
         } catch (LineUnavailableException e) {
@@ -39,6 +34,7 @@ public class APU {
     public void makeSound() {
         writer = new Thread(() -> {
             while (true) {
+                int buffered = 0;
                 for (int i = 0; i < BUFFER_SIZE; i++) {
                     int dutyIndex = (memory.getNR21() >> 6) & 0b11;
                     double dutyCutoff = switch (dutyIndex) { // Which sample to start setting amplitude to 1 for?
@@ -63,7 +59,6 @@ public class APU {
 
     public void tick() {
         frequency = memory.getFrequencyC2();
-        period = memory.getPeriodC2();
         samplesPerWavelength = SAMPLE_RATE / frequency;
     }
 }
