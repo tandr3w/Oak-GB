@@ -13,7 +13,8 @@ public class APU {
     private static final int BUFFER_SIZE = 1024;
     private SourceDataLine line;
     private byte[] audioBuffer = new byte[BUFFER_SIZE];
-    private int sampleIndex = 0;
+    private int samplesThisWavelength = 0;
+    private int samplesPerWavelength = 0;
 
     public APU(Memory memory) {
         this.memory = memory;
@@ -36,30 +37,25 @@ public class APU {
         line.start();
     }
 
-    private byte generateSquareWave(double dutyCycle) {
-        int period = SAMPLE_RATE / frequency;
-        // if (period == 0) {
-        //     return (byte) 0x00;
-        // }
-        int position = sampleIndex % period;
-        return (byte) ((position < period * dutyCycle) ? 127 : -128);
-    }
 
     public void makeSound() {
         writer = new Thread(() -> {
             while (true) {
                 for (int i = 0; i < BUFFER_SIZE; i++) {
                     int dutyIndex = (memory.getNR21() >> 6) & 0b11;
-                    double dutyCycle = switch (dutyIndex) {
+                    double dutyCutoff = switch (dutyIndex) { // Which sample to start setting amplitude to 1 for?
                         case 0 -> 1.0 / 8;
                         case 1 -> 2.0 / 8;
                         case 2 -> 4.0 / 8;
                         case 3 -> 6.0 / 8;
                         default -> 0.5;
                     };
-                    byte squareWave = generateSquareWave(dutyCycle);
+                    byte squareWave = (byte) ((samplesThisWavelength < samplesPerWavelength * dutyCutoff) ? 127 : -128);
                     audioBuffer[i] = squareWave;
-                    sampleIndex++;
+                    samplesThisWavelength++;
+                    if (samplesPerWavelength != 0){
+                        samplesThisWavelength %= samplesPerWavelength;
+                    }
                 }
                 line.write(audioBuffer, 0, BUFFER_SIZE);
             }
@@ -72,6 +68,7 @@ public class APU {
         frequency = memory.getFrequencyC2();
         period = memory.getPeriodC2();
         if (frequencyTimer <= 0) {
+            samplesPerWavelength = SAMPLE_RATE / frequency;
             frequencyTimer = (2048 - period) * 4;
             sequencePointer = (sequencePointer + 1) % 8;
         }
