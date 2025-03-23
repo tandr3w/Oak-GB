@@ -64,9 +64,9 @@ public class APU {
         if (frequencyTimer <= 0){
             frequencyTimer = (2048 - frequency) * 4;
             sequencePointer += 1;
-            sequencePointer %= 7;
+            sequencePointer %= 8;
         }
-        amplitude = Util.getIthBit(dutyCycles[memory.getNR21()], sequencePointer);
+        amplitude = Util.getIthBit(dutyCycles[(memory.getNR21() | 0b11000000) >> 6], sequencePointer);
     }
 }
 
