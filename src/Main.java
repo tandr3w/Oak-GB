@@ -205,6 +205,7 @@ public class Main extends JFrame implements KeyListener {
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
+            apu.tick();
             // System.out.println("Line: " + memory.getLY());
         }
         ppu.repaint();

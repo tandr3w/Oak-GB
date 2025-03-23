@@ -216,6 +216,10 @@ public class Memory {
     }
 
 
+    public int getFrequencyC2(){
+        return (getMemory(NR23_address) << 8) | (getMemory(NR24_address));
+    }
+
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
         // restricted memory
         // if (address != LY_address && address != LCDC_address && address != STAT_address && address != 0xFF04){
