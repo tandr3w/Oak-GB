@@ -217,7 +217,10 @@ public class Memory {
 
 
     public int getFrequencyC2(){
-        return 131072/(2048-((getMemory(NR24_address) & 0b00000111) << 8) | (getMemory(NR23_address)));
+        return 131072/(2048-(getPeriodC2()));
+    }
+    public int getPeriodC2() {
+        return ((getMemory(NR24_address)) & 0b00000111) << 8 | getMemory(NR23_address);
     }
 
     public int getNR21(){

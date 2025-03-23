@@ -1,18 +1,19 @@
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.*;
 
 public class APU {
     public int[] dutyCycles = {0b00000001, 0b00000011, 0b00001111, 0b11111100};
-    // public int[] dutyCycles = {0b11110000, 0b11110000, 0b11110000, 0b11110000};
-
     public int sequencePointer;
     public int frequencyTimer;
     public Thread writer;
     public int frequency;
+    public int period;
     public int amplitude;
     public Memory memory;
+    private static final int SAMPLE_RATE = 44100;
+    private static final int BUFFER_SIZE = 1024;
+    private SourceDataLine line;
+    private byte[] audioBuffer = new byte[BUFFER_SIZE];
+    private int sampleIndex = 0;
 
     public APU(Memory memory) {
         this.memory = memory;
@@ -21,51 +22,59 @@ public class APU {
         frequencyTimer = (2048 - frequency) * 4;
         amplitude = 0;
         try {
-            makeSound();
+            initAudio();
         } catch (LineUnavailableException e) {
+            e.printStackTrace();
         }
     }
 
-    public void makeSound() throws LineUnavailableException {
-        System.out.println("Make sound");
-        byte[] buf = new byte[2];
-        AudioFormat af = new AudioFormat((float) frequency, 16, 1, true, false);
-        SourceDataLine sdl = AudioSystem.getSourceDataLine(af);
-        sdl.open();
-        sdl.start();
+    private void initAudio() throws LineUnavailableException {
+        AudioFormat format = new AudioFormat(SAMPLE_RATE, 8, 1, true, false);
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+        line = (SourceDataLine) AudioSystem.getLine(info);
+        line.open(format, BUFFER_SIZE);
+        line.start();
+    }
 
-        class AudioThread extends Thread {
-            @Override
-            public void run(){
-                while (true){
-                    int a = 0;
-                    if (amplitude == 1){
-                        a = 32767;
-                    }
-                    else if (amplitude == 0){
-                        a = -32767;
-                    }
-                    buf[0] = (byte) (a & 0xFF); //write 8bits ________WWWWWWWW out of 16
-                    buf[1] = (byte) (a >> 8); //write 8bits WWWWWWWW________ out of 16
-                    sdl.write(buf, 0, 2);
+    private byte generateSquareWave(double dutyCycle) {
+        int period = SAMPLE_RATE / frequency;
+        // if (period == 0) {
+        //     return (byte) 0x00;
+        // }
+        int position = sampleIndex % period;
+        return (byte) ((position < period * dutyCycle) ? 127 : -128);
+    }
+
+    public void makeSound() {
+        writer = new Thread(() -> {
+            while (true) {
+                for (int i = 0; i < BUFFER_SIZE; i++) {
+                    int dutyIndex = (memory.getNR21() >> 6) & 0b11;
+                    double dutyCycle = switch (dutyIndex) {
+                        case 0 -> 1.0 / 8;
+                        case 1 -> 2.0 / 8;
+                        case 2 -> 4.0 / 8;
+                        case 3 -> 6.0 / 8;
+                        default -> 0.5;
+                    };
+                    byte squareWave = generateSquareWave(dutyCycle);
+                    audioBuffer[i] = squareWave;
+                    sampleIndex++;
                 }
+                line.write(audioBuffer, 0, BUFFER_SIZE);
             }
-        }
-
-        writer = new AudioThread();
+        });
         writer.start();
     }
-    public void tick(){
+
+    public void tick() {
         frequencyTimer -= 1;
         frequency = memory.getFrequencyC2();
-        if (frequencyTimer <= 0){
-            frequencyTimer = (2048 - frequency) * 4;
-            sequencePointer += 1;
-            sequencePointer %= 8;
+        period = memory.getPeriodC2();
+        if (frequencyTimer <= 0) {
+            frequencyTimer = (2048 - period) * 4;
+            sequencePointer = (sequencePointer + 1) % 8;
         }
-        amplitude = Util.getIthBit(dutyCycles[memory.getNR21() >> 6], sequencePointer);
-        // System.out.println(frequency);
+        amplitude = (dutyCycles[memory.getNR21() >> 6] >> sequencePointer) & 1;
     }
 }
-
-

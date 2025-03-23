@@ -104,6 +104,8 @@ public class Main extends JFrame implements KeyListener {
         int delay = 16; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
+        apu.makeSound();
+
     }
 
     public void keyPressed(KeyEvent e){
