@@ -4,7 +4,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 public class APU {
-    public int[] dutyCycles = {0b00000001, 0b00000011, 0b00001111, 0b11111100};
+    // public int[] dutyCycles = {0b00000001, 0b00000011, 0b00001111, 0b11111100};
+    public int[] dutyCycles = {0b11110000, 0b11110000, 0b11110000, 0b11110000};
+
     public int sequencePointer;
     public int frequencyTimer;
     public Thread writer;
@@ -15,7 +17,7 @@ public class APU {
     public APU(Memory memory) {
         this.memory = memory;
         sequencePointer = 0;
-        frequency = 44100;
+        frequency = 441;
         frequencyTimer = (2048 - frequency) * 4;
         amplitude = 0;
         try {
@@ -38,10 +40,10 @@ public class APU {
                 while (true){
                     int a = 0;
                     if (amplitude == 1){
-                        a = 32767/2;
+                        a = 32767;
                     }
                     else if (amplitude == 0){
-                        a = -32767/2;
+                        a = -32767;
                     }
                     buf[0] = (byte) (a & 0xFF); //write 8bits ________WWWWWWWW out of 16
                     buf[1] = (byte) (a >> 8); //write 8bits WWWWWWWW________ out of 16
@@ -59,9 +61,10 @@ public class APU {
         if (frequencyTimer <= 0){
             frequencyTimer = (2048 - frequency) * 4;
             sequencePointer += 1;
-            sequencePointer %= 8;
+            sequencePointer &= 7;
         }
-        amplitude = Util.getIthBit(dutyCycles[(memory.getNR21() | 0b11000000) >> 6], sequencePointer);
+        amplitude = Util.getIthBit(dutyCycles[(memory.getNR21() >> 6) & 3], sequencePointer);
+        System.out.println(frequency);
     }
 }
 
