@@ -4,18 +4,18 @@ import javax.sound.sampled.*;
 
 public class APU {
     public int[] dutyCycles = {0b00000001, 0b00000011, 0b00001111, 0b11111100};
-    public Thread writer;
-    public int frequency;
+    public volatile Thread writer;
+    public volatile int frequency;
     public volatile Memory memory;
     private static final int SAMPLE_RATE = 44100;
     private static final int BUFFER_SIZE = 4096;
-    private SourceDataLine line;
-    private byte[] audioBuffer = new byte[BUFFER_SIZE];
-    private int samplesThisWavelength = 0;
+    private volatile SourceDataLine line;
+    private volatile byte[] audioBuffer = new byte[BUFFER_SIZE];
+    private volatile int samplesThisWavelength = 0;
     private volatile int samplesPerWavelength = 0;
     private volatile int cycleCount = 0;
-    private int clockSpeed;
-    private int buffered;
+    private volatile int clockSpeed;
+    private volatile int buffered;
 
     public APU(Memory memory, int CLOCKSPEED) {
         this.memory = memory;

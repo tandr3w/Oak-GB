@@ -207,9 +207,10 @@ public class Main extends JFrame implements KeyListener {
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
+            apu.tick(cycles);
+
             // System.out.println("Line: " + memory.getLY());
         }
-        apu.tick(MAXCYCLES);
         ppu.repaint();
         // tilemap.repaint();
         long endTime = System.nanoTime();
