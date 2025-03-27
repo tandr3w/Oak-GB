@@ -317,7 +317,7 @@ public class PPU extends JPanel {
                     if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
                         continue;
                     }
-                    if ((bgPriority || (bgPriorities[memory.getLY()][xPos+spriteCol] == 1)) && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
+                    if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
                         continue; // Don't render if the background takes priority AND if the background is not white
                     }
                     if (xPos < minxPosAtPos[xPos+spriteCol]) {
@@ -325,6 +325,89 @@ public class PPU extends JPanel {
                         minxPosAtPos[xPos+spriteCol] = xPos; // the array should only be updated if the new xpos is lower
                     }
                     // minxPosAtPos[xPos+spriteCol] = xPos;
+                }
+            }
+        }
+    }
+
+    public void CGB_drawScanlineSprite(){
+        
+        int SPRITEADDRESS = 0xFE00;
+        int[] minxPosAtPos = new int[160];
+        for (int i=0; i<160; i++){
+            minxPosAtPos[i] = 1000;
+        }
+
+        for (int spriteNum = 40; spriteNum >= 0; spriteNum--){
+            
+            int indexStart = spriteNum * 4; // Sprites are 4 bytes each
+            // Get sprite attributes
+            int yPos = memory.getMemory(SPRITEADDRESS + indexStart)-16;
+            int xPos = memory.getMemory(SPRITEADDRESS + indexStart + 1)-8;
+            int spriteLocation = memory.getMemory(SPRITEADDRESS + indexStart + 2); // Location in memory where the sprite starts
+            // Bit 7: priority (0 = rendered on top, 1 = rendered below unless window/bg is white)
+            // Bit 6, 5: y and x flip (mirrored)
+            // Bit 4: palette number, 0 = from 0xFF48, 1 = from 0xFF49
+            // // Bit 0-3: unused
+
+            int attributes = memory.getMemory(SPRITEADDRESS + indexStart + 3);
+            boolean bgPriority = Util.getIthBit(attributes, 7) == 1;
+            boolean yFlip = Util.getIthBit(attributes, 6) == 1;
+            boolean xFlip = Util.getIthBit(attributes, 5) == 1;
+            boolean palette = Util.getIthBit(attributes, 4) == 1;
+            int bank = Util.getIthBit(attributes, 3);
+
+            int currentScanline = memory.getLY();
+            int ySize = 8 + 8*memory.getOBJSize();
+
+
+            if ((currentScanline >= yPos) && (currentScanline < (yPos + ySize))){
+                int spriteRow;
+                // Get the index of the row of the pixels on the sprite we are printing
+                // e.g. if scan line is on 10 and our sprite is on 9, print the 2nd (index 1) row of pixels
+                if (yFlip){
+                    spriteRow = yPos + ySize - 1 - currentScanline; // count from end of sprite
+                }
+                else {
+                    spriteRow = currentScanline - yPos;
+                }
+                spriteRow *= 2; // Since each row is 2 bytes
+                int dataAddress = 0x8000 + 16*spriteLocation + spriteRow;
+                if (ySize == 16){
+                    dataAddress = 0x8000 + 16*Util.setBit(spriteLocation, 0, false) + spriteRow;
+                }
+                int byte1 = memory.getVRAM(bank, dataAddress);
+                int byte2 = memory.getVRAM(bank, dataAddress + 1);
+                for (int spriteCol=0; spriteCol<8; spriteCol++){
+                    int whichBit = spriteCol;
+                    if (!xFlip){
+                        whichBit = 7-whichBit;
+                    }
+                    int bit1 = Util.getIthBit(byte1, whichBit);
+                    int bit2 = Util.getIthBit(byte2, whichBit);
+                    int colorID;
+                    int paletteID;
+                    if (palette){
+                        paletteID = (bit2 << 1) | bit1;
+                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address+1); // accesses OBP instead of BGP
+                    }
+                    else {
+                        paletteID = (bit2 << 1) | bit1;
+                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address);
+                    }
+
+                    if (paletteID == 0){
+                        continue; // Don't render white pixels
+                    }
+                    if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
+                        continue;
+                    }
+                    if (memory.getBGWindowEnable() == 1){
+                        if ((bgPriority || (bgPriorities[memory.getLY()][xPos+spriteCol] == 1)) && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
+                            continue; // Don't render if the background takes priority AND if the background is not white
+                        }
+                    }
+                    screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];                    
                 }
             }
         }
@@ -346,7 +429,13 @@ public class PPU extends JPanel {
             }
         }
         if (memory.getOBJEnable() == 1) {
-            drawScanlineSprite();
+            if (memory.CGBMode){
+                CGB_drawScanlineSprite();
+            }
+            else {
+                drawScanlineSprite();
+
+            }
         }
     }
 

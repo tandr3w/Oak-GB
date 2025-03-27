@@ -367,12 +367,12 @@ public class Memory {
 
         // Read from VRAM bank (CGB only)
         if (address >= 0x8000 && address <= 0x9FFF && CGBMode){
-            int bank = getMemory(0xFF4F) & 1;
+            int bank = getMemory(0xFF4F);
             return getVRAM(bank, address);
         }
 
         if (CGBMode && address == 0xFF4F){
-            return 0b11111110 | (memoryArray[0xFF4F] & 1);
+            return (memoryArray[0xFF4F] & 1);
         }
 
         // Read from RAM bank
