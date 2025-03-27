@@ -14,6 +14,7 @@ public class PPU extends JPanel {
     int[][] greenColourPalette;
     boolean green = false; // chooses which palette to use
     int[][][] screenData;
+    int[][] bgPriorities;
     int prevLY = -1;
     int prevLYC = -1;
     int internalWindowCounter = 0;
@@ -47,6 +48,8 @@ public class PPU extends JPanel {
             colourPaletteTranslator = greenColourPalette;
         }
         screenData = new int[144][160][3];
+        bgPriorities = new int[144][160];
+
         setPreferredSize(new Dimension(160*upscalingFactor, 144*upscalingFactor));
     }
 
@@ -192,6 +195,7 @@ public class PPU extends JPanel {
             int bank = Util.getIthBit(attributes, 3);
             int yFlip = Util.getIthBit(attributes, 6);
             int xFlip = Util.getIthBit(attributes, 5);
+            int priority = Util.getIthBit(attributes, 7);;
 
             short tileIdentifier;
             
@@ -235,6 +239,7 @@ public class PPU extends JPanel {
             }
 
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
+            bgPriorities[memory.getLY()][i] = priority;
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
         }
         if (hadWindow){
@@ -312,7 +317,7 @@ public class PPU extends JPanel {
                     if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
                         continue;
                     }
-                    if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
+                    if ((bgPriority || (bgPriorities[memory.getLY()][xPos+spriteCol] == 1)) && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
                         continue; // Don't render if the background takes priority AND if the background is not white
                     }
                     if (xPos < minxPosAtPos[xPos+spriteCol]) {
