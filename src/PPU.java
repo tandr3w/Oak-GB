@@ -12,7 +12,7 @@ public class PPU extends JPanel {
     // the GB stores colours as 2 bit numbers that we have to translate in to RGB colours
     int[][] colourPaletteTranslator;
     int[][] greenColourPalette;
-    boolean green = true; // chooses which palette to use
+    boolean green = false; // chooses which palette to use
     int[][][] screenData;
     int prevLY = -1;
     int prevLYC = -1;
@@ -31,8 +31,6 @@ public class PPU extends JPanel {
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         this.memory = memory;
         remainingCycles = 456;
-        // backgroundFIFO = new Queue(16);
-        // spriteFIFO = new Queue(16);
         colourPaletteTranslator = new int[][] {
             {255, 255, 255}, // 0b00
             {170, 170, 170}, // 0b01
@@ -40,10 +38,6 @@ public class PPU extends JPanel {
             {0, 0, 0} // 0b11
         };
         greenColourPalette = new int[][] {
-            // {156, 190, 12},
-            // {110, 135, 10},
-            // {44, 98, 52},
-            // {12, 54, 12},
             {181, 175, 66},
             {145, 155, 58},
             {93, 120, 46},
@@ -132,15 +126,88 @@ public class PPU extends JPanel {
             int bit2 = Util.getIthBit(byte2, 7-xIndex);
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
-            if (i == 0){
-                // System.out.println("Color ID: " + colorID);
-                // System.out.println("XPos: " + xPos);
-                // System.out.println("dataPos: " + dataPos);
-                // System.out.println("xIndex: " + xIndex);
-                // System.out.println("byteInTile: " + byteInTile);
-                // System.out.println("Signed: " + signed);
-                // System.out.println("BG tile map area: " + memory.getBGTileMapArea());
+        }
+        if (hadWindow){
+            internalWindowCounter++;
+        }
+    }
+
+    public void CGB_drawScanlineBG(){
+        // Draws tiles for one scanline
+        int windowX = memory.getWX() - 7;
+        int tileDataLocation; // location of the start of the tile data
+        int displayDataLocation; // location of the start of the window or background data
+        boolean signed = false;
+        if (memory.getAddressingMode() == 1){
+            tileDataLocation = 0x8000;
+        }
+        else {
+            tileDataLocation = 0x8800;
+            signed = true; // Signed bytes are used as identifiers
+        }
+
+        boolean windowEnabled = false;
+        if (memory.getWindowEnable() == 1){
+            if (memory.getWY() <= memory.getLY()){ // Check if current line is inside window region
+                windowEnabled = true;
             }
+        }
+
+        boolean hadWindow = false;
+        // memory[displayDataLocation --> displayDataLocation + 1023] holds a 32x32 grid of tile identification numbers
+        // giving the tiles from left to right and then top down
+        // Find which
+        int yPos; // Get the Y position on the 256x256 display that we are currently drawing at
+        for (int i = 0; i<160; i++){
+            int xPos = (i + memory.getSCX()) % 256; // Get x position on the 256x256 display we are currently drawing on
+            if (windowEnabled && i >= windowX){
+                hadWindow = true;
+                yPos = internalWindowCounter % 256;
+                xPos = (i - windowX) % 256;
+                if (memory.getWindowTileMapArea() == 1){ // We are rendering window instead of BG at this pixel
+                    displayDataLocation = 0x9C00;
+                }
+                else {
+                    displayDataLocation = 0x9800;
+                }
+            }
+            else {
+                yPos = (memory.getSCY() + memory.getLY()) % 256;
+                if (memory.getBGTileMapArea() == 1){
+                    displayDataLocation = 0x9C00;
+                }
+                else {
+                    displayDataLocation = 0x9800;
+                }
+            }
+            int verticalTileIndex = yPos / 8;
+            int horizontalTileIndex = xPos / 8;
+            int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32;
+
+            short tileIdentifier;
+            if (signed) {
+                tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
+            } else {
+                tileIdentifier = (short) memory.getMemory(dataPos);
+            }
+
+            int tileMemLocation = tileDataLocation;
+            if (signed) {
+                tileMemLocation += (tileIdentifier + 128) * 16; // Each tile is 16 bytes
+            } else {
+                tileMemLocation += tileIdentifier * 16;
+            }
+
+            int byteInTile = (yPos % 8) * 2; // Each 2 bytes corresponds to a row in the tile
+            int byte1 = memory.getMemory(tileMemLocation + byteInTile);
+            int byte2 = memory.getMemory(tileMemLocation + byteInTile + 1);
+            int xIndex = xPos % 8;
+            // we need the xIndex'th byte from the left of both of the bytes
+            // 7-xPos converts bit number from the left to bit number from the right
+            int bit1 = Util.getIthBit(byte1, 7-xIndex);
+            int bit2 = Util.getIthBit(byte2, 7-xIndex);
+            int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
+            screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
         }
         if (hadWindow){
             internalWindowCounter++;

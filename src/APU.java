@@ -54,7 +54,19 @@ public class APU {
                         case 3 -> 6.0 / 8;
                         default -> 0.5;
                     };
-                    byte squareWave = (byte) ((samplesThisWavelength < samplesPerWavelength * dutyCutoff) ? 127 : -128);
+
+                    if (memory.getVINLeft() == 0 && memory.getVINRight() == 0){
+                        continue;
+                    }
+                    if (memory.getCH2On() == 0){
+                        continue;
+                    }
+
+                    int vol = (((memory.getLeftVolume() + memory.getRightVolume()) / 2) * 16 + 16);
+                    if (vol > 128){
+                        vol = 128;
+                    }
+                    byte squareWave = (byte) ((samplesThisWavelength < samplesPerWavelength * dutyCutoff) ? vol-1 : -vol);
                     audioBuffer[buffered] = squareWave;
                     samplesThisWavelength++;
                     if (samplesPerWavelength != 0){

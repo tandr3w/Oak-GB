@@ -20,7 +20,7 @@ public class Main extends JFrame implements KeyListener {
 
     private Timer gameLoop;
     private int[] TMAFrequencies;
-    private final int CLOCKSPEED;
+    private int CLOCKSPEED;
     private int timerCounter;
     private int dividerCounter;
     private int toPrint = 0;
@@ -72,13 +72,20 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/tetris.gb");
+        memory.loadROM("ROMs/PokemonGold.gbc");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
         // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
         // memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
+
+        if (memory.CGBMode == true){
+            CLOCKSPEED *= 2;
+            MAXCYCLES *= 2;
+            CYCLESPERSECOND = MAXCYCLES * 60;
+            cpu.registers.a = 0x11;   
+        }
 
         setTitle("Gameboy Emulator");
         ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");

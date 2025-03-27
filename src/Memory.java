@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 
 public class Memory {
     // Hardware register addresses
+    boolean CGBMode = false; // Gameboy Color Game TODO: detect on startup based on registers rather than file extension
     final int LCDC_address;
     final int STAT_address;
     final int SCY_address;
@@ -67,6 +68,7 @@ public class Memory {
     public int currentROMBank;
     public int currentRAMBank;
     public int[] ramBanks;
+    public int[] vram;
     public boolean ramEnabled;
     public boolean rtcEnabled;
     public boolean romBankingMode;
@@ -105,6 +107,7 @@ public class Memory {
         isMBC2 = false;
         cartridge = new int[0x200000];
         ramBanks = new int[0x200000]; // todo check this size
+        vram = new int[0x4000];
         currentROMBank = 1;
         currentRAMBank = 0;
         ramEnabled = false;
@@ -227,6 +230,31 @@ public class Memory {
         return getMemory(NR21_address);
     }
 
+    public int getLeftVolume(){
+        return (getMemory(NR50_address) & 0b01110000) >> 4;
+    }
+
+    public int getVINLeft(){
+        return (getMemory(NR50_address) & 0b10000000) >> 7;
+    }
+
+    public int getVINRight(){
+        return getMemory(NR50_address) & 1;
+    }
+
+    public int getAudioOn(){
+        return Util.getIthBit(NR52_address, 7);
+    }
+
+    public int getCH2On(){
+        return Util.getIthBit(NR52_address, 1);
+    }
+
+
+    public int getRightVolume(){
+        return getMemory(NR50_address) & 0b111;
+    }
+
     public void setMemory(int address, int data){ // TODO: dont use this for unit tests
         // restricted memory
         // if (address != LY_address && address != LCDC_address && address != STAT_address && address != 0xFF04){
@@ -244,6 +272,12 @@ public class Memory {
         if (address < 0x8000){
             // Handle ROM banking
             handleROMBanking(address, data);
+        }
+
+        // Write to VRAM bank
+        else if (address >= 0x8000 && address <= 0x9FFF && CGBMode){
+            int bank = getMemory(0xFF4F) & 1;
+            vram[address - 0x8000 + 0x2000*bank] = data;
         }
 
         else if (address >= 0xA000 && address <= 0xBFFF){
@@ -312,6 +346,16 @@ public class Memory {
         // Read from ROM bank
         if (address >= 0x4000 && address <= 0x7FFF){
             return cartridge[address - 0x4000 + 0x4000*currentROMBank];
+        }
+
+        // Read from VRAM bank
+        if (address >= 0x8000 && address <= 0x9FFF && CGBMode){
+            int bank = getMemory(0xFF4F) & 1;
+            return vram[address - 0x8000 + 0x2000*bank];
+        }
+
+        if (CGBMode && address == 0xFF4F){
+            return 0b11111110 | (memoryArray[0xFF4F] & 1);
         }
 
         // Read from RAM bank
@@ -767,11 +811,15 @@ public class Memory {
 
     public String extractRomName(String ROMPath) {
         String ROMName = Paths.get(ROMPath).getFileName().toString();
+        if (ROMName.toLowerCase().endsWith(".gbc")){
+            CGBMode = true;
+        }
         if (ROMName.toLowerCase().endsWith(".gb") || ROMName.toLowerCase().endsWith(".gbc")) {
             ROMName = ROMName.substring(0, ROMName.lastIndexOf('.'));
         } else {
             System.out.println("Invalid ROM Path: Extension was not .gb or .gbc!");
         }
+
         return ROMName;
     }
 
