@@ -44,6 +44,7 @@ public class Main extends JFrame implements KeyListener {
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
         apu = new APU(memory, CLOCKSPEED);
+        memory.cpu = cpu;
         // tilemap = new Tilemap(memory, ppu);
         
         TMAFrequencies = new int[] {
@@ -72,7 +73,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/MarioDeluxe.gbc");
+        memory.loadROM("ROMs/cgb-acid2.gbc");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed

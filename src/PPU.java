@@ -364,6 +364,9 @@ public class PPU extends JPanel {
                 status = Util.setBit(status, 1, false);
                 status = Util.setBit(status, 0, false);
                 reqInt = Util.getIthBit(status, 3) == 1;
+                if (memory.hBlankDMA != null){
+                    memory.hBlankDMA.tick();
+                }
             }
         }
 

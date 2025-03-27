@@ -75,6 +75,8 @@ public class Memory {
     public boolean romBankingMode;
     public boolean rtcMappingMode; // MBC3
     public int ramSize;
+    public CPU cpu;
+    public HBlankDMA hBlankDMA;
     
     enum RTCRegister  {
         S,
@@ -344,6 +346,10 @@ public class Memory {
         else if (address == 0xFF46){
             DMATransfer(data);
         }
+        else if (address == 0xFF55 && CGBMode){
+            CGBDMATransfer(data);
+        }
+
         else {
             memoryArray[address] = data;
         }
@@ -566,6 +572,28 @@ public class Memory {
         {
             setMemory(0xFE00+i, getMemory(address+i));
         }
+        cpu.additionalCycles += 640;
+    }
+
+    public void CGBDMATransfer(int data){
+        int source = (getMemory(0xFF51) << 8) | (getMemory(0xFF52) & 0b11110000);
+        int destination = ((getMemory(0xFF53) & 0b11111) << 8) | (getMemory(0xFF54) & 0b11110000);
+        int length = ((data | 0b01111111) + 1) * 0x10;
+        if ((data & 0b10000000) == 0){ // General Purpose DMA
+            if (hBlankDMA != null){
+                System.out.println("Terminated hBlankDMA"); // FIXME;
+            }
+
+            for (int i=0; i<length; i++){
+                setMemory(source + i, getMemory(destination+i));
+            }
+            cpu.additionalCycles += 4*length;
+            memoryArray[0xFF55] = 0xFF;
+        }
+        else { // HBlank DMA
+            hBlankDMA = new HBlankDMA(this, source, destination, length);
+        }
+
     }
 
     public int getJoypadState() {
