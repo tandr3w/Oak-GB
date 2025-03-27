@@ -98,11 +98,14 @@ public class PPU extends JPanel {
                     displayDataLocation = 0x9800;
                 }
             }
+
+
             int verticalTileIndex = yPos / 8;
             int horizontalTileIndex = xPos / 8;
             int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32;
 
             short tileIdentifier;
+
             if (signed) {
                 tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
             } else {
@@ -180,15 +183,22 @@ public class PPU extends JPanel {
                     displayDataLocation = 0x9800;
                 }
             }
+
             int verticalTileIndex = yPos / 8;
             int horizontalTileIndex = xPos / 8;
             int dataPos = displayDataLocation + horizontalTileIndex + verticalTileIndex*32;
 
+            int attributes = memory.getVRAM(1, dataPos);
+            int bank = Util.getIthBit(attributes, 3);
+            int yFlip = Util.getIthBit(attributes, 6);
+            int xFlip = Util.getIthBit(attributes, 5);
+
             short tileIdentifier;
+            
             if (signed) {
-                tileIdentifier = (short) ((byte) memory.getMemory(dataPos));
+                tileIdentifier = (short) ((byte) memory.getVRAM(0, dataPos));
             } else {
-                tileIdentifier = (short) memory.getMemory(dataPos);
+                tileIdentifier = (short) memory.getVRAM(0, dataPos);
             }
 
             int tileMemLocation = tileDataLocation;
@@ -198,14 +208,32 @@ public class PPU extends JPanel {
                 tileMemLocation += tileIdentifier * 16;
             }
 
-            int byteInTile = (yPos % 8) * 2; // Each 2 bytes corresponds to a row in the tile
-            int byte1 = memory.getMemory(tileMemLocation + byteInTile);
-            int byte2 = memory.getMemory(tileMemLocation + byteInTile + 1);
+            int byteInTile;
+            if (yFlip == 0){
+                byteInTile = (yPos % 8) * 2; // Each 2 bytes corresponds to a row in the tile
+            }
+            else {
+                byteInTile = (7-(yPos % 8)) * 2; // Each 2 bytes corresponds to a row in the tile
+            }
+            int byte1 = memory.getVRAM(bank, tileMemLocation + byteInTile);
+            int byte2 = memory.getVRAM(bank, tileMemLocation + byteInTile + 1);
             int xIndex = xPos % 8;
+            if (xFlip == 1){
+                xIndex = 7 - xIndex;
+            }
             // we need the xIndex'th byte from the left of both of the bytes
             // 7-xPos converts bit number from the left to bit number from the right
-            int bit1 = Util.getIthBit(byte1, 7-xIndex);
-            int bit2 = Util.getIthBit(byte2, 7-xIndex);
+            int bit1;
+            int bit2;
+            if (yFlip == 0){
+                bit1 = Util.getIthBit(byte1, 7-xIndex);
+                bit2 = Util.getIthBit(byte2, 7-xIndex);
+            }
+            else {
+                bit2 = Util.getIthBit(byte1, 7-xIndex);
+                bit1 = Util.getIthBit(byte2, 7-xIndex); 
+            }
+
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
         }
@@ -305,7 +333,12 @@ public class PPU extends JPanel {
 
     public void drawScanline() {
         if (memory.getBGWindowEnable() == 1) {
-            drawScanlineBG();
+            if (memory.CGBMode){
+                CGB_drawScanlineBG();
+            }
+            else {
+                drawScanlineBG();
+            }
         }
         if (memory.getOBJEnable() == 1) {
             drawScanlineSprite();

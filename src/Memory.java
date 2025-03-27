@@ -368,7 +368,7 @@ public class Memory {
         // Read from VRAM bank (CGB only)
         if (address >= 0x8000 && address <= 0x9FFF && CGBMode){
             int bank = getMemory(0xFF4F) & 1;
-            return vram[address - 0x8000 + 0x2000*bank];
+            return getVRAM(bank, address);
         }
 
         if (CGBMode && address == 0xFF4F){
@@ -419,6 +419,13 @@ public class Memory {
         }
 
         return memoryArray[address];
+    }
+
+    public int getVRAM(int bank, int address){
+        if (!CGBMode){
+            return memoryArray[address];
+        }
+        return vram[address - 0x8000 + 0x2000*bank];
     }
 
     public void handleROMBanking(int address, int data){
