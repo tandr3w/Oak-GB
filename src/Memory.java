@@ -69,6 +69,7 @@ public class Memory {
     public int currentRAMBank;
     public int[] ramBanks;
     public int[] vram;
+    public int[] wram;
     public boolean ramEnabled;
     public boolean rtcEnabled;
     public boolean romBankingMode;
@@ -107,7 +108,8 @@ public class Memory {
         isMBC2 = false;
         cartridge = new int[0x200000];
         ramBanks = new int[0x200000]; // todo check this size
-        vram = new int[0x4000];
+        vram = new int[0x4000]; // 16KB
+        wram = new int[0x8000]; // 32KB
         currentROMBank = 1;
         currentRAMBank = 0;
         ramEnabled = false;
@@ -274,7 +276,7 @@ public class Memory {
             handleROMBanking(address, data);
         }
 
-        // Write to VRAM bank
+        // Write to VRAM bank (CGB only)
         else if (address >= 0x8000 && address <= 0x9FFF && CGBMode){
             int bank = getMemory(0xFF4F) & 1;
             vram[address - 0x8000 + 0x2000*bank] = data;
@@ -317,6 +319,15 @@ public class Memory {
                 }
             }
         }
+        // Write to WRAM Bank (CGB only)
+        else if (CGBMode && address >= 0xD000 && address <= 0xDFFF){
+            int bank = getMemory(0xFF70) & 0b00000111;
+            if (bank == 0){ // Use 0xC000 - 0xCFFF for bank 0
+                bank = 1;
+            }
+            wram[address - 0xD000 + bank*0x1000] = data;
+        }
+
         else if (address >= 0xFEA0 && address < 0xFEFF){
             return;
         }
@@ -348,7 +359,7 @@ public class Memory {
             return cartridge[address - 0x4000 + 0x4000*currentROMBank];
         }
 
-        // Read from VRAM bank
+        // Read from VRAM bank (CGB only)
         if (address >= 0x8000 && address <= 0x9FFF && CGBMode){
             int bank = getMemory(0xFF4F) & 1;
             return vram[address - 0x8000 + 0x2000*bank];
@@ -390,6 +401,15 @@ public class Memory {
                 }
 
             }
+        }
+
+        // Read from WRAM Bank (CGB only)
+        if (CGBMode && address >= 0xD000 && address <= 0xDFFF){
+            int bank = getMemory(0xFF70) & 0b00000111;
+            if (bank == 0){ // Read 0xC000 - 0xCFFF for bank 0
+                bank = 1;
+            }
+            return wram[address - 0xD000 + bank*0x1000];
         }
 
         return memoryArray[address];
