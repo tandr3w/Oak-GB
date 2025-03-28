@@ -627,10 +627,11 @@ public class Memory {
             // System.out.println("DONG DMA TRANSFER");
             // System.out.println(Util.hexString(length));
             if (hBlankDMA != null){
-                System.out.println("Terminated hBlankDMA"); // FIXME;
+                // System.out.println("Terminated hBlankDMA"); // FIXME;
                 memoryArray[0xFF55] = hBlankDMA.length/0x10 - hBlankDMA.currentPosition/0x10 - 1;
                 memoryArray[0xFF55] |= 0b10000000;
                 hBlankDMA = null;
+                return;
             }
             else {
                 memoryArray[0xFF55] = 0xFF;
@@ -643,7 +644,7 @@ public class Memory {
         }
         else { // HBlank DMA
 
-            hBlankDMA = new HBlankDMA(this, source, destination + 0x8000, length);
+            hBlankDMA = new HBlankDMA(this, source, destination, length);
         }
 
     }
@@ -920,6 +921,9 @@ public class Memory {
             }
             else if (isMBC3) {
                 System.out.println("Using MBC3");
+            }
+            else if (isMBC5){
+                System.out.println("Using MBC5");
             }
             ramSize = memoryArray[0x149];
             in.close();

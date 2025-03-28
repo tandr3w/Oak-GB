@@ -499,7 +499,7 @@ public class PPU extends JPanel {
                 status = Util.setBit(status, 1, false);
                 status = Util.setBit(status, 0, false);
                 reqInt = Util.getIthBit(status, 3) == 1;
-                if (memory.hBlankDMA != null){
+                if (mode != prevMode && memory.hBlankDMA != null){
                     memory.hBlankDMA.tick();
                 }
             }
@@ -543,7 +543,6 @@ public class PPU extends JPanel {
         int LY = memory.getLY();
         
         if (remainingCycles <= 0) {
-
             if (LY < 144) {
                 drawScanline();
             }
