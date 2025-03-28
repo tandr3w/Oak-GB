@@ -447,14 +447,18 @@ public class PPU extends JPanel {
     }
 
     public void renderScreen(Graphics g) {
-
-        for (int y = 0; y < 144*upscalingFactor; y++) {
-            for (int x = 0; x < 160*upscalingFactor; x++) {
-                int[] rgb = screenData[y / upscalingFactor][x / upscalingFactor];
+        for (int y = 0; y < 144; y++) {
+            for (int x = 0; x < 160; x++) {
+                int[] rgb = screenData[y][x];
                 // int pixelRGB = (0xFF << 24) | (rgb[0] << 16) | (rgb[1] << 8) | (rgb[2]);
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
+                for (int i=0; i<upscalingFactor; i++){
+                    for (int j=0; j<upscalingFactor; j++){
+                        bi.setRGB(x*upscalingFactor+i, y*upscalingFactor+j, pixelColor.getRGB());
+                    }
+                }
+
                 // System.out.println(rgb[0] + " " + rgb[1] + " " + rgb[2] + " " + Util.bitString(pixelColor.getRGB()));
-                bi.setRGB(x, y, pixelColor.getRGB());
                 // g.setColor(pixelColor);
                 // g.fillRect(x * upscalingFactor, y * upscalingFactor, upscalingFactor, upscalingFactor);
             }
