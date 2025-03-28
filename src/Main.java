@@ -154,7 +154,7 @@ public class Main extends JFrame implements KeyListener {
         // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
         // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
         int cyclesThisFrame = 0;
-        while (cyclesThisFrame < MAXCYCLES) {
+        while (cyclesThisFrame < MAXCYCLES) { // FIXME double speed probably doesnt work properly
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
             int cycles = cpu.execute(instruction);
             totalExecutes += 1;
@@ -163,7 +163,7 @@ public class Main extends JFrame implements KeyListener {
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
         }
-        if (!cpu.doubleSpeed || cycleNum % 2 == 1){ // Skip every other cycle during double speed mode
+        if (!cpu.doubleSpeed || (cycleNum % 2 == 1)){ // Skip every other cycle during double speed mode
             apu.tick(MAXCYCLES);
             ppu.repaint(); 
         }
