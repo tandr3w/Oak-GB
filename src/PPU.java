@@ -133,12 +133,10 @@ public class PPU extends JPanel {
             int bit1 = Util.getIthBit(byte1, 7-xIndex);
             int bit2 = Util.getIthBit(byte2, 7-xIndex);
 
-
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
-        
-
         }
+
         if (hadWindow){
             internalWindowCounter++;
         }
@@ -248,7 +246,6 @@ public class PPU extends JPanel {
             // 2 bytes per color, 4 colors per BGP
             int bgpStartAddress = (attributes & 0b111) * 2 * 4;
             int[][] colorData = memory.getCGBPaletteColor(bgpStartAddress, false);
-
 
             screenData[memory.getLY()][i] = colorData[paletteID]; 
             bgPriorities[memory.getLY()][i] = priority;
@@ -367,7 +364,6 @@ public class PPU extends JPanel {
             boolean bgPriority = Util.getIthBit(attributes, 7) == 1;
             boolean yFlip = Util.getIthBit(attributes, 6) == 1;
             boolean xFlip = Util.getIthBit(attributes, 5) == 1;
-            boolean palette = Util.getIthBit(attributes, 4) == 1;
             int bank = Util.getIthBit(attributes, 3);
 
             int currentScanline = memory.getLY();
@@ -400,9 +396,9 @@ public class PPU extends JPanel {
                     int bit2 = Util.getIthBit(byte2, whichBit);
                     int paletteID = (bit2 << 1) | bit1;
 
-                    if (paletteID == 0){
-                        continue; // Don't render white pixels
-                    }
+                    // if (paletteID == 0){
+                    //     continue; // Don't render white pixels
+                    // }
                     if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
                         continue;
                     }

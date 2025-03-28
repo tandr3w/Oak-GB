@@ -121,8 +121,8 @@ public class Memory {
 
         // Init palettes to white
         for (int i=0; i<0x40; i++){
-            BGPaletteMemory[i] = 0x1F;
-            spritePaletteMemory[i] = 0x1F;
+            BGPaletteMemory[i] = 0xFF;
+            spritePaletteMemory[i] = 0xFF;
         }
 
         currentROMBank = 1;
