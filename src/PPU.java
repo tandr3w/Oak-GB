@@ -252,6 +252,7 @@ public class PPU extends JPanel {
 
     public void drawScanlineSprite(){
         
+        int objectsSoFar = 0;
         int SPRITEADDRESS = 0xFE00;
         int[] minxPosAtPos = new int[160];
         for (int i=0; i<160; i++){
@@ -280,6 +281,7 @@ public class PPU extends JPanel {
             int ySize = 8 + 8*memory.getOBJSize();
 
             if ((currentScanline >= yPos) && (currentScanline < (yPos + ySize))){
+                objectsSoFar += 1;
                 int spriteRow;
                 // Get the index of the row of the pixels on the sprite we are printing
                 // e.g. if scan line is on 10 and our sprite is on 9, print the 2nd (index 1) row of pixels
@@ -323,6 +325,9 @@ public class PPU extends JPanel {
                     if (bgPriority && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
                         continue; // Don't render if the background takes priority AND if the background is not white
                     }
+                    if (objectsSoFar > 10){
+                        continue;
+                    }
                     if (xPos < minxPosAtPos[xPos+spriteCol]) {
                         screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
                         minxPosAtPos[xPos+spriteCol] = xPos; // the array should only be updated if the new xpos is lower
@@ -336,13 +341,11 @@ public class PPU extends JPanel {
     public void CGB_drawScanlineSprite(){
         
         int objectsSoFar = 0;
-        int SPRITEADDRESS = 0xFE00;
-        int[] minxPosAtPos = new int[160];
-        for (int i=0; i<160; i++){
-            minxPosAtPos[i] = 1000;
-        }
 
-        for (int spriteNum = 39; spriteNum >= 0; spriteNum--){
+        int SPRITEADDRESS = 0xFE00;
+        int[] hasSprite = new int[160];
+
+        for (int spriteNum = 0; spriteNum < 40; spriteNum++){
             
             int indexStart = spriteNum * 4; // Sprites are 4 bytes each
             // Get sprite attributes
@@ -365,6 +368,7 @@ public class PPU extends JPanel {
 
 
             if ((currentScanline >= yPos) && (currentScanline < (yPos + ySize))){
+                objectsSoFar += 1;
                 int spriteRow;
                 // Get the index of the row of the pixels on the sprite we are printing
                 // e.g. if scan line is on 10 and our sprite is on 9, print the 2nd (index 1) row of pixels
@@ -396,6 +400,12 @@ public class PPU extends JPanel {
                     if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
                         continue;
                     }
+                    if (hasSprite[xPos+spriteCol] == 1){
+                        continue;
+                    }
+                    if (objectsSoFar > 10){
+                        continue;
+                    }
                     if (memory.getBGWindowEnable() == 1){
                         if ((bgPriority || (bgPriorities[memory.getLY()][xPos+spriteCol] == 1)) && (bgColorIDs[memory.getLY()][xPos+spriteCol] != 0)) {
                             continue; // Don't render if the background takes priority AND if the background is not white
@@ -405,7 +415,8 @@ public class PPU extends JPanel {
                     int spritePaletteStartAddress = (attributes & 0b111) * 2 * 4;
                     int[][] colorData = memory.getCGBPaletteColor(spritePaletteStartAddress, true);
 
-                    screenData[memory.getLY()][xPos+spriteCol] = colorData[paletteID];                    
+                    screenData[memory.getLY()][xPos+spriteCol] = colorData[paletteID];  
+                    hasSprite[xPos+spriteCol] = 1;                  
                 }
             }
         }
