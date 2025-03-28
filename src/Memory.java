@@ -769,9 +769,30 @@ public class Memory {
         }
     }
 
-    // public int[][] getCGBPaletteColor(int id, int address){
+    public int[][] getCGBPaletteColor(int address, boolean sprite){
+        int[][] colorData = new int[4][3];
+        for (int j=0; j<4; j++){
+            int colors;
+            if (sprite){
+                colors = ((spritePaletteMemory[address+2*j+1] & 0xFF) << 8) | (spritePaletteMemory[address+2*j] & 0xFF);
+            }
+            else {
+                colors = ((BGPaletteMemory[address+2*j+1] & 0xFF) << 8) | (BGPaletteMemory[address+2*j] & 0xFF);
+            }
+            // Red
+            colorData[j][0] = colors & 0b11111;
+            // Green
+            colorData[j][1] = (colors >> 5) & 0b11111;
+            // Blue
+            colorData[j][2] = (colors >> 10) & 0b11111;
 
-    // }
+            // Convert from RGB555 to RGB888
+            colorData[j][0] *= 8;
+            colorData[j][1] *= 8;
+            colorData[j][2] *= 8;
+        }
+        return colorData;
+    }
 
     public int getLCDStatus() {
         return getMemory(STAT_address);
