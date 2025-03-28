@@ -621,7 +621,7 @@ public class Memory {
 
     public void CGBDMATransfer(int data){
         int source = (getMemory(0xFF51) << 8) | (getMemory(0xFF52) & 0b11110000);
-        int destination = ((getMemory(0xFF53) & 0b11111) << 8) | (getMemory(0xFF54) & 0b11110000);
+        int destination = ((getMemory(0xFF53) & 0b11111) << 4) | ((getMemory(0xFF54) & 0b11110000 >> 4));
         int length = ((data | 0b01111111) + 1) * 0x10;
         if ((data & 0b10000000) == 0){ // General Purpose DMA
             // System.out.println("DONG DMA TRANSFER");
