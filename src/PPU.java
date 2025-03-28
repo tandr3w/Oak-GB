@@ -335,6 +335,7 @@ public class PPU extends JPanel {
 
     public void CGB_drawScanlineSprite(){
         
+        int objectsSoFar = 0;
         int SPRITEADDRESS = 0xFE00;
         int[] minxPosAtPos = new int[160];
         for (int i=0; i<160; i++){
