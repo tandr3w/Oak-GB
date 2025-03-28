@@ -628,7 +628,7 @@ public class Memory {
             // System.out.println(Util.hexString(length));
             if (hBlankDMA != null){
                 System.out.println("Terminated hBlankDMA"); // FIXME;
-                memoryArray[0xFF55] = hBlankDMA.length/0x10 - hBlankDMA.currentPosition/0x10;
+                memoryArray[0xFF55] = hBlankDMA.length/0x10 - hBlankDMA.currentPosition/0x10 - 1;
                 memoryArray[0xFF55] |= 0b10000000;
                 hBlankDMA = null;
             }
