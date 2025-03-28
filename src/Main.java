@@ -28,8 +28,7 @@ public class Main extends JFrame implements KeyListener {
 
     public int bruh = 0;
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905;
-    private long CYCLESPERSECOND = MAXCYCLES * 60;
+    private long CYCLESPERSECOND;
     private long cyclesThisSecond = 0;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
@@ -44,6 +43,7 @@ public class Main extends JFrame implements KeyListener {
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
         apu = new APU(memory, CLOCKSPEED);
+        CYCLESPERSECOND = cpu.MAXCYCLES * 60;
         memory.cpu = cpu;
         // tilemap = new Tilemap(memory, ppu);
         
@@ -119,18 +119,21 @@ public class Main extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e){
         joypad.updateJoypadPressed(e);
         if (e.getKeyCode() == KeyEvent.VK_EQUALS){
-            MAXCYCLES += 69905/2;
-            System.out.println("current speed: " + MAXCYCLES);
+            cpu.MAXCYCLES += cpu.BASESPEED/2;
+            cpu.cpuIncrements += 1;
+            System.out.println("current speed: " + cpu.MAXCYCLES);
         }
         if (e.getKeyCode() == KeyEvent.VK_MINUS){
-            if (MAXCYCLES - 69905/2 > 1) { // compare with 1 because of integer rounding
-                MAXCYCLES -= 69905/2;
+            if (cpu.MAXCYCLES - cpu.BASESPEED/2 > 1) { // compare with 1 because of integer rounding
+                cpu.MAXCYCLES -= cpu.BASESPEED/2;
             }
-            System.out.println("current speed: " + MAXCYCLES);
+            cpu.cpuIncrements -= 1;
+            System.out.println("current speed: " + cpu.MAXCYCLES);
         }
         if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH){ // RESET
-            MAXCYCLES = 69905;
-            System.out.println("current speed: " + MAXCYCLES);
+            cpu.MAXCYCLES = cpu.BASESPEED;
+            cpu.cpuIncrements = 0;
+            System.out.println("current speed: " + cpu.MAXCYCLES);
         }
         // pressesToTrigger += 1;
     }
@@ -152,7 +155,7 @@ public class Main extends JFrame implements KeyListener {
         // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
         // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
         int cyclesThisFrame = 0;
-        while (cyclesThisFrame < MAXCYCLES) {
+        while (cyclesThisFrame < cpu.MAXCYCLES) {
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
 
             // if (bruh < 5 && cpu.registers.pc == 0x40){
@@ -218,7 +221,7 @@ public class Main extends JFrame implements KeyListener {
 
             // System.out.println("Line: " + memory.getLY());
         }
-        apu.tick(MAXCYCLES);
+        apu.tick(cpu.MAXCYCLES);
         ppu.repaint();
         // tilemap.repaint();
         long endTime = System.nanoTime();
@@ -236,7 +239,7 @@ public class Main extends JFrame implements KeyListener {
         // else if (cpu.registers.b == 0x42 && cpu.registers.c == 0x42 && cpu.registers.d == 0x42 && cpu.registers.e == 0x42 && cpu.registers.h == 0x42 && cpu.registers.l == 0x42){
         //     System.out.println("TEST FAILED");
         // }
-        cyclesThisSecond += MAXCYCLES;
+        cyclesThisSecond += cpu.MAXCYCLES;
         if (cyclesThisSecond >= CYCLESPERSECOND) {
             cyclesThisSecond = 0;
             memory.updateRTC(1);

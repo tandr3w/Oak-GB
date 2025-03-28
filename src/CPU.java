@@ -12,6 +12,9 @@ public class CPU {
     boolean enableInterruptsNext;
     boolean disableInterruptsNext;
     int additionalCycles;
+    public int BASESPEED = 69905;
+    public int MAXCYCLES = 69905;
+    public int cpuIncrements = 0;
 
     public CPU(Opcodes opcodes, Memory memory){
         // TODO: use a function to set memory so we can restrict access to protect parts
@@ -716,6 +719,16 @@ public class CPU {
                 break;
 
             case Operation.STOP:
+                if ((memory.getMemory(0xFF4D) & 1) == 0){
+                    if (Util.getIthBit(memory.getMemory(0xFF4D), 7) == 1){
+                        BASESPEED = 69905*2;
+                        MAXCYCLES = BASESPEED + BASESPEED/2*cpuIncrements;
+                    }
+                    else {
+                        BASESPEED = 69905*1;
+                        MAXCYCLES = BASESPEED + BASESPEED/2*cpuIncrements;
+                    }
+                }
                 stopMode = true;
                 break;
 
