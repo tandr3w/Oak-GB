@@ -70,6 +70,8 @@ public class Memory {
     public int[] ramBanks;
     public int[] vram;
     public int[] wram;
+    public int[] BGPaletteMemory;
+    public int[] spritePaletteMemory;
     public boolean ramEnabled;
     public boolean rtcEnabled;
     public boolean romBankingMode;
@@ -112,6 +114,17 @@ public class Memory {
         ramBanks = new int[0x200000]; // todo check this size
         vram = new int[0x4000]; // 16KB
         wram = new int[0x8000]; // 32KB
+
+        // CGB Palettes
+        BGPaletteMemory = new int[0x40];
+        spritePaletteMemory = new int[0x40];
+
+        // Init palettes to white
+        for (int i=0; i<0x40; i++){
+            BGPaletteMemory[i] = 0x1F;
+            spritePaletteMemory[i] = 0x1F;
+        }
+
         currentROMBank = 1;
         currentRAMBank = 0;
         ramEnabled = false;
@@ -350,6 +363,21 @@ public class Memory {
             CGBDMATransfer(data);
         }
 
+        else if (address == 0xFF69 && CGBMode){ // Background color palettes register
+            int paletteAddress = getMemory(0xFF68) & 0b11111;
+            BGPaletteMemory[paletteAddress] = data;
+            if (Util.getIthBit(getMemory(0xFF68), 7) == 1){
+                setMemory(0xFF68, getMemory(0xFF68) + 1); // Auto Increment Bit
+            }
+        }
+        else if (address == 0xFF6B && CGBMode){ // Sprite color palettes register
+            int paletteAddress = getMemory(0xFF6A) & 0b11111;
+            spritePaletteMemory[paletteAddress] = data;
+            if (Util.getIthBit(getMemory(0xFF6A), 7) == 1){
+                setMemory(0xFF6A, getMemory(0xFF6A) + 1); // Auto Increment Bit
+            }
+        }
+
         else {
             memoryArray[address] = data;
         }
@@ -416,6 +444,16 @@ public class Memory {
                 bank = 1;
             }
             return wram[address - 0xD000 + bank*0x1000];
+        }
+
+        // Read palette data
+        if (address == 0xFF69 && CGBMode){ 
+            int paletteAddress = getMemory(0xFF68) & 0b11111;
+            return BGPaletteMemory[paletteAddress];
+        }
+        if (address == 0xFF6B && CGBMode){ 
+            int paletteAddress = getMemory(0xFF6A) & 0b11111;
+            return spritePaletteMemory[paletteAddress];
         }
 
         return memoryArray[address];
