@@ -74,7 +74,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/MarioDeluxe.gbc");
+        memory.loadROM("ROMs/PokemonCrystal.gbc");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
@@ -163,7 +163,7 @@ public class Main extends JFrame implements KeyListener {
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
         }
-        if (!cpu.doubleSpeed || (cycleNum % 2 == 1)){ // Skip every other cycle during double speed mode
+        if ((!cpu.doubleSpeed) || (cycleNum % 2 == 1)){ // Skip every other cycle during double speed mode
             apu.tick(MAXCYCLES);
             ppu.repaint(); 
         }

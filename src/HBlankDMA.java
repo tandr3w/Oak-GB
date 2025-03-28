@@ -14,6 +14,9 @@ public class HBlankDMA {
     }
 
     public void tick(){
+        if (memory.cpu.halted){
+            return;
+        }
         if (currentPosition >= length){
             memory.hBlankDMA = null;
             memory.memoryArray[0xFF55] = 0xFF;
@@ -22,7 +25,7 @@ public class HBlankDMA {
             memory.setMemory(endPosition + currentPosition, startPosition + currentPosition);
             currentPosition += 1;
         }
-        memory.memoryArray[0xFF55] = length - currentPosition;
+        memory.memoryArray[0xFF55] = length/0x10 - currentPosition/0x10;
         memory.cpu.additionalCycles += 4;
     }
 }
