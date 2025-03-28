@@ -457,11 +457,11 @@ public class Memory {
 
         // Read palette data
         if (address == 0xFF69 && CGBMode){ 
-            int paletteAddress = getMemory(0xFF68) & 0b11111;
+            int paletteAddress = getMemory(0xFF68) & 0b111111;
             return BGPaletteMemory[paletteAddress];
         }
         if (address == 0xFF6B && CGBMode){ 
-            int paletteAddress = getMemory(0xFF6A) & 0b11111;
+            int paletteAddress = getMemory(0xFF6A) & 0b111111;
             return spritePaletteMemory[paletteAddress];
         }
 
@@ -814,6 +814,21 @@ public class Memory {
         return colorData;
     }
 
+    public int[] getCGBPaletteColorHex(int address, boolean sprite){
+        int[] colorData = new int[4];
+        for (int j=0; j<4; j++){
+            int colors;
+            if (sprite){
+                colors = ((spritePaletteMemory[address+2*j+1] & 0xFF) << 8) | (spritePaletteMemory[address+2*j] & 0xFF);
+                // System.out.println(address + " " + colors);
+            }
+            else {
+                colors = ((BGPaletteMemory[address+2*j+1] & 0xFF) << 8) | (BGPaletteMemory[address+2*j] & 0xFF);
+            }
+            colorData[j] = colors;
+        }
+        return colorData;
+    }
     public int getLCDStatus() {
         return getMemory(STAT_address);
     }
