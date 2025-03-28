@@ -224,7 +224,7 @@ public class PPU extends JPanel {
                 byteInTile = (7-(yPos % 8)) * 2; // Each 2 bytes corresponds to a row in the tile
             }
             int byte1 = memory.getVRAM(bank, tileMemLocation + byteInTile);
-            int byte2 = memory.getVRAM(bank, tileMemLocation + byteInTile + 1);
+            int byte2 = memory.getVRAM(bank, tileMemLocation + byteInTile+1);
             int xIndex = xPos % 8;
             if (xFlip == 1){
                 xIndex = 7 - xIndex;
@@ -233,15 +233,8 @@ public class PPU extends JPanel {
             // 7-xPos converts bit number from the left to bit number from the right
             int bit1;
             int bit2;
-            if (yFlip == 0){
-                bit1 = Util.getIthBit(byte1, 7-xIndex);
-                bit2 = Util.getIthBit(byte2, 7-xIndex);
-            }
-            else {
-                bit2 = Util.getIthBit(byte1, 7-xIndex);
-                bit1 = Util.getIthBit(byte2, 7-xIndex); 
-            }
-
+            bit1 = Util.getIthBit(byte1, 7-xIndex);
+            bit2 = Util.getIthBit(byte2, 7-xIndex);
             int paletteID = (bit2 << 1) | bit1;
             // 2 bytes per color, 4 colors per BGP
             int bgpStartAddress = (attributes & 0b111) * 2 * 4;
