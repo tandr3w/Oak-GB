@@ -28,8 +28,10 @@ public class Main extends JFrame implements KeyListener {
 
     public int bruh = 0;
     // private boolean initLoad = true;
-    private long CYCLESPERSECOND;
+    private int MAXCYCLES = 69905;
+    private long CYCLESPERSECOND = MAXCYCLES * 60;
     private long cyclesThisSecond = 0;
+    private int cycleNum = 0;
     // private boolean DEBUG = false;
     // private int MAXCYCLES = 456;
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
@@ -43,7 +45,6 @@ public class Main extends JFrame implements KeyListener {
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
         apu = new APU(memory, CLOCKSPEED);
-        CYCLESPERSECOND = cpu.MAXCYCLES * 60;
         memory.cpu = cpu;
         // tilemap = new Tilemap(memory, ppu);
         
@@ -73,7 +74,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/cgb-acid2.gbc");
+        memory.loadROM("ROMs/PokemonGold.gbc");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
@@ -119,21 +120,18 @@ public class Main extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e){
         joypad.updateJoypadPressed(e);
         if (e.getKeyCode() == KeyEvent.VK_EQUALS){
-            cpu.MAXCYCLES += cpu.BASESPEED/2;
-            cpu.cpuIncrements += 1;
-            System.out.println("current speed: " + cpu.MAXCYCLES);
+            MAXCYCLES += 69905/2;
+            System.out.println("current speed: " + MAXCYCLES);
         }
         if (e.getKeyCode() == KeyEvent.VK_MINUS){
-            if (cpu.MAXCYCLES - cpu.BASESPEED/2 > 1) { // compare with 1 because of integer rounding
-                cpu.MAXCYCLES -= cpu.BASESPEED/2;
+            if (MAXCYCLES - 69905/2 > 1) { // compare with 1 because of integer rounding
+                MAXCYCLES -= 69905/2;
             }
-            cpu.cpuIncrements -= 1;
-            System.out.println("current speed: " + cpu.MAXCYCLES);
+            System.out.println("current speed: " + MAXCYCLES);
         }
         if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH){ // RESET
-            cpu.MAXCYCLES = cpu.BASESPEED;
-            cpu.cpuIncrements = 0;
-            System.out.println("current speed: " + cpu.MAXCYCLES);
+            MAXCYCLES = 69905;
+            System.out.println("current speed: " + MAXCYCLES);
         }
         // pressesToTrigger += 1;
     }
@@ -151,95 +149,39 @@ public class Main extends JFrame implements KeyListener {
     }
 
     private void runFrame() {
+        cycleNum += 1;
         long startTime = System.nanoTime();
         // System.out.println("LCDC: " + Util.bitString(memory.getMemory(memory.LCDC_address)));
         // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
         int cyclesThisFrame = 0;
-        while (cyclesThisFrame < cpu.MAXCYCLES) {
+        while (cyclesThisFrame < MAXCYCLES) {
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
-
-            // if (bruh < 5 && cpu.registers.pc == 0x40){
-            //     System.out.println(totalExecutes);
-            //     cpu.registers.printRegisters();
-            //     printInfo();
-            //     bruh += 1;
-            // }
-            // if (bruh > 5){
-            //     while (true){}
-            // }
-            // if (cpu.registers.pc == 0x313){
-            //     toPrint = 30;
-            // }
-            // Text is displayed on 68928
-            // if (cpu.registers.pc == 0x300 && bruh == 0){
-            //     System.out.println("Executes done: " + totalExecutes);
-            //     opcodes.printInstruction(instruction);
-            //     cpu.registers.printRegisters();  
-            //     System.out.println("FF0F: " + memory.getMemory(0xFF0F) + " FFFF: " + memory.getMemory(0xFFFF));
-            //     toPrint=10;
-            //     bruh = 1;
-            // }
-            // if (totalExecutes == 16){
-            //     opcodes.printInstruction(instruction);
-            //     cpu.registers.printRegisters();
-            //     System.out.println("FF0F: " + Util.hexString(memory.getMemory(0xFF0F)) + " FFFF: " + Util.hexString(memory.getMemory(0xFFFF)));
-            //     toPrint=10;
-            // }
-
-            // if (totalExecutes == 68928){
-            //     opcodes.printInstruction(instruction);
-            //     cpu.registers.printRegisters();
-            //     toPrint=10;
-            // }
-
-            // if (toPrint > 0){
-            //     toPrint--;
-            //     opcodes.printInstruction(instruction);
-            //     cpu.registers.printRegisters();
-            //     System.out.println("FF0F: " + memory.getMemory(0xFF0F) + " FFFF: " + memory.getMemory(0xFFFF));
-            //     System.out.println("---");
-            // }
             int cycles = cpu.execute(instruction);
-            // if (totalExecutes == 16){
-            //     opcodes.printInstruction(instruction);
-            //     cpu.registers.printRegisters();
-            //     System.out.println("FF0F: " + Util.hexString(memory.getMemory(0xFF0F)) + " FFFF: " + Util.hexString(memory.getMemory(0xFFFF)));
-            //     toPrint=10;
-            // }
             totalExecutes += 1;
-
-            // System.out.println(cpu.registers.pc);
-
-            // if (instruction.operation == Operation.LD && instruction.operandToSet == Operand.n16){
-            //     opcodes.printInstruction(instruction);
-            // }
-            // opcodes.printInstruction(opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc)));
             cyclesThisFrame += cycles;
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
-
-            // System.out.println("Line: " + memory.getLY());
         }
-        apu.tick(cpu.MAXCYCLES);
-        ppu.repaint();
+        if (!cpu.doubleSpeed || cycleNum % 2 == 1){ // Skip every other cycle during double speed mode
+            apu.tick(MAXCYCLES);
+            ppu.repaint(); 
+        }
         // tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
         int newDelay = 15 - ((int) frameDuration/1000000);
+        if (cpu.doubleSpeed){
+            newDelay /= 2;
+        }
         if (newDelay > 0){
             gameLoop.setDelay(newDelay);
         }
         else {
             gameLoop.setDelay(0);
         }
-        // if (cpu.registers.b == 3 && cpu.registers.c == 5 && cpu.registers.d == 8 && cpu.registers.e == 13 && cpu.registers.h == 21 && cpu.registers.l == 34){
-        //     System.out.println("TEST PASSED");
-        // }
-        // else if (cpu.registers.b == 0x42 && cpu.registers.c == 0x42 && cpu.registers.d == 0x42 && cpu.registers.e == 0x42 && cpu.registers.h == 0x42 && cpu.registers.l == 0x42){
-        //     System.out.println("TEST FAILED");
-        // }
-        cyclesThisSecond += cpu.MAXCYCLES;
+
+        cyclesThisSecond += MAXCYCLES;
         if (cyclesThisSecond >= CYCLESPERSECOND) {
             cyclesThisSecond = 0;
             memory.updateRTC(1);
