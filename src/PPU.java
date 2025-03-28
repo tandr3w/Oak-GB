@@ -251,11 +251,11 @@ public class PPU extends JPanel {
                 for (int j=0; j<4; j++){
                     int colors = ((memory.BGPaletteMemory[bgpStartAddress+j+1] & 0xFF) << 8) | (memory.BGPaletteMemory[bgpStartAddress+j] & 0xFF);
                     // Red
-                    colorData[j][2] = colors & 0b11111;
+                    colorData[j][0] = colors & 0b11111;
                     // Green
-                    colorData[j][1] = (colors << 5) & 0b11111;
+                    colorData[j][1] = (colors >> 5) & 0b11111;
                     // Blue
-                    colorData[j][0] = (colors << 10) & 0b11111;
+                    colorData[j][2] = (colors >> 10) & 0b11111;
 
                     // Convert from RGB555 to RGB888
                     colorData[j][0] *= 8;
