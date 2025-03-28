@@ -25,7 +25,7 @@ public class Main extends JFrame implements KeyListener {
     private int dividerCounter;
 
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905*10;
+    private int MAXCYCLES = 69905;
     private long CYCLESPERSECOND = MAXCYCLES * 60;
     private long cyclesThisSecond = 0;
     private int cycleNum = 0;

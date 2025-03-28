@@ -25,7 +25,6 @@ public class PPU extends JPanel {
     BufferedImage bi;
     ImageIcon icon;
 
-
     public PPU(Memory memory) {
         bi = new BufferedImage(160*upscalingFactor, 144*upscalingFactor, BufferedImage.TYPE_INT_RGB);
         icon = new ImageIcon(bi);
@@ -452,8 +451,10 @@ public class PPU extends JPanel {
         for (int y = 0; y < 144*upscalingFactor; y++) {
             for (int x = 0; x < 160*upscalingFactor; x++) {
                 int[] rgb = screenData[y / upscalingFactor][x / upscalingFactor];
-                Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
-                bi.setRGB(x, y, pixelColor.getRGB());
+                int pixelRGB = (0xFF << 24) | (rgb[0] << 16) | (rgb[1] << 8) | (rgb[2]);
+                // Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
+                // System.out.println(rgb[0] + " " + rgb[1] + " " + rgb[2] + " " + Util.bitString(pixelColor.getRGB()));
+                bi.setRGB(x, y, pixelRGB);
                 // g.setColor(pixelColor);
                 // g.fillRect(x * upscalingFactor, y * upscalingFactor, upscalingFactor, upscalingFactor);
             }
