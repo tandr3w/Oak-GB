@@ -71,7 +71,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/HarvestMoon3.gbc");
+        memory.loadROM("ROMs/gbc_colorbars.gbc");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
@@ -115,12 +115,15 @@ public class Main extends JFrame implements KeyListener {
     }
 
     public void printPalettes(){
-        int[] colorData = memory.getCGBPaletteColorHex(8*i, false);
-        System.out.print(i + ": " + Util.hexString(colorData[0]) + " ");
-        System.out.print(Util.hexString(colorData[1]) + " ");
-        System.out.print(Util.hexString(colorData[2])+ " ");
-        System.out.print(Util.hexString(colorData[3]));
-        System.out.println();
+        for (int i=0; i<8; i++){
+
+            int[] colorData = memory.getCGBPaletteColorHex(8*i, false);
+            System.out.print(i + ": " + Util.hexString(colorData[0]) + " ");
+            System.out.print(Util.hexString(colorData[1]) + " ");
+            System.out.print(Util.hexString(colorData[2])+ " ");
+            System.out.print(Util.hexString(colorData[3]));
+            System.out.println();
+        }
     }
 
     public void keyPressed(KeyEvent e){ 
@@ -131,7 +134,7 @@ public class Main extends JFrame implements KeyListener {
         //         System.out.print(Util.hexString(i) + ": ");
         //     }
         // }
-        for (int i=0; i<8; i++){
+        // for (int i=0; i<8; i++){
             // int[][] colorData = memory.getCGBPaletteColor(8*i, false);
             // System.out.print(i + ": " + Util.hexString(colorData[0][0]) + Util.hexString(colorData[0][1]) + Util.hexString(colorData[0][2]));
             // System.out.print(" " + Util.hexString(colorData[1][0]) + Util.hexString(colorData[1][1]) + Util.hexString(colorData[1][2]));
@@ -144,7 +147,7 @@ public class Main extends JFrame implements KeyListener {
             // System.out.print(Util.hexString(colorData[2])+ " ");
             // System.out.print(Util.hexString(colorData[3]));
             // System.out.println();
-        }
+        // }
         joypad.updateJoypadPressed(e);
         if (e.getKeyCode() == KeyEvent.VK_EQUALS){
             MAXCYCLES += 69905/2;
