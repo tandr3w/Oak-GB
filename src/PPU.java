@@ -244,30 +244,25 @@ public class PPU extends JPanel {
 
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
 
-            if (memory.CGBMode){
-                // 2 bytes per color, 4 colors per BGP
-                int bgpStartAddress = (attributes & 0b111) * 2 * 4;
-                int[][] colorData = new int[4][3];
-                for (int j=0; j<4; j++){
-                    int colors = ((memory.BGPaletteMemory[bgpStartAddress+j+1] & 0xFF) << 8) | (memory.BGPaletteMemory[bgpStartAddress+j] & 0xFF);
-                    // Red
-                    colorData[j][0] = colors & 0b11111;
-                    // Green
-                    colorData[j][1] = (colors >> 5) & 0b11111;
-                    // Blue
-                    colorData[j][2] = (colors >> 10) & 0b11111;
+            // 2 bytes per color, 4 colors per BGP
+            int bgpStartAddress = (attributes & 0b111) * 2 * 4;
+            int[][] colorData = new int[4][3];
+            for (int j=0; j<4; j++){
+                int colors = ((memory.BGPaletteMemory[bgpStartAddress+2*j+1] & 0xFF) << 8) | (memory.BGPaletteMemory[bgpStartAddress+2*j] & 0xFF);
+                // Red
+                colorData[j][0] = colors & 0b11111;
+                // Green
+                colorData[j][1] = (colors >> 5) & 0b11111;
+                // Blue
+                colorData[j][2] = (colors >> 10) & 0b11111;
 
-                    // Convert from RGB555 to RGB888
-                    colorData[j][0] *= 8;
-                    colorData[j][1] *= 8;
-                    colorData[j][2] *= 8;
-                }
+                // Convert from RGB555 to RGB888
+                colorData[j][0] *= 8;
+                colorData[j][1] *= 8;
+                colorData[j][2] *= 8;
+            }
 
-                screenData[memory.getLY()][i] = colorData[colorID]; 
-            }
-            else {
-                screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
-            }
+            screenData[memory.getLY()][i] = colorData[colorID]; 
 
             bgPriorities[memory.getLY()][i] = priority;
         }
@@ -436,7 +431,25 @@ public class PPU extends JPanel {
                             continue; // Don't render if the background takes priority AND if the background is not white
                         }
                     }
-                    screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];                    
+                    // 2 bytes per color, 4 colors per BGP
+                    int spritePaletteStartAddress = (attributes & 0b111) * 2 * 4;
+                    int[][] colorData = new int[4][3];
+                    for (int j=0; j<4; j++){
+                        int colors = ((memory.spritePaletteMemory[spritePaletteStartAddress+2*j+1] & 0xFF) << 8) | (memory.BGPaletteMemory[spritePaletteStartAddress+2*j] & 0xFF);
+                        // Red
+                        colorData[j][0] = colors & 0b11111;
+                        // Green
+                        colorData[j][1] = (colors >> 5) & 0b11111;
+                        // Blue
+                        colorData[j][2] = (colors >> 10) & 0b11111;
+
+                        // Convert from RGB555 to RGB888
+                        colorData[j][0] *= 8;
+                        colorData[j][1] *= 8;
+                        colorData[j][2] *= 8;
+                    }
+
+                    screenData[memory.getLY()][xPos+spriteCol] = colorData[colorID];                    
                 }
             }
         }
