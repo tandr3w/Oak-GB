@@ -104,6 +104,7 @@ public class Memory {
     public RTCRegister selectedRTCRegister;
 
     public String ROMPath;
+    public int ramBytes;
 
     public Memory() {
         memoryArray = new int[0xFFFF + 1];
@@ -111,7 +112,7 @@ public class Memory {
         lastWrittenValueIsZero = false;
         isMBC2 = false;
         cartridge = new int[0x200000];
-        ramBanks = new int[0x200000]; // todo check this size
+        ramBanks = new int[0x20000]; // todo check this size
         vram = new int[0x4000]; // 16KB
         wram = new int[0x8000]; // 32KB
 
@@ -299,7 +300,7 @@ public class Memory {
         else if (address >= 0xA000 && address <= 0xBFFF){
             if (isMBC1 || isMBC2 || isMBC5) {
                 if (ramEnabled){
-                    ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
+                    ramBanks[(address - 0xA000 + (currentRAMBank * 0x2000)) & (ramBytes-1)] = data;
                 }
             }
 
@@ -307,7 +308,7 @@ public class Memory {
                 // either ram bank or register
                 if (!rtcMappingMode){
                     if (ramEnabled){
-                        ramBanks[address - 0xA000 + (currentRAMBank * 0x2000)] = data;
+                        ramBanks[(address - 0xA000 + (currentRAMBank * 0x2000)) & (ramBytes-1)] = data;
                     }
                 }
                 else {
@@ -334,7 +335,12 @@ public class Memory {
             }
         }
         // Write to WRAM Bank (CGB only)
+        else if (CGBMode && address >= 0xC000 && address <= 0xCFFF){
+            wram[address - 0xC000] = data;
+        }
+
         else if (CGBMode && address >= 0xD000 && address <= 0xDFFF){
+            // System.out.println("Writing to wram bank");
             int bank = getMemory(0xFF70) & 0b00000111;
             if (bank == 0){ // Use 0xC000 - 0xCFFF for bank 0
                 bank = 1;
@@ -404,10 +410,9 @@ public class Memory {
 
         // Read from RAM bank
         if (address >= 0xA000 && address <= 0xBFFF){
-            // TODO: Check if MBC3
             if (!rtcMappingMode){
                 if (ramEnabled){
-                    return ramBanks[address - 0xA000 + (currentRAMBank*0x2000)];
+                    return ramBanks[(address - 0xA000 + (currentRAMBank*0x2000)) & (ramBytes-1)];
                 }
                 else {
                     return 0xFF;
@@ -434,6 +439,11 @@ public class Memory {
                 }
 
             }
+        }
+
+        // Read from WRAM Bank (CGB only)
+        if (CGBMode && address >= 0xC000 && address <= 0xCFFF){
+            return wram[address - 0xC000];
         }
 
         // Read from WRAM Bank (CGB only)
@@ -477,12 +487,10 @@ public class Memory {
                         ramEnabled = true;
                     }
                 }
-                else if ((data & 0xF) == 0){
+                else {
                     if (ramSize > 0){
                         ramEnabled = false;
                     }
-                }
-                else {
                 }
             }
             if (isMBC3){
@@ -492,13 +500,11 @@ public class Memory {
                     }
                     rtcEnabled = true;
                 }
-                else if ((data & 0xF) == 0){
+                else {
                     if (ramSize > 0){
                         ramEnabled = false;
                     }
                     rtcEnabled = false;
-                }
-                else {
                 }
             }
         }
@@ -526,9 +532,11 @@ public class Memory {
             }
             else if (isMBC5){
                 if (address < 0x3000){
-                    currentROMBank = data & 0xFF;
+                    currentROMBank &= 0b100000000;
+                    currentROMBank |= data & 0xFF;
                 }
                 else {
+                    currentROMBank &= 0xFF;
                     currentROMBank |= ((data & 1) << 8);
                 }
             }
@@ -577,7 +585,7 @@ public class Memory {
                 }
             }
             else if (isMBC5){
-                currentRAMBank = data;
+                currentRAMBank = data & 0b11;
             }
         }
         else if (address < 0x8000){ // Change RAM/ROM bank mode
@@ -926,6 +934,18 @@ public class Memory {
                 System.out.println("Using MBC5");
             }
             ramSize = memoryArray[0x149];
+            if (ramSize == 2){
+                ramBytes = 0x2000;
+            }
+            else if (ramSize == 3){
+                ramBytes = 0x8000;
+            }
+            else if (ramSize == 4){
+                ramBytes = 0x20000;
+            }
+            else if (ramSize == 5){
+                ramBytes = 0x10000;
+            }
             in.close();
         } catch (IOException e) {
             System.out.println("error");

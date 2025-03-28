@@ -396,6 +396,7 @@ public class PPU extends JPanel {
                     if (paletteID == 0){
                         continue; // Don't render white pixels
                     }
+
                     if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
                         continue;
                     }
@@ -413,7 +414,6 @@ public class PPU extends JPanel {
                     // 2 bytes per color, 4 colors per BGP
                     int spritePaletteStartAddress = (attributes & 0b111) * 2 * 4;
                     int[][] colorData = memory.getCGBPaletteColor(spritePaletteStartAddress, true);
-
                     screenData[memory.getLY()][xPos+spriteCol] = colorData[paletteID];  
                     hasSprite[xPos+spriteCol] = 1;                  
                 }

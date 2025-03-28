@@ -13,7 +13,7 @@ public class Main extends JFrame implements KeyListener {
     private CPU cpu;
     private PPU ppu;
     private Joypad joypad;
-    private APU apu;
+    // private APU apu;
 
     // private Tilemap tilemap;
     // private JFrame tilemapFrame;
@@ -71,7 +71,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/PokemonCrystal.gbc");
+        memory.loadROM("ROMs/HarvestMoon3.gbc");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
