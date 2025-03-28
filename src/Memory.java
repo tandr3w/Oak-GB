@@ -363,14 +363,15 @@ public class Memory {
         }
 
         else if (address == 0xFF69 && CGBMode){ // Background color palettes register
-            int paletteAddress = getMemory(0xFF68) & 0b11111;
+            int paletteAddress = getMemory(0xFF68) & 0b111111;
             BGPaletteMemory[paletteAddress] = data;
             if (Util.getIthBit(getMemory(0xFF68), 7) == 1){
                 setMemory(0xFF68, getMemory(0xFF68) + 1); // Auto Increment Bit
             }
         }
         else if (address == 0xFF6B && CGBMode){ // Sprite color palettes register
-            int paletteAddress = getMemory(0xFF6A) & 0b11111;
+            int paletteAddress = getMemory(0xFF6A) & 0b111111;
+            // System.out.println(Util.hexString(paletteAddress) + " " + data);
             spritePaletteMemory[paletteAddress] = data;
             if (Util.getIthBit(getMemory(0xFF6A), 7) == 1){
                 setMemory(0xFF6A, getMemory(0xFF6A) + 1); // Auto Increment Bit
@@ -384,7 +385,6 @@ public class Memory {
     public int getMemory(int address){
         if (address == JOYP_address) {
             int JOYP = getJoypadState();
-            // System.out.println(JOYP);
             return JOYP;
         }
         // Read from ROM bank
@@ -774,6 +774,7 @@ public class Memory {
             int colors;
             if (sprite){
                 colors = ((spritePaletteMemory[address+2*j+1] & 0xFF) << 8) | (spritePaletteMemory[address+2*j] & 0xFF);
+                // System.out.println(address + " " + colors);
             }
             else {
                 colors = ((BGPaletteMemory[address+2*j+1] & 0xFF) << 8) | (BGPaletteMemory[address+2*j] & 0xFF);
@@ -786,9 +787,9 @@ public class Memory {
             colorData[j][2] = (colors >> 10) & 0b11111;
 
             // Convert from RGB555 to RGB888
-            colorData[j][0] *= 8;
-            colorData[j][1] *= 8;
-            colorData[j][2] *= 8;
+            colorData[j][0] = (colorData[j][0] << 3) | (colorData[j][0] >> 2);
+            colorData[j][1] = (colorData[j][1] << 3) | (colorData[j][1] >> 2);
+            colorData[j][2] = (colorData[j][2] << 3) | (colorData[j][2] >> 2);
         }
         return colorData;
     }
