@@ -71,7 +71,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/HarvestMoon3.gbc");
+        memory.loadROM("ROMs/gbc_colorbars.gbc");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
@@ -114,7 +114,14 @@ public class Main extends JFrame implements KeyListener {
 
     }
 
-    public void keyPressed(KeyEvent e){
+    public void keyPressed(KeyEvent e){ 
+        for (int i=0x00; i<0xA000; i++){
+            System.out.print(memory.getVRAM(0, i) + " ");
+            if (i % 0x10 == 0){
+                System.out.println();
+                System.out.print(Util.hexString(i) + ": ");
+            }
+        }
         joypad.updateJoypadPressed(e);
         if (e.getKeyCode() == KeyEvent.VK_EQUALS){
             MAXCYCLES += 69905/2;

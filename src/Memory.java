@@ -619,6 +619,8 @@ public class Memory {
     }
 
     public void DMATransfer(int data){
+        // System.out.println("Doing DMATransfer!");
+
         int address = data << 8;
         for (int i = 0; i < 0xA0; i++)
         {
@@ -628,6 +630,7 @@ public class Memory {
     }
 
     public void CGBDMATransfer(int data){
+        System.out.println("Doing CGBDMATransfer!");
         int source = ((getMemory(0xFF51) & 0xFF) << 8) | ((getMemory(0xFF52) & 0b11110000));
         int destination = ((getMemory(0xFF53) & 0b11111) << 8) | ((getMemory(0xFF54) & 0b11110000));
         int length = ((data & 0b01111111) + 1) * 0x10;
