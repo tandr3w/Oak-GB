@@ -6,7 +6,6 @@ public class CPU {
     Registers registers;
     Memory memory;
     Opcodes opcodes;
-    boolean stopMode;
     boolean halted;
     boolean interrupts;
     boolean enableInterruptsNext;
@@ -20,7 +19,6 @@ public class CPU {
         this.memory = memory;
         registers = new Registers(this);
         this.opcodes = opcodes;
-        stopMode = false; // TODO: actually use these
         halted = false;
         interrupts = false;
         enableInterruptsNext = false;
@@ -718,7 +716,7 @@ public class CPU {
                 break;
 
             case Operation.STOP:
-                if ((memory.getMemory(0xFF4D) & 1) == 0){
+                if (memory.CGBMode && (memory.getMemory(0xFF4D) & 1) == 0){
                     if (Util.getIthBit(memory.getMemory(0xFF4D), 7) == 1){
                         doubleSpeed = true;
                     }
@@ -726,7 +724,6 @@ public class CPU {
                         doubleSpeed = false;
                     }
                 }
-                stopMode = true;
                 break;
 
             case Operation.HALT:

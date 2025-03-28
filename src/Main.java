@@ -23,12 +23,9 @@ public class Main extends JFrame implements KeyListener {
     private int CLOCKSPEED;
     private int timerCounter;
     private int dividerCounter;
-    private int toPrint = 0;
-    private int totalExecutes = 0;
 
-    public int bruh = 0;
     // private boolean initLoad = true;
-    private int MAXCYCLES = 69905;
+    private int MAXCYCLES = 69905*10;
     private long CYCLESPERSECOND = MAXCYCLES * 60;
     private long cyclesThisSecond = 0;
     private int cycleNum = 0;
@@ -44,7 +41,7 @@ public class Main extends JFrame implements KeyListener {
         joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
-        apu = new APU(memory, CLOCKSPEED);
+        // apu = new APU(memory, CLOCKSPEED);
         memory.cpu = cpu;
         // tilemap = new Tilemap(memory, ppu);
         
@@ -74,7 +71,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/PokemonCrystal.gbc");
+        memory.loadROM("ROMs/PokemonReal (andrew).gb");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
@@ -113,7 +110,7 @@ public class Main extends JFrame implements KeyListener {
         int delay = 16; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
-        apu.makeSound();
+        // apu.makeSound();
 
     }
 
@@ -157,14 +154,13 @@ public class Main extends JFrame implements KeyListener {
         while (cyclesThisFrame < MAXCYCLES) { // FIXME double speed probably doesnt work properly
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
             int cycles = cpu.execute(instruction);
-            totalExecutes += 1;
             cyclesThisFrame += cycles;
             updateTimer(cycles);
             ppu.updateGraphics(cycles);
             cpu.doInterrupts();
         }
         if ((!cpu.doubleSpeed) || (cycleNum % 2 == 1)){ // Skip every other cycle during double speed mode
-            apu.tick(MAXCYCLES);
+            // apu.tick(MAXCYCLES);
             ppu.repaint(); 
         }
         // tilemap.repaint();
@@ -180,6 +176,7 @@ public class Main extends JFrame implements KeyListener {
         else {
             gameLoop.setDelay(0);
         }
+
 
         cyclesThisSecond += MAXCYCLES;
         if (cyclesThisSecond >= CYCLESPERSECOND) {
