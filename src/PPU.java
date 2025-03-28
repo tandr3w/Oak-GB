@@ -244,8 +244,7 @@ public class PPU extends JPanel {
                 bit1 = Util.getIthBit(byte2, 7-xIndex); 
             }
 
-            int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
-
+            int paletteID = (bit2 << 1) | bit1;
             // 2 bytes per color, 4 colors per BGP
             int bgpStartAddress = (attributes & 0b111) * 2 * 4;
             int[][] colorData = new int[4][3];
@@ -264,9 +263,9 @@ public class PPU extends JPanel {
                 colorData[j][2] *= 8;
             }
 
-            screenData[memory.getLY()][i] = colorData[colorID]; 
+            screenData[memory.getLY()][i] = colorData[paletteID]; 
             bgPriorities[memory.getLY()][i] = priority;
-            bgColorIDs[memory.getLY()][i] = colorID;
+            bgColorIDs[memory.getLY()][i] = paletteID;
 
         }
         if (hadWindow){
@@ -365,7 +364,7 @@ public class PPU extends JPanel {
             minxPosAtPos[i] = 1000;
         }
 
-        for (int spriteNum = 40; spriteNum >= 0; spriteNum--){
+        for (int spriteNum = 39; spriteNum >= 0; spriteNum--){
             
             int indexStart = spriteNum * 4; // Sprites are 4 bytes each
             // Get sprite attributes
@@ -412,16 +411,7 @@ public class PPU extends JPanel {
                     }
                     int bit1 = Util.getIthBit(byte1, whichBit);
                     int bit2 = Util.getIthBit(byte2, whichBit);
-                    int colorID;
-                    int paletteID;
-                    if (palette){
-                        paletteID = (bit2 << 1) | bit1;
-                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address+1); // accesses OBP instead of BGP
-                    }
-                    else {
-                        paletteID = (bit2 << 1) | bit1;
-                        colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.OBP_address);
-                    }
+                    int paletteID = (bit2 << 1) | bit1;
 
                     if (paletteID == 0){
                         continue; // Don't render white pixels
@@ -452,7 +442,7 @@ public class PPU extends JPanel {
                         colorData[j][2] *= 8;
                     }
 
-                    screenData[memory.getLY()][xPos+spriteCol] = colorData[colorID];                    
+                    screenData[memory.getLY()][xPos+spriteCol] = colorData[paletteID];                    
                 }
             }
         }

@@ -769,6 +769,10 @@ public class Memory {
         }
     }
 
+    // public int[][] getCGBPaletteColor(int id, int address){
+
+    // }
+
     public int getLCDStatus() {
         return getMemory(STAT_address);
     }
