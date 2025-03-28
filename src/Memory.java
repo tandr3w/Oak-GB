@@ -637,13 +637,13 @@ public class Memory {
             }
             // memoryArray[0xFF55] = data; // FIXME DMA IS BROKEN AS HELL RIGHT NOW
             for (int i=0; i<length; i++){
-                setMemory(destination + i, getMemory(source+i));
+                setMemory(destination + i + 0x8000, getMemory(source+i));
             }
             cpu.additionalCycles += 4*length;
         }
         else { // HBlank DMA
 
-            hBlankDMA = new HBlankDMA(this, source, destination, length);
+            hBlankDMA = new HBlankDMA(this, source, destination + 0x8000, length);
         }
 
     }

@@ -19,7 +19,7 @@ public class HBlankDMA {
             memory.memoryArray[0xFF55] = 0xFF;
         }
         for (int i=0; i<0x10; i++){
-            memory.setMemory(startPosition + currentPosition, endPosition + currentPosition);
+            memory.setMemory(endPosition + currentPosition, startPosition + currentPosition);
             currentPosition += 1;
         }
         memory.memoryArray[0xFF55] = length - currentPosition;
