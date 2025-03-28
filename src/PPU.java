@@ -15,6 +15,7 @@ public class PPU extends JPanel {
     boolean green = false; // chooses which palette to use
     int[][][] screenData;
     int[][] bgPriorities;
+    int[][] bgColorIDs;
     int prevLY = -1;
     int prevLYC = -1;
     int internalWindowCounter = 0;
@@ -49,6 +50,7 @@ public class PPU extends JPanel {
         }
         screenData = new int[144][160][3];
         bgPriorities = new int[144][160];
+        bgColorIDs = new int[144][160];
 
         setPreferredSize(new Dimension(160*upscalingFactor, 144*upscalingFactor));
     }
@@ -263,8 +265,9 @@ public class PPU extends JPanel {
             }
 
             screenData[memory.getLY()][i] = colorData[colorID]; 
-
             bgPriorities[memory.getLY()][i] = priority;
+            bgColorIDs[memory.getLY()][i] = colorID;
+
         }
         if (hadWindow){
             internalWindowCounter++;
@@ -427,7 +430,7 @@ public class PPU extends JPanel {
                         continue;
                     }
                     if (memory.getBGWindowEnable() == 1){
-                        if ((bgPriority || (bgPriorities[memory.getLY()][xPos+spriteCol] == 1)) && (screenData[memory.getLY()][xPos+spriteCol] != colourPaletteTranslator[0])) {
+                        if ((bgPriority || (bgPriorities[memory.getLY()][xPos+spriteCol] == 1)) && (bgColorIDs[memory.getLY()][xPos+spriteCol] != 0)) {
                             continue; // Don't render if the background takes priority AND if the background is not white
                         }
                     }
