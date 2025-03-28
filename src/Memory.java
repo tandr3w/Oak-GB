@@ -624,22 +624,25 @@ public class Memory {
         int destination = ((getMemory(0xFF53) & 0b11111) << 8) | (getMemory(0xFF54) & 0b11110000);
         int length = ((data | 0b01111111) + 1) * 0x10;
         if ((data & 0b10000000) == 0){ // General Purpose DMA
+            // System.out.println("DONG DMA TRANSFER");
+            // System.out.println(Util.hexString(length));
             if (hBlankDMA != null){
                 System.out.println("Terminated hBlankDMA"); // FIXME;
-                memoryArray[0xFF55] = hBlankDMA.length - hBlankDMA.currentPosition;
+                memoryArray[0xFF55] = (hBlankDMA.length/0x10)-1 - (hBlankDMA.currentPosition/0x10-1);
                 memoryArray[0xFF55] |= 0b10000000;
                 hBlankDMA = null;
             }
             else {
                 memoryArray[0xFF55] = 0xFF;
             }
-
+            // memoryArray[0xFF55] = data; // FIXME DMA IS BROKEN AS HELL RIGHT NOW
             for (int i=0; i<length; i++){
-                setMemory(source + i, getMemory(destination+i));
+                setMemory(destination + i, getMemory(source+i));
             }
             cpu.additionalCycles += 4*length;
         }
         else { // HBlank DMA
+
             hBlankDMA = new HBlankDMA(this, source, destination, length);
         }
 
