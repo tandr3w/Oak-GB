@@ -22,6 +22,7 @@ public class HBlankDMA {
             memory.setMemory(startPosition + currentPosition, endPosition + currentPosition);
             currentPosition += 1;
         }
+        memory.memoryArray[0xFF55] = length - currentPosition;
         memory.cpu.additionalCycles += 4;
     }
 }

@@ -626,13 +626,18 @@ public class Memory {
         if ((data & 0b10000000) == 0){ // General Purpose DMA
             if (hBlankDMA != null){
                 System.out.println("Terminated hBlankDMA"); // FIXME;
+                memoryArray[0xFF55] = hBlankDMA.length - hBlankDMA.currentPosition;
+                memoryArray[0xFF55] |= 0b10000000;
+                hBlankDMA = null;
+            }
+            else {
+                memoryArray[0xFF55] = 0xFF;
             }
 
             for (int i=0; i<length; i++){
                 setMemory(source + i, getMemory(destination+i));
             }
             cpu.additionalCycles += 4*length;
-            memoryArray[0xFF55] = 0xFF;
         }
         else { // HBlank DMA
             hBlankDMA = new HBlankDMA(this, source, destination, length);
