@@ -136,7 +136,7 @@ public class PPU extends JPanel {
             int colorID = memory.getPaletteColor((bit2 << 1) | bit1, memory.BGP_address);
             screenData[memory.getLY()][i] = colourPaletteTranslator[colorID];
         }
-
+        
         if (hadWindow){
             internalWindowCounter++;
         }
@@ -396,9 +396,9 @@ public class PPU extends JPanel {
                     int bit2 = Util.getIthBit(byte2, whichBit);
                     int paletteID = (bit2 << 1) | bit1;
 
-                    // if (paletteID == 0){
-                    //     continue; // Don't render white pixels
-                    // }
+                    if (paletteID == 0){
+                        continue; // Don't render white pixels
+                    }
                     if (xPos + spriteCol < 0 || xPos + spriteCol >= 160){
                         continue;
                     }
@@ -424,14 +424,13 @@ public class PPU extends JPanel {
     }
 
     public void drawScanline() {
-        if (memory.getBGWindowEnable() == 1) {
-            if (memory.CGBMode){
-                CGB_drawScanlineBG();
-            }
-            else {
-                drawScanlineBG();
-            }
+        if (memory.CGBMode){
+            CGB_drawScanlineBG();
         }
+        else if (memory.getBGWindowEnable() == 1) {
+            drawScanlineBG();
+        }
+        
         if (memory.getOBJEnable() == 1) {
             if (memory.CGBMode){
                 CGB_drawScanlineSprite();

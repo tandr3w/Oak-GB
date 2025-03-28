@@ -119,7 +119,6 @@ public class Memory {
         BGPaletteMemory = new int[0x40];
         spritePaletteMemory = new int[0x40];
 
-        // Init palettes to white
         for (int i=0; i<0x40; i++){
             BGPaletteMemory[i] = 0xFF;
             spritePaletteMemory[i] = 0xFF;
