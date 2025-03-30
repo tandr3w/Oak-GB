@@ -6,3 +6,4 @@ Saves/
 test_jsons/
 .vscode/
 lib/
+*.DS_Store
