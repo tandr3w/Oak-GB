@@ -10,7 +10,7 @@ public class Main extends JFrame implements KeyListener {
     private CPU cpu;
     private PPU ppu;
     private Joypad joypad;
-    // private APU apu;
+    private APU apu;
 
     // private Tilemap tilemap;
     // private JFrame tilemapFrame;
@@ -38,7 +38,7 @@ public class Main extends JFrame implements KeyListener {
         joypad = new Joypad(memory);
         cpu = new CPU(opcodes, memory);
         ppu = new PPU(memory);
-        // apu = new APU(memory, CLOCKSPEED);
+        apu = new APU(memory, CLOCKSPEED);
         memory.cpu = cpu;
         // tilemap = new Tilemap(memory, ppu);
         
@@ -68,7 +68,7 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/PokemonCrystal.gbc");
+        memory.loadROM("ROMs/tetris.gb");
         memory.loadSave();
         memory.setCGBMode();
 
@@ -101,7 +101,7 @@ public class Main extends JFrame implements KeyListener {
         int delay = 0; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
-        // apu.makeSound();
+        apu.makeSound();
 
     }
 
@@ -185,7 +185,7 @@ public class Main extends JFrame implements KeyListener {
             cpu.doInterrupts();
         }
         if ((!cpu.doubleSpeed) || (cycleNum % 2 == 1)){ // Skip every other cycle during double speed mode
-            // apu.tick(MAXCYCLES);
+            apu.tick(MAXCYCLES);
             ppu.repaint(); 
         }
         // tilemap.repaint();

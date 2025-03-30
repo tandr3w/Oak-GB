@@ -1,2 +1,6 @@
 # Compiled class file
 *.class
+bin/
+ROMs/
+Saves/
+test_jsons/
