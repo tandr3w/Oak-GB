@@ -537,9 +537,7 @@ public class PPU extends JPanel {
     }
 
     public void updateGraphics(int cycles) {
-        updateLCDStatus();
-        prevLY = memory.getLY();
-        prevLYC = memory.getLYC();
+
         if (memory.getLCDEnable() == 0) {
             return;
         }
@@ -548,6 +546,9 @@ public class PPU extends JPanel {
         int LY = memory.getLY();
         
         if (remainingCycles <= 0) {
+            updateLCDStatus();
+            prevLY = memory.getLY();
+            prevLYC = memory.getLYC();
             if (LY < 144) {
                 drawScanline();
             }

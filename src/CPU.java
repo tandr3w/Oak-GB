@@ -11,7 +11,6 @@ public class CPU {
     boolean enableInterruptsNext;
     boolean disableInterruptsNext;
     int additionalCycles;
-    public int MAXCYCLES = 69905;
     public boolean doubleSpeed;
 
     public CPU(Opcodes opcodes, Memory memory){

@@ -71,11 +71,11 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/gbc_colorbars.gbc");
+        memory.loadROM("ROMs/PokemonReal (andrew).gb");
         
         memory.loadSave();
         // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
-        // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // Passed
+        // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // dou
         // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
         // memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
 
@@ -107,7 +107,7 @@ public class Main extends JFrame implements KeyListener {
         // tilemapFrame.setLocation(69, 69);
         // tilemapFrame.setResizable(false);
         // tilemapFrame.setVisible(true);
-        int delay = 16; // 1000 / 60 --> 16.6667
+        int delay = 0; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
         // apu.makeSound();
@@ -154,8 +154,8 @@ public class Main extends JFrame implements KeyListener {
             System.out.println("current speed: " + MAXCYCLES);
         }
         if (e.getKeyCode() == KeyEvent.VK_MINUS){
-            if (MAXCYCLES - 69905/2 > 1) { // compare with 1 because of integer rounding
-                MAXCYCLES -= 69905/2;
+            if (MAXCYCLES - 69905/4 > 1) { // compare with 1 because of integer rounding
+                MAXCYCLES -= 69905/4;
             }
             System.out.println("current speed: " + MAXCYCLES);
         }
@@ -200,10 +200,8 @@ public class Main extends JFrame implements KeyListener {
         // tilemap.repaint();
         long endTime = System.nanoTime();
         long frameDuration = endTime - startTime;
-        int newDelay = 15 - ((int) frameDuration/1000000);
-        if (cpu.doubleSpeed){
-            newDelay /= 2;
-        }
+        int newDelay = 16 - ((int) frameDuration/1000000);
+
         if (newDelay > 0){
             gameLoop.setDelay(newDelay);
         }
