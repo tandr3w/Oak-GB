@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 
 public class Memory {
     // Hardware register addresses
-    boolean CGBMode = false; // Gameboy Color Game TODO: detect on startup based on registers rather than file extension
+    boolean CGBMode = false;
     final int LCDC_address;
     final int STAT_address;
     final int SCY_address;
@@ -979,9 +979,6 @@ public class Memory {
 
     public String extractRomName(String ROMPath) {
         String ROMName = Paths.get(ROMPath).getFileName().toString();
-        if (ROMName.toLowerCase().endsWith(".gbc")){
-            CGBMode = true;
-        }
         if (ROMName.toLowerCase().endsWith(".gb") || ROMName.toLowerCase().endsWith(".gbc")) {
             ROMName = ROMName.substring(0, ROMName.lastIndexOf('.'));
         } else {
@@ -1180,5 +1177,27 @@ public class Memory {
         long currentTime = System.currentTimeMillis();
         long elapsedSeconds = (currentTime - prevTime) / 1000;
         updateRTC(elapsedSeconds);
+    }
+
+    // read from file header
+    public void setCGBMode() {
+        switch (memoryArray[0x0143]) { // CGB Flag
+            case 0x80: // supports CGB; backwards compatible with DMG
+                System.out.println("Running on CGB Mode! (0x80)");
+                CGBMode = true;
+                break;
+            case 0xC0: // only runs on CGB
+                System.out.println("Running on CGB Mode! (0xC0)");
+                CGBMode = true;
+                break;
+            default:
+                System.out.println("Running on DMG Mode!");
+                CGBMode = false;
+                break;
+        }
+
+        if (CGBMode){
+            cpu.registers.a = 0x11;
+        }
     }
 }
