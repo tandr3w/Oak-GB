@@ -2,8 +2,8 @@
 A Java emulator for the Gameboy and Gameboy Color.
 
 Created by:
-- ![@tandr3w](github.com/tandr3w)
-- ![@ayleri](github.com/ayleri)
+- [@tandr3w](github.com/tandr3w)
+- [@ayleri](github.com/ayleri)
 
 # Gallery
 ![Pokemon Gold Title Screen](https://github.com/tandr3w/Oak-GB/blob/main/resources/screenshot0.png)
