@@ -75,7 +75,7 @@ public class Main extends JFrame implements KeyListener {
         String fileName = "";
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "GB & GBC ROMs", "gb", "gbc");
+                "ROMs (.gb and .gbc files)", "gb", "gbc");
         chooser.setFileFilter(filter);
         chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         int returnVal = chooser.showOpenDialog(null);
