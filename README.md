@@ -1,10 +1,6 @@
 # Oak GB
 Oak GB is an emulator for the Gameboy and Gameboy Color, written in Java 8 and rendered using a Swing JFrame. The emulator is not cycle-accurate, but passes various important tests, including, cpu_instrs, dmg-acid2, and cgb-acid2
 
-Created by:
-- [@tandr3w](github.com/tandr3w)
-- [@ayleri](github.com/ayleri)
-
 # Gallery
 ![Pokemon Gold Title Screen](https://github.com/tandr3w/Oak-GB/blob/main/resources/screenshot0.png)
 ![Pokemon Gold Battle Screen](https://github.com/tandr3w/Oak-GB/blob/main/resources/screenshot3.png)
@@ -31,4 +27,8 @@ Run the ```build.sh``` script to create a runnable jar file, or ```run.sh``` to 
 - [x] Settings to change screen size & game speed
 - [x] Support for .gb and .gbc files
 - [ ] APU (coming soon)
+
+# Created by:
+- [@tandr3w](github.com/tandr3w)
+- [@ayleri](github.com/ayleri)
 
