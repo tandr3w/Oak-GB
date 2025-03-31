@@ -2,7 +2,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 
 import src.*;
-import testing.*;
 
 public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
@@ -258,7 +256,7 @@ public class Main extends JFrame implements KeyListener {
                     File file = new File("resources/screenshot" + count + ".png");
                     if (!file.isFile()){
                         System.out.println("Screenshot taken successfully: " + file);
-                        ImageIO.write(ppu.bi, "png", file);
+                        ImageIO.write(ppu.bi.getSubimage(0, 0, 160*Settings.screenSize, 144*Settings.screenSize), "png", file);
                         break;
                     }
                     count += 1;
