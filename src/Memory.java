@@ -364,18 +364,18 @@ public class Memory {
         else if (address == 0xFF46){
             DMATransfer(data);
         }
-        else if (address == 0xFF55 && CGBMode){
+        else if (CGBMode && address == 0xFF55){
             CGBDMATransfer(data);
         }
 
-        else if (address == 0xFF69 && CGBMode){ // Background color palettes register
+        else if (CGBMode && address == 0xFF69){ // Background color palettes register
             int paletteAddress = getMemory(0xFF68) & 0b111111;
             BGPaletteMemory[paletteAddress] = data;
             if (Util.getIthBit(getMemory(0xFF68), 7) == 1){
                 setMemory(0xFF68, getMemory(0xFF68) + 1); // Auto Increment Bit
             }
         }
-        else if (address == 0xFF6B && CGBMode){ // Sprite color palettes register
+        else if (CGBMode && address == 0xFF6B){ // Sprite color palettes register
             int paletteAddress = getMemory(0xFF6A) & 0b111111;
             // System.out.println(Util.hexString(paletteAddress) + " " + data);
             spritePaletteMemory[paletteAddress] = data;
@@ -399,7 +399,7 @@ public class Memory {
         }
 
         // Read from VRAM bank (CGB only)
-        if (address >= 0x8000 && address <= 0x9FFF && CGBMode){
+        if (CGBMode && address >= 0x8000 && address <= 0x9FFF){
             int bank = getMemory(0xFF4F);
             return getVRAM(bank, address);
         }
@@ -456,11 +456,11 @@ public class Memory {
         }
 
         // Read palette data
-        if (address == 0xFF69 && CGBMode){ 
+        if (CGBMode && address == 0xFF69){ 
             int paletteAddress = getMemory(0xFF68) & 0b111111;
             return BGPaletteMemory[paletteAddress];
         }
-        if (address == 0xFF6B && CGBMode){ 
+        if (CGBMode && address == 0xFF6B){ 
             int paletteAddress = getMemory(0xFF6A) & 0b111111;
             return spritePaletteMemory[paletteAddress];
         }
