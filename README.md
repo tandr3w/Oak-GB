@@ -29,6 +29,6 @@ Run the ```build.sh``` script to create a runnable jar file, or ```run.sh``` to 
 - [ ] APU (coming soon)
 
 # Created by:
-- [@tandr3w](github.com/tandr3w)
-- [@ayleri](github.com/ayleri)
+- Andrew - [@tandr3w](github.com/tandr3w)
+- Ailen - [@ayleri](github.com/ayleri)
 
