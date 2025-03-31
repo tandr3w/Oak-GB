@@ -1,8 +1,11 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
@@ -68,7 +71,23 @@ public class Main extends JFrame implements KeyListener {
         
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
-        memory.loadROM("ROMs/PokemonCrystal.gbc");
+
+        String fileName = "";
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "GB & GBC ROMs", "gb", "gbc");
+        chooser.setFileFilter(filter);
+        chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            fileName = chooser.getSelectedFile().getPath();
+        }    
+        else {
+            System.exit(0);
+        }
+
+
+        memory.loadROM(fileName);
         memory.loadSave();
         memory.setCGBMode();
 
