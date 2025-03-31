@@ -1,8 +1,5 @@
 # Oak GB
-Oak GB is an emulator for the Gameboy and Gameboy Color, written in Java 8 and rendered using a Swing JFrame. The emulator is not cycle-accurate, but passes various important tests, including:
-- cpu_instrs
-- dmg-acid2
-- cgb-acid2
+Oak GB is an emulator for the Gameboy and Gameboy Color, written in Java 8 and rendered using a Swing JFrame. The emulator is not cycle-accurate, but passes various important tests, including, cpu_instrs, dmg-acid2, and cgb-acid2
 
 Created by:
 - [@tandr3w](github.com/tandr3w)
