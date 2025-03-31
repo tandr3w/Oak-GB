@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -7,6 +8,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
+
 import src.*;
 import testing.*;
 
@@ -248,6 +251,23 @@ public class Main extends JFrame implements KeyListener {
 
     public void keyPressed(KeyEvent e){ 
         joypad.updateJoypadPressed(e);
+        if (e.getKeyCode() == KeyEvent.VK_BACK_QUOTE){
+            try {
+                int count = 0;
+                while (true){
+                    File file = new File("resources/screenshot" + count + ".png");
+                    if (!file.isFile()){
+                        System.out.println("Screenshot taken successfully: " + file);
+                        ImageIO.write(ppu.bi, "png", file);
+                        break;
+                    }
+                    count += 1;
+                }
+            }
+            catch (IOException error){
+                error.printStackTrace();
+            }
+        }
         // if (e.getKeyCode() == KeyEvent.VK_EQUALS){
         //     MAXCYCLES += 69905/2;
         //     System.out.println("current speed: " + MAXCYCLES);

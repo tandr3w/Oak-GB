@@ -20,7 +20,7 @@ public class PPU extends JPanel {
     int internalWindowCounter = 0;
 
     int remainingCycles; // Number from 0 - 456; represents T-cycles
-    BufferedImage bi;
+    public BufferedImage bi;
     ImageIcon icon;
     JLabel label;
 
