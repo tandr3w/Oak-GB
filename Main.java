@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -74,6 +75,124 @@ public class Main extends JFrame implements KeyListener {
         // https://github.com/mattcurrie/dmg-acid2
         // memory.loadROM("ROMs/dmg-acid2.gb"); // graphics testing ROM
 
+        setTitle("Oak GB");
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        JMenuBar menuBar = new JMenuBar();
+        JMenu speedBar= new JMenu("Speed");
+        JMenu sizeBar = new JMenu("Size");
+        JMenu audioBar = new JMenu("Audio");
+
+
+        JMenuItem speed1 = new JCheckBoxMenuItem("0.5x");
+        JMenuItem speed2 = new JCheckBoxMenuItem("1x", true);
+        JMenuItem speed3 = new JCheckBoxMenuItem("1.5x");
+        JMenuItem speed4 = new JCheckBoxMenuItem("2x");
+        JMenuItem speed5 = new JCheckBoxMenuItem("3x");
+
+        JMenuItem size1 = new JCheckBoxMenuItem("160x144");
+        JMenuItem size2 = new JCheckBoxMenuItem("320x288");
+        JMenuItem size3 = new JCheckBoxMenuItem("480x432", true);
+        JMenuItem size4 = new JCheckBoxMenuItem("640x576");
+
+        JMenuItem muted = new JCheckBoxMenuItem("Muted", Settings.muted);
+
+        muted.addActionListener(e -> {
+            Settings.muted = !Settings.muted;
+        });
+
+        size1.addActionListener(e -> {
+            size2.setSelected(false);
+            size3.setSelected(false);
+            size4.setSelected(false);
+            Settings.screenSize = 1;
+            ppu.updateDisplay();
+            pack();
+        });
+        size2.addActionListener(e -> {
+            size1.setSelected(false);
+            size3.setSelected(false);
+            size4.setSelected(false);
+            Settings.screenSize = 2;
+            ppu.updateDisplay();
+            pack();
+        });
+        size3.addActionListener(e -> {
+            size1.setSelected(false);
+            size2.setSelected(false);
+            size4.setSelected(false);
+            Settings.screenSize = 3;
+            ppu.updateDisplay();
+            pack();
+        });
+        size4.addActionListener(e -> {
+            size1.setSelected(false);
+            size2.setSelected(false);
+            size3.setSelected(false);
+            Settings.screenSize = 4;
+            ppu.updateDisplay();
+            pack();
+        });
+
+
+        speed1.addActionListener(e -> {
+            speed2.setSelected(false);
+            speed3.setSelected(false);
+            speed4.setSelected(false);
+            speed5.setSelected(false);
+            Settings.gameSpeed = 0.5;
+        });
+        speed2.addActionListener(e -> {
+            speed1.setSelected(false);
+            speed3.setSelected(false);
+            speed4.setSelected(false);
+            speed5.setSelected(false);
+            Settings.gameSpeed = 1;
+        });
+        speed3.addActionListener(e -> {
+            speed1.setSelected(false);
+            speed2.setSelected(false);
+            speed4.setSelected(false);
+            speed5.setSelected(false);
+            Settings.gameSpeed = 1.5;
+        });
+        speed4.addActionListener(e -> {
+            speed1.setSelected(false);
+            speed2.setSelected(false);
+            speed3.setSelected(false);
+            speed5.setSelected(false);
+            Settings.gameSpeed = 2;
+        });
+        speed5.addActionListener(e -> {
+            speed1.setSelected(false);
+            speed2.setSelected(false);
+            speed3.setSelected(false);
+            speed4.setSelected(false);
+            Settings.gameSpeed = 3;
+        });
+        speedBar.add(speed1);
+        speedBar.add(speed2);
+        speedBar.add(speed3);
+        speedBar.add(speed4);
+        speedBar.add(speed5);
+        sizeBar.add(size1);
+        sizeBar.add(size2);
+        sizeBar.add(size3);
+        sizeBar.add(size4);
+        audioBar.add(muted);
+
+        menuBar.add(speedBar);
+        menuBar.add(sizeBar);
+        menuBar.add(audioBar);
+
+        setJMenuBar(menuBar);
+
+        ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
+        setIconImage(gameboyIcon.getImage());
+        setLocationRelativeTo(null);
+        setLocation(400,150);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         String fileName = "";
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -93,24 +212,6 @@ public class Main extends JFrame implements KeyListener {
         memory.loadSave();
         memory.setCGBMode();
 
-        // memory.loadROM("ROMs/mooneye-wario-suite/acceptance/bits/unused_hwio-GS.gb"); // Failed
-        // memory.loadROM("ROMs/blargg-test-roms/cpu_instrs/cpu_instrs.gb"); // dou
-        // memory.loadROM("ROMs/mooneye-test-suite/emulator-only/mbc1/bits_mode.gb");
-        // memory.loadROM("ROMs/blargg-test-roms/interrupt_time/interrupt_time.gb");
-
-        setTitle("Gameboy Emulator");
-        ImageIcon gameboyIcon = new ImageIcon("icons/gameboy.png");
-        setIconImage(gameboyIcon.getImage());
-        setLocationRelativeTo(null);
-        setLocation(400,150);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(ppu);
-        ppu.addKeyListener(this);
-        pack();
-        ppu.requestFocus();
-        setVisible(true);
-
         // tilemap = new Tilemap(memory, ppu);
         // tilemapFrame = new JFrame("Tile Map");
         // tilemapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -119,10 +220,17 @@ public class Main extends JFrame implements KeyListener {
         // tilemapFrame.setLocation(69, 69);
         // tilemapFrame.setResizable(false);
         // tilemapFrame.setVisible(true);
+
         int delay = 0; // 1000 / 60 --> 16.6667
         gameLoop = new Timer(delay, e -> runFrame());
         gameLoop.start();
         apu.makeSound();
+        
+        add(ppu);
+        ppu.addKeyListener(this);
+        pack();
+        ppu.requestFocus();
+        setVisible(true);
 
     }
 
@@ -139,42 +247,21 @@ public class Main extends JFrame implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e){ 
-        // for (int i=0x00; i<0xA000; i++){
-        //     System.out.print(memory.getVRAM(0, i) + " ");
-        //     if (i % 0x10 == 0){
-        //         System.out.println();
-        //         System.out.print(Util.hexString(i) + ": ");
-        //     }
-        // }
-        // for (int i=0; i<8; i++){
-            // int[][] colorData = memory.getCGBPaletteColor(8*i, false);
-            // System.out.print(i + ": " + Util.hexString(colorData[0][0]) + Util.hexString(colorData[0][1]) + Util.hexString(colorData[0][2]));
-            // System.out.print(" " + Util.hexString(colorData[1][0]) + Util.hexString(colorData[1][1]) + Util.hexString(colorData[1][2]));
-            // System.out.print(" " + Util.hexString(colorData[2][0]) + Util.hexString(colorData[2][1]) + Util.hexString(colorData[2][2]));
-            // System.out.print(" " + Util.hexString(colorData[3][0]) + Util.hexString(colorData[3][1]) + Util.hexString(colorData[3][2]));
-            // System.out.println();
-            // int[] colorData = memory.getCGBPaletteColorHex(8*i, false);
-            // System.out.print(i + ": " + Util.hexString(colorData[0]) + " ");
-            // System.out.print(Util.hexString(colorData[1]) + " ");
-            // System.out.print(Util.hexString(colorData[2])+ " ");
-            // System.out.print(Util.hexString(colorData[3]));
-            // System.out.println();
-        // }
         joypad.updateJoypadPressed(e);
-        if (e.getKeyCode() == KeyEvent.VK_EQUALS){
-            MAXCYCLES += 69905/2;
-            System.out.println("current speed: " + MAXCYCLES);
-        }
-        if (e.getKeyCode() == KeyEvent.VK_MINUS){
-            if (MAXCYCLES - 69905/4 > 1) { // compare with 1 because of integer rounding
-                MAXCYCLES -= 69905/4;
-            }
-            System.out.println("current speed: " + MAXCYCLES);
-        }
-        if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH){ // RESET
-            MAXCYCLES = 69905;
-            System.out.println("current speed: " + MAXCYCLES);
-        }
+        // if (e.getKeyCode() == KeyEvent.VK_EQUALS){
+        //     MAXCYCLES += 69905/2;
+        //     System.out.println("current speed: " + MAXCYCLES);
+        // }
+        // if (e.getKeyCode() == KeyEvent.VK_MINUS){
+        //     if (MAXCYCLES - 69905/4 > 1) { // compare with 1 because of integer rounding
+        //         MAXCYCLES -= 69905/4;
+        //     }
+        //     System.out.println("current speed: " + MAXCYCLES);
+        // }
+        // if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH){ // RESET
+        //     MAXCYCLES = 69905;
+        //     System.out.println("current speed: " + MAXCYCLES);
+        // }
         // pressesToTrigger += 1;
     }
 
@@ -197,7 +284,7 @@ public class Main extends JFrame implements KeyListener {
         // System.out.println("SCX: " + Util.bitString(memory.getMemory(memory.SCX_address)));
         // Print palettes
         int cyclesThisFrame = 0;
-        while (cyclesThisFrame < MAXCYCLES) { // FIXME double speed probably doesnt work properly
+        while (cyclesThisFrame < (int) (MAXCYCLES * Settings.gameSpeed)) { // FIXME double speed probably doesnt work properly
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
             int cycles = cpu.execute(instruction);
             cyclesThisFrame += cycles;
@@ -206,7 +293,9 @@ public class Main extends JFrame implements KeyListener {
             cpu.doInterrupts();
         }
         if ((!cpu.doubleSpeed) || (cycleNum % 2 == 1)){ // Skip every other cycle during double speed mode
-            apu.tick(MAXCYCLES);
+            if (!Settings.muted){
+                apu.tick((int) (MAXCYCLES * Settings.gameSpeed));
+            }            
             ppu.repaint(); 
         }
         // tilemap.repaint();

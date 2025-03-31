@@ -43,6 +43,9 @@ public class APU {
         writer = new Thread(() -> {
             int cyclesPerSample = clockSpeed/SAMPLE_RATE;
             while (true) {
+                if (Settings.muted){
+                    continue;
+                }
                 while (cycleCount >= cyclesPerSample) {
                     frequency = memory.getFrequencyC2();
                     cycleCount -= cyclesPerSample;

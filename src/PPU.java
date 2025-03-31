@@ -20,14 +20,15 @@ public class PPU extends JPanel {
     int internalWindowCounter = 0;
 
     int remainingCycles; // Number from 0 - 456; represents T-cycles
-    int upscalingFactor = 3;
     BufferedImage bi;
     ImageIcon icon;
+    JLabel label;
 
     public PPU(Memory memory) {
-        bi = new BufferedImage(160*upscalingFactor, 144*upscalingFactor, BufferedImage.TYPE_INT_RGB);
+        bi = new BufferedImage(160*4, 144*4, BufferedImage.TYPE_INT_RGB); // 4: max screen size
         icon = new ImageIcon(bi);
-        add(new JLabel(icon));
+        label = new JLabel(icon);
+        add(label);
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         this.memory = memory;
         remainingCycles = 456;
@@ -50,7 +51,11 @@ public class PPU extends JPanel {
         bgPriorities = new int[144][160];
         bgColorIDs = new int[144][160];
 
-        setPreferredSize(new Dimension(160*upscalingFactor, 144*upscalingFactor));
+        setPreferredSize(new Dimension(160*Settings.screenSize, 144*Settings.screenSize));
+    }
+
+    public void updateDisplay(){
+        setPreferredSize(new Dimension(160*Settings.screenSize, 144*Settings.screenSize));
     }
 
     public void drawScanlineBG(){
@@ -328,7 +333,7 @@ public class PPU extends JPanel {
                     }
                     if (xPos < minxPosAtPos[xPos+spriteCol]) {
                         screenData[memory.getLY()][xPos+spriteCol] = colourPaletteTranslator[colorID];
-                        minxPosAtPos[xPos+spriteCol] = xPos; // the array should only be updated if the new xpos is lower
+                        minxPosAtPos[xPos+spriteCol] = xPos; // the array should only be dated if the new xpos is lower
                     }
                     // minxPosAtPos[xPos+spriteCol] = xPos;
                 }
@@ -451,15 +456,15 @@ public class PPU extends JPanel {
                 int[] rgb = screenData[y][x];
                 // int pixelRGB = (0xFF << 24) | (rgb[0] << 16) | (rgb[1] << 8) | (rgb[2]);
                 Color pixelColor = new Color(rgb[0], rgb[1], rgb[2]);
-                for (int i=0; i<upscalingFactor; i++){
-                    for (int j=0; j<upscalingFactor; j++){
-                        bi.setRGB(x*upscalingFactor+i, y*upscalingFactor+j, pixelColor.getRGB());
+                for (int i=0; i<Settings.screenSize; i++){
+                    for (int j=0; j<Settings.screenSize; j++){
+                        bi.setRGB(x*Settings.screenSize+i, y*Settings.screenSize+j, pixelColor.getRGB());
                     }
                 }
 
                 // System.out.println(rgb[0] + " " + rgb[1] + " " + rgb[2] + " " + Util.bitString(pixelColor.getRGB()));
                 // g.setColor(pixelColor);
-                // g.fillRect(x * upscalingFactor, y * upscalingFactor, upscalingFactor, upscalingFactor);
+                // g.fillRect(x * Settings.screenSize, y * Settings.screenSize, Settings.screenSize, Settings.screenSize);
             }
         }
     }
