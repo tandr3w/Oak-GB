@@ -1,16 +1,17 @@
+package src;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 
 public class CPU {
-    Registers registers;
-    Memory memory;
-    Opcodes opcodes;
-    boolean halted;
-    boolean interrupts;
-    boolean enableInterruptsNext;
-    boolean disableInterruptsNext;
-    int additionalCycles;
+    public Registers registers;
+    public Memory memory;
+    public Opcodes opcodes;
+    public boolean halted;
+    public boolean interrupts;
+    public boolean enableInterruptsNext;
+    public boolean disableInterruptsNext;
+    public int additionalCycles;
     public boolean doubleSpeed;
 
     public CPU(Opcodes opcodes, Memory memory){

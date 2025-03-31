@@ -1,3 +1,4 @@
+package src;
 enum Operand {
     A, B, C, D, E, H, L, BC, DE, HL, AF,
     MemHL, MemBC, MemDE,

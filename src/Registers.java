@@ -1,16 +1,17 @@
+package src;
 public class Registers {
-    int a; // 8-bit integers
-    int b;
-    int c;
-    int d;
-    int e;
-    int f;
-    int h;
-    int l;
+    public int a; // 8-bit integers
+    public int b;
+    public int c;
+    public int d;
+    public int e;
+    public int f;
+    public int h;
+    public int l;
     // sp & pc are both registers
-    int sp;
-    int pc;
-    CPU cpu;
+    public int sp;
+    public int pc;
+    public CPU cpu;
 
     public Registers(CPU cpu){
         a = 0x01;

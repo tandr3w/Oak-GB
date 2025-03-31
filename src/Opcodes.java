@@ -1,3 +1,4 @@
+package src;
 public class Opcodes {
     public Instruction[] opcodesArray;
     public Instruction[] prefixOpcodesArray;

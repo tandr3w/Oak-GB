@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import src.*;
 
 public class Main extends JFrame implements KeyListener {
     private Opcodes opcodes;
