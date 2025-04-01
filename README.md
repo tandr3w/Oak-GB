@@ -20,7 +20,7 @@ Oak GB is an emulator for the Gameboy and Gameboy Color, written in Java 8 and r
 | `                          | Take Screenshot                     |
 
 # Usage
-Run the ```build.sh``` script to create a runnable jar file, or ```run.sh``` to run the program. There are equivalent .bat files for windows machines. Then, simply select your ROM file to start the emulator.
+Run the ```build.sh``` script to create a runnable jar file, or ```run.sh``` to run the program. There are equivalent .bat files for Windows machines. Then, simply select your ROM file to start the emulator.
 
 # Features
 - [x] Fully implemented CPU
@@ -31,6 +31,6 @@ Run the ```build.sh``` script to create a runnable jar file, or ```run.sh``` to 
 - [ ] APU (coming soon)
 
 # Created by:
-- Andrew - [@tandr3w](github.com/tandr3w)
-- Ailen - [@ayleri](github.com/ayleri)
+- Andrew - [@tandr3w](https://github.com/tandr3w)
+- Ailen - [@ayleri](https://github.com/ayleri)
 
