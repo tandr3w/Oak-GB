@@ -10,12 +10,14 @@ Oak GB is an emulator for the Gameboy and Gameboy Color, written in Java 8 and r
 ![Zelda](https://github.com/tandr3w/Oak-GB/blob/main/resources/screenshot14.png?raw=true)
 
 # Controls
-- Z: A
-- X: B
-- Arrow Keys: Up/Down/Left/Right
-- Enter: Start
-- Space: Select
-- `: Screenshot (stored in the resources folder)
+| **Computer Keyboard**      | **Gameboy**                         |
+|----------------------------|-------------------------------------|
+| Z                          | A                                   |
+| X                          | B                                   |
+| Arrow Keys                 | Up/Down/Left/Right                  |
+| Enter                      | Start                               |
+| Space                      | Select                              |
+| `                          | Take Screenshot                     |
 
 # Usage
 Run the ```build.sh``` script to create a runnable jar file, or ```run.sh``` to run the program. There are equivalent .bat files for windows machines. Then, simply select your ROM file to start the emulator.
