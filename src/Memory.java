@@ -835,6 +835,7 @@ public class Memory {
     }
 
     public void setLCDStatus(int val) {
+        // System.out.println(cpu.registers.pc);
         setMemory(STAT_address, val);
     }
 
@@ -1199,6 +1200,11 @@ public class Memory {
 
         if (CGBMode){
             cpu.registers.a = 0x11;
+            cpu.registers.d = 0xFF;
+            cpu.registers.e = 0x56;
+            cpu.registers.l = 0x0D;
+            cpu.registers.h = 0x00;
+            memoryArray[STAT_address] = 0xFF;
         }
     }
 }

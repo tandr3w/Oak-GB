@@ -27,6 +27,9 @@ public class Main extends JFrame implements KeyListener {
     private int CLOCKSPEED;
     private int timerCounter;
     private int dividerCounter;
+    private int steps = 0;
+    private boolean broken = false;
+    private int breakpoint = 7657577;
 
     // private boolean initLoad = true;
     private int MAXCYCLES = 69905;
@@ -266,6 +269,16 @@ public class Main extends JFrame implements KeyListener {
                 error.printStackTrace();
             }
         }
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
+            System.out.println(Util.bitString(memory.getLCDStatus()));
+            System.out.println(Util.bitString(memory.getLY()));
+            printInfo();
+            cpu.registers.printRegisters();
+            System.out.println("\n\n");
+        }
+        if (e.getKeyCode() == KeyEvent.VK_0) {
+            steps += 1;
+        }
         // if (e.getKeyCode() == KeyEvent.VK_EQUALS){
         //     MAXCYCLES += 69905/2;
         //     System.out.println("current speed: " + MAXCYCLES);
@@ -304,6 +317,31 @@ public class Main extends JFrame implements KeyListener {
         int cyclesThisFrame = 0;
         while (cyclesThisFrame < (int) (MAXCYCLES * Settings.gameSpeed)) { // FIXME double speed probably doesnt work properly
             Instruction instruction = opcodes.byteToInstruction(memory.getMemory(cpu.registers.pc));
+            if (broken && steps > 0){
+                steps -= 1;
+                System.out.println(Util.bitString(memory.getLCDStatus()));
+                System.out.println(Util.bitString(memory.getLY()));
+                printInfo();
+                cpu.registers.printRegisters();
+                System.out.println("\n\n");  
+            }
+            else if (broken && steps <= 0){
+                return;
+            }
+            else {
+                if (cpu.registers.pc == breakpoint){
+                    System.out.println(Util.bitString(memory.getLCDStatus()));
+                    System.out.println(Util.bitString(memory.getLY()));
+                    printInfo();
+                    cpu.registers.printRegisters();
+                    System.out.println("\n\n");  
+                    broken = true;
+                    return;          
+                }
+            }
+
+
+
             int cycles = cpu.execute(instruction);
             cyclesThisFrame += cycles;
             updateTimer(cycles);
