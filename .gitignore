@@ -1,9 +1,8 @@
-# Compiled class file
 *.class
 bin/
 ROMs/
 Saves/
 test_jsons/
 .vscode/
-lib/
+# lib/
 *.DS_Store
