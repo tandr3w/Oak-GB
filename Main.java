@@ -41,6 +41,12 @@ public class Main extends JFrame implements KeyListener {
     // private int pressesToTrigger = (int) (float)(30f / (float)((float)MAXCYCLES / 19900f)); // Skip first 120 frames
 
     public Main() {
+        try {
+            UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        
         CLOCKSPEED = 4194304;
         addKeyListener(this);
         opcodes = new Opcodes();
