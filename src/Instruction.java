@@ -92,6 +92,4 @@ public class Instruction {
         this.operation = operation;
         this.num_bytes = num_bytes;
     }
-
-    // TODO: add more constructors for other operations
 }

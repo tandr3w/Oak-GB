@@ -15,7 +15,6 @@ public class CPU {
     public boolean doubleSpeed;
 
     public CPU(Opcodes opcodes, Memory memory){
-        // TODO: use a function to set memory so we can restrict access to protect parts
         this.memory = memory;
         registers = new Registers(this);
         this.opcodes = opcodes;
@@ -352,7 +351,6 @@ public class CPU {
                 }
                 
                 if (instruction.operandToSet == Operand.a16) {
-                    // TODO: FIGURE OUT HOW ENDIANNESS WORKS...
                     int address = ((instruction.next_bytes[1] & 0xFF) << 8) | (instruction.next_bytes[0] & 0xFF);
                     memory.setMemory(address, valToLoad);
                     num_cycles += 4;
@@ -370,7 +368,6 @@ public class CPU {
                 registers.setValToEnum(instruction.operandToSet, valToLoad);
 
                 break;
-            // TODO: check if all cominations of operands are accounted for
             case Operation.LD16:
                 int twoByteVal;
                 // There are no LD16 operations that have an n8 operand
@@ -980,10 +977,6 @@ public class CPU {
         registers.a = result;
     }
 
-
-
-    
-    // TODO: NEED TO UPDATE ZERO FLAG
     public void RLC(Operand target) {
         int val = registers.readValFromEnum(target);
         int firstCircularBit = (val) >> 7;
