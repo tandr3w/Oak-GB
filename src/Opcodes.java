@@ -3,8 +3,6 @@ public class Opcodes {
     public Instruction[] opcodesArray;
     public Instruction[] prefixOpcodesArray;
     public Opcodes() {
-        // TODO: figure out how to handle prefixed/unprefixed opcodes
-        // nvm its simple; switch to prefixed when CB instruction is executed
         opcodesArray = new Instruction[0xFF + 1];
         prefixOpcodesArray = new Instruction[0xFF + 1];
         
