@@ -224,7 +224,7 @@ public class PPU extends JPanel {
                 byteInTile = (yPos % 8) * 2; // Each 2 bytes corresponds to a row in the tile
             }
             else {
-                byteInTile = (7-(yPos % 8)) * 2; // Each 2 bytes corresponds to a row in the tile
+                byteInTile = (7-(yPos % 8)) * 2; // Each 2 byt es corresponds to a row in the tile
             }
             int byte1 = memory.getVRAM(bank, tileMemLocation + byteInTile);
             int byte2 = memory.getVRAM(bank, tileMemLocation + byteInTile+1);

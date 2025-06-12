@@ -948,10 +948,10 @@ public class Memory {
                 System.out.println("Using MBC2!");
             }
             else if (isMBC3) {
-                System.out.println("Using MBC3");
+                System.out.println("Using MBC3!");
             }
             else if (isMBC5){
-                System.out.println("Using MBC5");
+                System.out.println("Using MBC5!");
             }
             ramSize = memoryArray[0x149];
             if (ramSize == 2){

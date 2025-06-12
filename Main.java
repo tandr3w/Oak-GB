@@ -208,11 +208,12 @@ public class Main extends JFrame implements KeyListener {
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "ROMs (.gb and .gbc files)", "gb", "gbc");
         chooser.setFileFilter(filter);
-        chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        // chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        chooser.setCurrentDirectory(new File("ROMs"));
         int returnVal = chooser.showOpenDialog(null);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             fileName = chooser.getSelectedFile().getPath();
-        }    
+        }   
         else {
             System.exit(0);
         }
