@@ -4,3 +4,5 @@ test_jsons/
 .vscode/
 # lib/
 *.DS_Store
+OakGB.jar
+manifest.txt
